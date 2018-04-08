@@ -26,6 +26,7 @@
 %token LIT_STRING
 %token TOKEN_ERROR
 
+
 %%
 
 program:
@@ -136,3 +137,4 @@ read: KW_READ TK_ID
 int yyerror(int code){
     
 }
+#include "lex.yy.c"
