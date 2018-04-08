@@ -1,2 +1,7 @@
 *.o
 y.tab.c
+etapa2
+lex.yy.o
+lex.yy.c
+parser.tab.c
+
