@@ -45,8 +45,7 @@ lcmd: cmd lcmd
 
 
 
-cmd:TK_ID '=' exp
-    |TK_ID '['TK_LIT_INT']' exp
+cmd:var_dec
     | KW_IF '(' exp ')' 'then' cmd
     | KW_IF '(' exp ')' 'then' cmd 'else' cmd
     | KW_WHILE '(' exp ')' cmd
@@ -56,29 +55,49 @@ cmd:TK_ID '=' exp
     | print
     ;
 
+var_dec:type TK_ID '=' lit
+        |type TK_ID '['exp']'':' vet_dec ';'
+        |type '#' TK_ID '=' lit
 
+    ;
+type:KW_INT
+    |KW_FLOAT
+    |KW_CHAR
+lit:LIT_REAL
+    |'LIT_CHAR'
+    |LIT_INT
+vet_dec: lit
+        |
+        ;
 exp:TK_ID
-    |LIT_INTEGER
-    |LIT_REAL
-    |LIT_CHAR
-    |LIT_STRING
-    | LIT_INT
-    | exp OP exp
+    |lit
+    |exp OP exp
     |TK_ID '('')'
     |func_call
     ;
 
-    func_call: '('TK_ID func_args ',' l_func_args')'
+func_call: TK_ID'('TK_ID func_args  l_func_args')'
     ;
 
-    func_args:TK_ID
-    |'#' TK_ID
-    |'&' TK_ID
-    ;
-
-    l_func_args:func_args l_func_args
+func_args:TK_ID ','
+    |'#' TK_ID ','
+    |'&' TK_ID ','
     |
     ;
+
+l_func_args:func_args l_func_args
+            |
+            ;
+
+func_dec:func_header block
+        ;
+
+func_header: type TK_ID '(' func_par ')'
+        ;  
+
+func_par: type TK_ID
+        |
+        ;
 
 op: '+'
     |'-'
@@ -98,12 +117,12 @@ op: '+'
 print: KW_PRINT pe lpe
 
 
-pe: string
+pe: LIT_STRING
     |TK_ID
     ;
 
 
-lpe:string
+lpe:LIT_STRING
     |TK_ID
     |
     ;
