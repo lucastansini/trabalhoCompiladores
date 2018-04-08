@@ -32,15 +32,20 @@
 
 %%
 
-program:
+program: ldec
+    | 
     ;
-
-
 reset: ',' TK_ID reset
     |
     ;
 block: '{' lcmd '}'
     ;
+dec:KW_IF '(' exp ')' KW_THEN cmd ';'
+    | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
+    | KW_WHILE '(' exp ')' cmd ';'
+    | KW_FOR '('TK_ID '=' exp 'to' exp')' cmd
+    ;
+ldec: dec ldec
 
 
 lcmd: cmd lcmd
@@ -50,10 +55,6 @@ lcmd: cmd lcmd
 
 
 cmd:var_dec
-    | KW_IF '(' exp ')' KW_THEN cmd
-    | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd
-    | KW_WHILE '(' exp ')' cmd
-    | KW_FOR '('TK_ID '=' exp 'to' exp')' cmd
     | block
     | read
     | print
@@ -62,8 +63,7 @@ cmd:var_dec
 var_dec:type TK_ID '=' lit
         |type TK_ID '['exp']'':' vet_dec ';'
         |type '#' TK_ID '=' lit
-
-    ;
+        ;
 type:KW_INT
     |KW_FLOAT
     |KW_CHAR
