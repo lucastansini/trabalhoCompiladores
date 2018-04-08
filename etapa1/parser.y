@@ -25,7 +25,10 @@
 %token LIT_CHAR
 %token LIT_STRING
 %token TOKEN_ERROR
-
+%{
+    
+#include "lex.yy.c"
+    %}
 
 %%
 
@@ -64,9 +67,11 @@ var_dec:type TK_ID '=' lit
 type:KW_INT
     |KW_FLOAT
     |KW_CHAR
+    ;
 lit:LIT_REAL
     |"'" LIT_CHAR "'"
     |LIT_INT
+    ;
 vet_dec: lit
         |
         ;
@@ -135,6 +140,7 @@ read: KW_READ TK_ID
     ;
 %%
 int yyerror(int code){
+    printf("Erro na linha %d   ------>",getLineNumber());
+    exit(3);
     
 }
-#include "lex.yy.c"

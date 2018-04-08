@@ -1,8 +1,7 @@
 #include<stdio.h>
 int main(int argc, char **argv)
 {
-    printf(" I am here");
-    /*int tok;
+    int tok;
     FILE    *fd;
     
     if (argc == 2)
@@ -12,7 +11,7 @@ int main(int argc, char **argv)
             perror("Error: ");
             return (-1);
         }
-//        yyin = fd;
+            yyin = fd;
         
     }
     else
@@ -21,6 +20,8 @@ int main(int argc, char **argv)
     initMe();
      while (isRunning()) {
          tok = yylex();
+         yyparse();
+
          switch (tok) {
              case KW_CHAR:
                  printf("KW CHAR");
@@ -101,7 +102,9 @@ int main(int argc, char **argv)
          }
          printf("linha:%d\n",lineNumber);
      }
+    
 
     hashPrint();
-    return (0);*/
+
+    return (0);
 }
