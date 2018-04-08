@@ -76,7 +76,7 @@ exp:TK_ID
     |func_call
     ;
 
-func_call: TK_ID'('TK_ID func_args  l_func_args')'
+func_call: TK_ID'(' func_args  l_func_args')'
     ;
 
 func_args:TK_ID ','
@@ -98,6 +98,10 @@ func_header: type TK_ID '(' func_par ')'
 func_par: type TK_ID
         |
         ;
+l_func_par: func_par l_func_par
+|
+;
+
 
 op: '+'
     |'-'
