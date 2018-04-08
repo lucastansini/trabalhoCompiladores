@@ -20,7 +20,7 @@
 %token OPERATOR_OR
 
 %token TK_ID
-%token LIT_INTEGER
+%token LIT_INT
 %token LIT_REAL
 %token LIT_CHAR
 %token LIT_STRING
@@ -46,10 +46,10 @@ lcmd: cmd lcmd
 
 
 cmd:var_dec
-    | KW_IF '(' exp ')' 'then' cmd
-    | KW_IF '(' exp ')' 'then' cmd 'else' cmd
+    | KW_IF '(' exp ')' KW_THEN cmd
+    | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd
     | KW_WHILE '(' exp ')' cmd
-    | KW_FOR (TK_ID '=' exp 'to' exp) cmd
+    | KW_FOR '('TK_ID '=' exp 'to' exp')' cmd
     | block
     | read
     | print
@@ -64,14 +64,14 @@ type:KW_INT
     |KW_FLOAT
     |KW_CHAR
 lit:LIT_REAL
-    |'LIT_CHAR'
+    |"'" LIT_CHAR "'"
     |LIT_INT
 vet_dec: lit
         |
         ;
 exp:TK_ID
     |lit
-    |exp OP exp
+    |exp op exp
     |TK_ID '('')'
     |func_call
     ;
@@ -126,7 +126,7 @@ lpe:LIT_STRING
     |TK_ID
     |
     ;
-read KW_READ TK_ID
+read: KW_READ TK_ID
     ;
 %%
 int yyerror(int code){
