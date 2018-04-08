@@ -47,11 +47,10 @@ lcmd: cmd lcmd
 
 cmd:TK_ID '=' exp
     |TK_ID '['TK_LIT_INT']' exp
-    | KW_IF '('exp ')' 'then' cmd
-    | KW_IF ( exp ) 'then' cmd
-    | KW_IF ( exp ) 'then' cmd 'else' cmd
-    | KW_WHILE ( exp ) cmd
-    | KW_FOR (TK_ID = exp 'to' exp) cmd
+    | KW_IF '(' exp ')' 'then' cmd
+    | KW_IF '(' exp ')' 'then' cmd 'else' cmd
+    | KW_WHILE '(' exp ')' cmd
+    | KW_FOR (TK_ID '=' exp 'to' exp) cmd
     | block
     | read
     | print
