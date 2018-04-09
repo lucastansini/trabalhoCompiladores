@@ -25,5 +25,5 @@ int main(int argc, char **argv)
 
     hashPrint();
 
-    return (0);
+    exit (0);
 }
