@@ -39,18 +39,19 @@ ldec: dec ldec
     |
     ;
 
-dec:KW_IF '(' exp ')' KW_THEN cmd
-    |KW_IF '(' exp ')' KW_THEN cmd 'else' cmd
-    |KW_WHILE '(' exp ')' cmd
-    |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
+dec:KW_IF '(' exp ')' KW_THEN lcmd
+    |KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
+    |KW_WHILE '(' exp ')' lcmd
+    |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd
     |func_dec
     |type TK_IDENTIFIER '=' lit ';'
     |type TK_IDENTIFIER'['exp']'':' vet_dec ';'
     |type TK_IDENTIFIER'['exp']' ';'
     |type '#' TK_IDENTIFIER '=' lit ';'
+
     ;
 
-reset: ',' TK_IDENTIFIER reset
+reset: ',' func_args reset
     |
     ;
 block: '{' lcmd '}'
@@ -58,14 +59,12 @@ block: '{' lcmd '}'
 
 lcmd: cmd ';' lcmd
     |
-    |ldec
+    |dec
     ;
 
 
 
 cmd:block
-    | read
-    | print
     | TK_IDENTIFIER '=' exp
     | '#'TK_IDENTIFIER '='exp
     | '&'TK_IDENTIFIER '='exp
@@ -76,7 +75,11 @@ cmd:block
     | '&'TK_IDENTIFIER'['exp']' '='exp
     | TK_IDENTIFIER '=''['exp']''#'exp
     | TK_IDENTIFIER '=''['exp']''&'exp
-
+    |func_call
+    |print
+    |read
+    |KW_RETURN exp
+    |
 
     ;
 
@@ -98,13 +101,13 @@ exp:TK_IDENTIFIER
     |TK_IDENTIFIER '('')'
     |func_call
     ;
-func_call: TK_IDENTIFIER'(' func_args  l_func_args')'
+func_call: TK_IDENTIFIER'(' l_func_args reset')'
     ;
 
-func_args:TK_IDENTIFIER ','
-    |'#' TK_IDENTIFIER ','
-    |'&' TK_IDENTIFIER ','
-    |
+func_args:lit
+    |TK_IDENTIFIER
+    |'#' TK_IDENTIFIER
+    |'&' TK_IDENTIFIER
     ;
 
 l_func_args:func_args l_func_args
@@ -114,16 +117,17 @@ l_func_args:func_args l_func_args
 func_dec:func_header block
     ;
 
-func_header: type TK_IDENTIFIER '(' func_par ')'
+func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')'
     ;
 
 func_par: type TK_IDENTIFIER
-    |
     ;
 l_func_par: func_par l_func_par
     |
     ;
-
+reset_func_par: ',' func_par reset_func_par
+    |
+    ;
 
 op: '+'
     |'-'
@@ -140,24 +144,26 @@ op: '+'
     |OPERATOR_OR
     ;
 
-print: KW_PRINT pe lpe
-
-
-pe: LIT_STRING
-    |TK_IDENTIFIER
+print:KW_PRINT lpe
 ;
 
 
-lpe:    LIT_STRING
-    |TK_IDENTIFIER
-    |
+pe:LIT_STRING
+|TK_IDENTIFIER
+|'&'TK_IDENTIFIER
+|'#'TK_IDENTIFIER
 ;
-read: KW_READ TK_IDENTIFIER
+
+
+lpe: pe lpe
+|
+;
+read:KW_READ TK_IDENTIFIER
 ;
 %%
 int yyerror(int code){
     printf("O analisador encontrou um erro na linha %d\n",getLineNumber());
-    //exit(3);
+    exit(3);
     
 }
 #include "main.c"
