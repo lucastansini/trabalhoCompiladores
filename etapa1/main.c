@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include "lex.yy.h"
+
 int main(int argc, char **argv)
 {
     int tok;
