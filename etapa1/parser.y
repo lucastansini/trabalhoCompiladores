@@ -39,9 +39,9 @@ ldec: dec ldec
     |
     ;
 
-dec:KW_IF '(' exp ')' KW_THEN cmd ';'
-    |KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
-    |KW_WHILE '(' exp ')' cmd ';'
+dec:KW_IF '(' exp ')' KW_THEN cmd
+    |KW_IF '(' exp ')' KW_THEN cmd 'else' cmd
+    |KW_WHILE '(' exp ')' cmd
     |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
     |func_dec
     |type TK_IDENTIFIER '=' lit ';'
@@ -58,6 +58,7 @@ block: '{' lcmd '}'
 
 lcmd: cmd ';' lcmd
     |
+    |ldec
     ;
 
 
@@ -65,7 +66,18 @@ lcmd: cmd ';' lcmd
 cmd:block
     | read
     | print
-    | TK_IDENTIFIER '=' LIT_INTEGER ';'
+    | TK_IDENTIFIER '=' exp
+    | '#'TK_IDENTIFIER '='exp
+    | '&'TK_IDENTIFIER '='exp
+    | TK_IDENTIFIER '=''#'exp
+    | TK_IDENTIFIER '=''&'exp
+    | TK_IDENTIFIER'['exp']' '=' exp
+    | '#'TK_IDENTIFIER'['exp']' '='exp
+    | '&'TK_IDENTIFIER'['exp']' '='exp
+    | TK_IDENTIFIER '=''['exp']''#'exp
+    | TK_IDENTIFIER '=''['exp']''&'exp
+
+
     ;
 
 type:KW_INT
@@ -80,6 +92,7 @@ vet_dec: lit vet_dec
     |lit
     ;
 exp:TK_IDENTIFIER
+    |TK_IDENTIFIER'['exp']'
     |lit
     |exp op exp
     |TK_IDENTIFIER '('')'
@@ -135,7 +148,7 @@ pe: LIT_STRING
 ;
 
 
-lpe:LIT_STRING
+lpe:    LIT_STRING
     |TK_IDENTIFIER
     |
 ;
@@ -143,8 +156,8 @@ read: KW_READ TK_IDENTIFIER
 ;
 %%
 int yyerror(int code){
-    printf("Erro na linha %d   ------>",getLineNumber());
-    exit(3);
+    printf("O analisador encontrou um erro na linha %d\n",getLineNumber());
+    //exit(3);
     
 }
 #include "main.c"
