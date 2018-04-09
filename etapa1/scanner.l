@@ -1,7 +1,7 @@
 
 %x COMMENT
 %{
-#include "y.tab.h"
+#include "parser.tab.h"
 #include "hash.c"
 
 
@@ -97,3 +97,4 @@ void initMe(void){
 	hashInit();
 }
 
+#include "main.c"

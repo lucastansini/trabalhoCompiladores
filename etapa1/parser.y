@@ -11,6 +11,7 @@
 %token KW_READ
 %token KW_RETURN
 %token KW_PRINT
+%token KW_TO
 
 %token OPERATOR_LE
 %token OPERATOR_GE
@@ -43,7 +44,7 @@ block: '{' lcmd '}'
 dec:KW_IF '(' exp ')' KW_THEN cmd ';'
     | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
     | KW_WHILE '(' exp ')' cmd ';'
-    | KW_FOR '('TK_ID '=' exp 'to' exp')' cmd
+    | KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
     ;
 ldec: dec ldec
 
@@ -70,7 +71,7 @@ type:KW_INT
     ;
 lit:LIT_REAL
     |"'" LIT_CHAR "'"
-    |LIT_INT
+    |LIT_INTEGER
     ;
 vet_dec: lit
         |
@@ -144,4 +145,3 @@ int yyerror(int code){
     exit(3);
     
 }
-#include "main.c"
