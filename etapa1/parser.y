@@ -27,8 +27,8 @@
 %token LIT_STRING
 %token TOKEN_ERROR
 %{
-extern int getLineNumber();    
-    
+extern int getLineNumber();
+#include<stdio.h>    
     %}
 
 %%
@@ -45,6 +45,8 @@ dec:KW_IF '(' exp ')' KW_THEN cmd ';'
     | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
     | KW_WHILE '(' exp ')' cmd ';'
     | KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
+    | func_dec
+    | var_dec
     ;
 ldec: dec ldec
 
@@ -61,9 +63,9 @@ cmd:var_dec
     | print
     ;
 
-var_dec:type TK_IDENTIFIER '=' lit
+var_dec:type TK_IDENTIFIER '=' lit ';'
         |type TK_IDENTIFIER '['exp']'':' vet_dec ';'
-        |type '#' TK_IDENTIFIER '=' lit
+        |type '#' TK_IDENTIFIER '=' lit ';'
         ;
 type:KW_INT
     |KW_FLOAT

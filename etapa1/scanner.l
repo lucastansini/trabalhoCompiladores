@@ -4,7 +4,6 @@
 #include "parser.tab.h"
 #include "hash.c"
 
-
 int lineNumber = 1;
 int running    = 1;
 %}
