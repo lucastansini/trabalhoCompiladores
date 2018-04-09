@@ -54,11 +54,12 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd
 reset: ',' func_args reset
     |
     ;
-block: '{' lcmd '}'
+block: '{' lcmd '}'|
     ;
 
-lcmd: cmd ';' lcmd
+lcmd: cmd  ';'lcmd
     |
+    | cmd ';'cmd lcmd
     |dec
     ;
 
