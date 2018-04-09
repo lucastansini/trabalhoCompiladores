@@ -1,7 +1,7 @@
 
 %x COMMENT
 %{
-#include "tokens.h"
+#include "y.tab.h"
 #include "hash.c"
 
 
@@ -96,4 +96,4 @@ int isRunning(){
 void initMe(void){
 	hashInit();
 }
-#include "main.c"
+

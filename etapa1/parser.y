@@ -19,23 +19,23 @@
 %token OPERATOR_AND
 %token OPERATOR_OR
 
-%token TK_ID
-%token LIT_INT
+%token TK_IDENTIFIER
+%token LIT_INTEGER
 %token LIT_REAL
 %token LIT_CHAR
 %token LIT_STRING
 %token TOKEN_ERROR
 %{
     
-#include "lex.yy.c"
+    
     %}
 
 %%
 
 program: ldec
-    | 
+    |
     ;
-reset: ',' TK_ID reset
+reset: ',' TK_IDENTIFIER reset
     |
     ;
 block: '{' lcmd '}'
@@ -60,9 +60,9 @@ cmd:var_dec
     | print
     ;
 
-var_dec:type TK_ID '=' lit
-        |type TK_ID '['exp']'':' vet_dec ';'
-        |type '#' TK_ID '=' lit
+var_dec:type TK_IDENTIFIER '=' lit
+        |type TK_IDENTIFIER '['exp']'':' vet_dec ';'
+        |type '#' TK_IDENTIFIER '=' lit
         ;
 type:KW_INT
     |KW_FLOAT
@@ -75,19 +75,19 @@ lit:LIT_REAL
 vet_dec: lit
         |
         ;
-exp:TK_ID
+exp:TK_IDENTIFIER
     |lit
     |exp op exp
-    |TK_ID '('')'
+    |TK_IDENTIFIER '('')'
     |func_call
     ;
 
-func_call: TK_ID'(' func_args  l_func_args')'
+func_call: TK_IDENTIFIER'(' func_args  l_func_args')'
     ;
 
-func_args:TK_ID ','
-    |'#' TK_ID ','
-    |'&' TK_ID ','
+func_args:TK_IDENTIFIER ','
+    |'#' TK_IDENTIFIER ','
+    |'&' TK_IDENTIFIER ','
     |
     ;
 
@@ -98,10 +98,10 @@ l_func_args:func_args l_func_args
 func_dec:func_header block
         ;
 
-func_header: type TK_ID '(' func_par ')'
+func_header: type TK_IDENTIFIER '(' func_par ')'
         ;  
 
-func_par: type TK_ID
+func_par: type TK_IDENTIFIER
         |
         ;
 l_func_par: func_par l_func_par
@@ -128,15 +128,15 @@ print: KW_PRINT pe lpe
 
 
 pe: LIT_STRING
-    |TK_ID
+    |TK_IDENTIFIER
     ;
 
 
 lpe:LIT_STRING
-    |TK_ID
+    |TK_IDENTIFIER
     |
     ;
-read: KW_READ TK_ID
+read: KW_READ TK_IDENTIFIER
     ;
 %%
 int yyerror(int code){
@@ -144,3 +144,4 @@ int yyerror(int code){
     exit(3);
     
 }
+#include "main.c"
