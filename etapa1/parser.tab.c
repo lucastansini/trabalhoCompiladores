@@ -55,14 +55,80 @@
 /* Push parsers.  */
 #define YYPUSH 0
 
+<<<<<<< Updated upstream
 /* Pull parsers.  */
 #define YYPULL 1
+=======
+
+
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     KW_CHAR = 258,
+     KW_INT = 259,
+     KW_FLOAT = 260,
+     KW_IF = 261,
+     KW_THEN = 262,
+     KW_ELSE = 263,
+     KW_WHILE = 264,
+     KW_FOR = 265,
+     KW_READ = 266,
+     KW_RETURN = 267,
+     KW_PRINT = 268,
+     KW_TO = 269,
+     OPERATOR_LE = 270,
+     OPERATOR_GE = 271,
+     OPERATOR_EQ = 272,
+     OPERATOR_NE = 273,
+     OPERATOR_AND = 274,
+     OPERATOR_OR = 275,
+     TK_IDENTIFIER = 276,
+     LIT_INTEGER = 277,
+     LIT_REAL = 278,
+     LIT_CHAR = 279,
+     LIT_STRING = 280,
+     TOKEN_ERROR = 281
+   };
+#endif
+/* Tokens.  */
+#define KW_CHAR 258
+#define KW_INT 259
+#define KW_FLOAT 260
+#define KW_IF 261
+#define KW_THEN 262
+#define KW_ELSE 263
+#define KW_WHILE 264
+#define KW_FOR 265
+#define KW_READ 266
+#define KW_RETURN 267
+#define KW_PRINT 268
+#define KW_TO 269
+#define OPERATOR_LE 270
+#define OPERATOR_GE 271
+#define OPERATOR_EQ 272
+#define OPERATOR_NE 273
+#define OPERATOR_AND 274
+#define OPERATOR_OR 275
+#define TK_IDENTIFIER 276
+#define LIT_INTEGER 277
+#define LIT_REAL 278
+#define LIT_CHAR 279
+#define LIT_STRING 280
+#define TOKEN_ERROR 281
+>>>>>>> Stashed changes
 
 
 
 
 /* Copy the first part of user declarations.  */
+<<<<<<< Updated upstream
 #line 29 "parser.y" /* yacc.c:339  */
+=======
+#line 29 "parser.y"
+>>>>>>> Stashed changes
 
     
     
@@ -144,9 +210,14 @@ int yyparse (void);
 
 #endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
 
+<<<<<<< Updated upstream
 /* Copy the second part of user declarations.  */
 
 #line 150 "parser.tab.c" /* yacc.c:358  */
+=======
+/* Line 216 of yacc.c.  */
+#line 163 "parser.tab.c"
+>>>>>>> Stashed changes
 
 #ifdef short
 # undef short
@@ -418,11 +489,20 @@ static const yytype_uint8 yytranslate[] =
       30,    31,    43,    41,    27,    42,     2,    44,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,    37,    32,
       45,    34,    46,     2,     2,     2,     2,     2,     2,     2,
+<<<<<<< Updated upstream
+=======
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+>>>>>>> Stashed changes
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,    35,     2,    36,     2,     2,     2,     2,     2,     2,
        2,    33,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+<<<<<<< Updated upstream
+       2,    35,     2,    36,     2,     2,     2,     2,     2,     2,
+       2,    33,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+=======
+>>>>>>> Stashed changes
        2,     2,     2,    28,     2,    29,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -460,9 +540,15 @@ static const char *const yytname[] =
   "KW_PRINT", "KW_TO", "OPERATOR_LE", "OPERATOR_GE", "OPERATOR_EQ",
   "OPERATOR_NE", "OPERATOR_AND", "OPERATOR_OR", "TK_IDENTIFIER",
   "LIT_INTEGER", "LIT_REAL", "LIT_CHAR", "LIT_STRING", "TOKEN_ERROR",
+<<<<<<< Updated upstream
   "','", "'{'", "'}'", "'('", "')'", "';'", "'e'", "'='", "'['", "']'",
   "':'", "'#'", "\"'\"", "'&'", "'+'", "'-'", "'*'", "'/'", "'<'", "'>'",
   "'!'", "$accept", "program", YY_NULLPTR
+=======
+  "','", "'{'", "'}'", "'('", "')'", "';'", "'else'", "'='", "'['", "']'",
+  "':'", "'#'", "\"'\"", "'&'", "'+'", "'-'", "'*'", "'/'", "'<'", "'>'",
+  "'!'", "$accept", "program", 0
+>>>>>>> Stashed changes
 };
 #endif
 
@@ -1222,7 +1308,12 @@ yyreduce:
   switch (yyn)
     {
       
+<<<<<<< Updated upstream
 #line 1226 "parser.tab.c" /* yacc.c:1646  */
+=======
+/* Line 1267 of yacc.c.  */
+#line 1355 "parser.tab.c"
+>>>>>>> Stashed changes
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1450,7 +1541,13 @@ yyreturn:
 #endif
   return yyresult;
 }
+<<<<<<< Updated upstream
 #line 142 "parser.y" /* yacc.c:1906  */
+=======
+
+
+#line 142 "parser.y"
+>>>>>>> Stashed changes
 
 int yyerror(int code){
     printf("Erro na linha %d   ------>",getLineNumber());

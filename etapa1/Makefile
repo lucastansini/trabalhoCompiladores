@@ -7,7 +7,7 @@
 # and #include "main.c" in the last part of the scanner.l
 #
 
-etapa2:      parser.tab.o lex.yy.o
+etapa2:parser.tab.o  lex.yy.o 
 	gcc -o etapa2  parser.tab.o 
 lex.yy.o: lex.yy.c
 	gcc -c lex.yy.c
@@ -22,4 +22,4 @@ parser.tab.o: parser.tab.c
 	gcc -c parser.tab.c
 
 clean:
-	rm lex.yy.c etapa2 
+	rm lex.yy.c parser.tab.h etapa2 

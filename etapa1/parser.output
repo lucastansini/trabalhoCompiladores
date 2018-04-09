@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 Nonterminals useless in grammar
+=======
+Useless nonterminals
+>>>>>>> Stashed changes
 
    reset
    block
@@ -25,7 +29,11 @@ Nonterminals useless in grammar
    read
 
 
+<<<<<<< Updated upstream
 Terminals unused in grammar
+=======
+Terminals which are not used
+>>>>>>> Stashed changes
 
    KW_CHAR
    KW_INT
@@ -57,7 +65,11 @@ Terminals unused in grammar
    '('
    ')'
    ';'
+<<<<<<< Updated upstream
    'e'
+=======
+   'else'
+>>>>>>> Stashed changes
    '='
    '['
    ']'
@@ -74,24 +86,40 @@ Terminals unused in grammar
    '!'
 
 
+<<<<<<< Updated upstream
 Rules useless in grammar
+=======
+Useless rules
+>>>>>>> Stashed changes
 
     2 program: ldec
 
     3 reset: ',' TK_IDENTIFIER reset
+<<<<<<< Updated upstream
     4      | %empty
+=======
+    4      | /* empty */
+>>>>>>> Stashed changes
 
     5 block: '{' lcmd '}'
 
     6 dec: KW_IF '(' exp ')' KW_THEN cmd ';'
+<<<<<<< Updated upstream
     7    | KW_IF '(' exp ')' KW_THEN cmd 'e' cmd ';'
+=======
+    7    | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
+>>>>>>> Stashed changes
     8    | KW_WHILE '(' exp ')' cmd ';'
     9    | KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' cmd
 
    10 ldec: dec ldec
 
    11 lcmd: cmd lcmd
+<<<<<<< Updated upstream
    12     | %empty
+=======
+   12     | /* empty */
+>>>>>>> Stashed changes
 
    13 cmd: var_dec
    14    | block
@@ -111,7 +139,11 @@ Rules useless in grammar
    25    | LIT_INTEGER
 
    26 vet_dec: lit
+<<<<<<< Updated upstream
    27        | %empty
+=======
+   27        | /* empty */
+>>>>>>> Stashed changes
 
    28 exp: TK_IDENTIFIER
    29    | lit
@@ -124,20 +156,34 @@ Rules useless in grammar
    34 func_args: TK_IDENTIFIER ','
    35          | '#' TK_IDENTIFIER ','
    36          | '&' TK_IDENTIFIER ','
+<<<<<<< Updated upstream
    37          | %empty
 
    38 l_func_args: func_args l_func_args
    39            | %empty
+=======
+   37          | /* empty */
+
+   38 l_func_args: func_args l_func_args
+   39            | /* empty */
+>>>>>>> Stashed changes
 
    40 func_dec: func_header block
 
    41 func_header: type TK_IDENTIFIER '(' func_par ')'
 
    42 func_par: type TK_IDENTIFIER
+<<<<<<< Updated upstream
    43         | %empty
 
    44 l_func_par: func_par l_func_par
    45           | %empty
+=======
+   43         | /* empty */
+
+   44 l_func_par: func_par l_func_par
+   45           | /* empty */
+>>>>>>> Stashed changes
 
    46 op: '+'
    47   | '-'
@@ -160,7 +206,11 @@ Rules useless in grammar
 
    62 lpe: LIT_STRING
    63    | TK_IDENTIFIER
+<<<<<<< Updated upstream
    64    | %empty
+=======
+   64    | /* empty */
+>>>>>>> Stashed changes
 
    65 read: KW_READ TK_IDENTIFIER
 
@@ -169,7 +219,11 @@ Grammar
 
     0 $accept: program $end
 
+<<<<<<< Updated upstream
     1 program: %empty
+=======
+    1 program: /* empty */
+>>>>>>> Stashed changes
 
 
 Terminals, with rules where they appear
@@ -192,7 +246,11 @@ $end (0) 0
 '>' (62)
 '[' (91)
 ']' (93)
+<<<<<<< Updated upstream
 'e' (101)
+=======
+'else' (101)
+>>>>>>> Stashed changes
 '{' (123)
 '}' (125)
 error (256)
@@ -231,7 +289,11 @@ program (49)
     on left: 1, on right: 0
 
 
+<<<<<<< Updated upstream
 State 0
+=======
+state 0
+>>>>>>> Stashed changes
 
     0 $accept: . program $end
 
@@ -240,14 +302,22 @@ State 0
     program  go to state 1
 
 
+<<<<<<< Updated upstream
 State 1
+=======
+state 1
+>>>>>>> Stashed changes
 
     0 $accept: program . $end
 
     $end  shift, and go to state 2
 
 
+<<<<<<< Updated upstream
 State 2
+=======
+state 2
+>>>>>>> Stashed changes
 
     0 $accept: program $end .
 
