@@ -1,10 +1,11 @@
 #include<stdio.h>
+extern FILE * yyin;
 
 int main(int argc, char **argv)
 {
     int tok;
     FILE    *fd;
-    
+
     if (argc == 2)
     {
         if (!(fd = fopen(argv[1], "r")))

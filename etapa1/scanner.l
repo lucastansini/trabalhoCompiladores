@@ -96,5 +96,3 @@ int isRunning(){
 void initMe(void){
 	hashInit();
 }
-
-#include "main.c"

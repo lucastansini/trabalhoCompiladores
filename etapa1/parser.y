@@ -27,7 +27,7 @@
 %token LIT_STRING
 %token TOKEN_ERROR
 %{
-    
+extern int getLineNumber();    
     
     %}
 
@@ -145,3 +145,4 @@ int yyerror(int code){
     exit(3);
     
 }
+#include "main.c"

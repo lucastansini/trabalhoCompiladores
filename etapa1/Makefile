@@ -1,25 +1,11 @@
-#
-# UFRGS - Compiladores B - Marcelo Johann - 2018/1 - Etapa 1
-#
-# Makefile for single compiler call
-# All source files must be included from code embedded in scanner.l
-# In our case, you probably need #include "hash.c" at the beginning
-# and #include "main.c" in the last part of the scanner.l
-#
-
-etapa2:parser.tab.o  lex.yy.o 
-	gcc -o etapa2  parser.tab.o 
-lex.yy.o: lex.yy.c
-	gcc -c lex.yy.c
-
-lex.yy.c: scanner.l
-	flex scanner.l
+etapa2: parser.tab.c lex.yy.c
+	cc -o etapa2 lex.yy.c parser.tab.c
 
 parser.tab.c: parser.y
 	bison -d -v parser.y
-
-parser.tab.o: parser.tab.c
-	gcc -c parser.tab.c
+	
+lex.yy.c: scanner.l
+	lex scanner.l
 
 clean:
-	rm lex.yy.c parser.tab.h etapa2 
+	rm lex.yy.c y.tab.c y.tab.h y.output etapa2
