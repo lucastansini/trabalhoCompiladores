@@ -3,7 +3,7 @@ extern FILE * yyin;
 
 int main(int argc, char **argv)
 {
-    int tok;
+    int token;
     FILE    *fd;
 
     if (argc == 2)
@@ -18,8 +18,9 @@ int main(int argc, char **argv)
     }
     else
         printf("Usage: a.out filename\n");
-
-         yyparse();
+    
+    
+    yyparse();
 
 
     hashPrint();

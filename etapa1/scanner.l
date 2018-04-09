@@ -3,6 +3,7 @@
 %{
 #include "parser.tab.h"
 #include "hash.c"
+#include <stdio.h>
 
 int lineNumber = 1;
 int running    = 1;

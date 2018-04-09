@@ -32,59 +32,59 @@ extern int getLineNumber();
     %}
 
 %%
-
 program: ldec
+    ;
+
+ldec: dec ldec
     |
     ;
+
+dec:KW_IF '(' exp ')' KW_THEN cmd ';'
+    |KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
+    |KW_WHILE '(' exp ')' cmd ';'
+    |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
+    |func_dec
+    |type TK_IDENTIFIER '=' lit ';'
+    |type TK_IDENTIFIER'['exp']'':' vet_dec ';'
+    |type TK_IDENTIFIER'['exp']' ';'
+    |type '#' TK_IDENTIFIER '=' lit ';'
+    ;
+
 reset: ',' TK_IDENTIFIER reset
     |
     ;
 block: '{' lcmd '}'
     ;
-dec:KW_IF '(' exp ')' KW_THEN cmd ';'
-    | KW_IF '(' exp ')' KW_THEN cmd 'else' cmd ';'
-    | KW_WHILE '(' exp ')' cmd ';'
-    | KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd
-    | func_dec
-    | var_dec
-    ;
-ldec: dec ldec
 
-
-lcmd: cmd lcmd
+lcmd: cmd ';' lcmd
     |
     ;
 
 
 
-cmd:var_dec
-    | block
+cmd:block
     | read
     | print
+    | TK_IDENTIFIER '=' LIT_INTEGER ';'
     ;
 
-var_dec:type TK_IDENTIFIER '=' lit ';'
-        |type TK_IDENTIFIER '['exp']'':' vet_dec ';'
-        |type '#' TK_IDENTIFIER '=' lit ';'
-        ;
 type:KW_INT
     |KW_FLOAT
     |KW_CHAR
     ;
 lit:LIT_REAL
-    |"'" LIT_CHAR "'"
+    |LIT_CHAR
     |LIT_INTEGER
     ;
-vet_dec: lit
-        |
-        ;
+vet_dec: lit vet_dec
+    |lit
+    ;
 exp:TK_IDENTIFIER
     |lit
     |exp op exp
     |TK_IDENTIFIER '('')'
     |func_call
     ;
-
 func_call: TK_IDENTIFIER'(' func_args  l_func_args')'
     ;
 
@@ -95,21 +95,21 @@ func_args:TK_IDENTIFIER ','
     ;
 
 l_func_args:func_args l_func_args
-            |
-            ;
+    |
+    ;
 
 func_dec:func_header block
-        ;
+    ;
 
 func_header: type TK_IDENTIFIER '(' func_par ')'
-        ;  
+    ;
 
 func_par: type TK_IDENTIFIER
-        |
-        ;
+    |
+    ;
 l_func_par: func_par l_func_par
-|
-;
+    |
+    ;
 
 
 op: '+'
@@ -132,15 +132,15 @@ print: KW_PRINT pe lpe
 
 pe: LIT_STRING
     |TK_IDENTIFIER
-    ;
+;
 
 
 lpe:LIT_STRING
     |TK_IDENTIFIER
     |
-    ;
+;
 read: KW_READ TK_IDENTIFIER
-    ;
+;
 %%
 int yyerror(int code){
     printf("Erro na linha %d   ------>",getLineNumber());
