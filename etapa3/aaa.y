@@ -30,9 +30,10 @@
 
 %left ','
 %left '='
+%left OPERATOR_AND OPERATOR_OR
 %left '+' '-'
 %left '*' '/'
-%left OPERATOR_AND OPERATOR_OR OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
+%left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
 %nonassoc '(' ')'
 
 
@@ -58,13 +59,13 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd
     |type TK_IDENTIFIER'['exp']'':' vet_dec ';'
     |type TK_IDENTIFIER'['exp']' ';'
     |type '#' TK_IDENTIFIER '=' lit ';'
-
     ;
 
 reset: ',' func_args reset
     |
     ;
-block: '{' lcmd '}'|
+block: '{' lcmd '}'
+    |
     ;
 
 lcmd: cmd  ';'lcmd
@@ -98,6 +99,7 @@ type:KW_INT
     |KW_FLOAT
     |KW_CHAR
     ;
+
 lit:LIT_REAL
     |LIT_CHAR
     |LIT_INTEGER
@@ -108,7 +110,19 @@ vet_dec: lit vet_dec
 exp:TK_IDENTIFIER
     |TK_IDENTIFIER'['exp']'
     |lit
-    |exp op exp
+    | exp '+' exp
+    | exp '-' exp
+    | exp '*' exp
+    | exp '/' exp
+    | exp '<' exp
+    | exp '>' exp
+    | '!' exp
+    |exp OPERATOR_LE exp
+    |exp OPERATOR_GE exp
+    |exp OPERATOR_EQ exp
+    |exp OPERATOR_NE exp
+    |exp OPERATOR_AND exp
+    |exp OPERATOR_OR exp
     |TK_IDENTIFIER '('')'
     |func_call
     ;
@@ -140,21 +154,6 @@ reset_func_par: ',' func_par reset_func_par
     |
     ;
 
-op: '+'
-    |'-'
-    |'*'
-    |'/'
-    |'<'
-    |'>'
-    |'!'
-    |OPERATOR_LE
-    |OPERATOR_GE
-    |OPERATOR_EQ
-    |OPERATOR_NE
-    |OPERATOR_AND
-    |OPERATOR_OR
-    ;
-
 print:KW_PRINT lpe
 ;
 
@@ -175,6 +174,6 @@ read:KW_READ TK_IDENTIFIER
 int yyerror(int code){
     printf("O analisador encontrou um erro na linha %d\n",getLineNumber());
     exit(3);
-    
+
 }
 #include "main.c"
