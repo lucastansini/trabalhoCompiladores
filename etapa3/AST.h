@@ -12,6 +12,7 @@
 //Constantes para cada coisa que vai ser colocada na AST.
 //Identificador SYMBOL recebe 1 nesse caso.
 #define AST_SYMBOL 1
+#define AST_ADD 2
 
 
 typedef struct ast_node{

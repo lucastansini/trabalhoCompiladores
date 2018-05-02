@@ -1,4 +1,10 @@
 
+//Declarações para pegar o yylval.symbol
+%union{
+    struct hash_node *symbol;
+}
+
+
 %token KW_CHAR
 %token KW_INT
 %token KW_FLOAT

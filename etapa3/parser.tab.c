@@ -62,15 +62,8 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 40 "parser.y" /* yacc.c:339  */
 
-extern int getLineNumber();
-#include<stdio.h>
-#include <stdlib.h>
-#include "AST.h"
-    
-
-#line 74 "parser.tab.c" /* yacc.c:339  */
+#line 67 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -134,7 +127,17 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 3 "parser.y" /* yacc.c:355  */
+
+    struct hash_node *symbol;
+
+#line 138 "parser.tab.c" /* yacc.c:355  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -147,8 +150,15 @@ int yyparse (void);
 #endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
+#line 46 "parser.y" /* yacc.c:358  */
 
-#line 152 "parser.tab.c" /* yacc.c:358  */
+extern int getLineNumber();
+#include<stdio.h>
+#include <stdlib.h>
+#include "AST.h"
+    
+
+#line 162 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -448,15 +458,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    48,    48,    51,    52,    55,    56,    57,    58,    59,
-      60,    61,    62,    63,    67,    68,    70,    70,    73,    74,
-      75,    76,    81,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,   100,   101,
-     102,   104,   105,   106,   108,   109,   111,   112,   113,   114,
-     115,   116,   118,   121,   122,   123,   124,   127,   128,   131,
-     134,   137,   139,   140,   142,   143,   146,   147,   148,   149,
-     150,   151,   152,   153,   154,   155,   156,   157,   158,   161,
-     165,   166,   167,   168,   172,   173,   175
+       0,    54,    54,    57,    58,    61,    62,    63,    64,    65,
+      66,    67,    68,    69,    73,    74,    76,    76,    79,    80,
+      81,    82,    87,    88,    89,    90,    91,    92,    93,    94,
+      95,    96,    97,    98,    99,   100,   101,   102,   106,   107,
+     108,   110,   111,   112,   114,   115,   117,   118,   119,   120,
+     121,   122,   124,   127,   128,   129,   130,   133,   134,   137,
+     140,   143,   145,   146,   148,   149,   152,   153,   154,   155,
+     156,   157,   158,   159,   160,   161,   162,   163,   164,   167,
+     171,   172,   173,   174,   178,   179,   181
 };
 #endif
 
@@ -1401,7 +1411,7 @@ yyreduce:
   switch (yyn)
     {
       
-#line 1405 "parser.tab.c" /* yacc.c:1646  */
+#line 1415 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1629,7 +1639,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 177 "parser.y" /* yacc.c:1906  */
+#line 183 "parser.y" /* yacc.c:1906  */
 
 int yyerror(int code){
     printf("O analisador encontrou um erro na linha %d\n",getLineNumber());
