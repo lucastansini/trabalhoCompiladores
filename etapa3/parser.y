@@ -1,5 +1,4 @@
 
-
 %token KW_CHAR
 %token KW_INT
 %token KW_FLOAT
@@ -36,9 +35,13 @@
 %nonassoc '(' ')'
 
 
+
+
 %{
 extern int getLineNumber();
 #include<stdio.h>
+#include <stdlib.h>
+#include "AST.h"
     %}
 
 %%
@@ -175,6 +178,6 @@ read:KW_READ TK_IDENTIFIER
 int yyerror(int code){
     printf("O analisador encontrou um erro na linha %d\n",getLineNumber());
     exit(3);
-    
+
 }
 #include "main.c"
