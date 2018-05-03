@@ -2,7 +2,13 @@
 //Declarações para pegar o yylval.symbol
 %union{
     struct hash_node *symbol;
+    struct ast_node *ast;
 }
+
+
+%type<ast> dec
+%type<ast> ldec
+%type<ast> program
 
 
 %token KW_CHAR
@@ -48,14 +54,15 @@ extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
 #include "AST.h"
+
     %}
 
 %%
-program: ldec
+program: ldec {$$ = $1; astPrint($1);}
     ;
 
-ldec: dec ldec
-    |
+ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
+    | {$$ = 0;}
     ;
 
 dec:KW_IF '(' exp ')' KW_THEN lcmd 
@@ -63,7 +70,7 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd
     |KW_WHILE '(' exp ')' lcmd
     |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd
     |func_dec
-    |type TK_IDENTIFIER '=' LIT_REAL ';'
+    |type TK_IDENTIFIER '=' LIT_REAL ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
     |type TK_IDENTIFIER '=' LIT_CHAR ';'
     |type TK_IDENTIFIER '=' LIT_INTEGER ';'
     |type TK_IDENTIFIER'['exp']'':' vet_dec ';'
