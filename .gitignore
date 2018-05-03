@@ -4,3 +4,11 @@ etapa1/etapa1
 etapa1/\.DS_Store
 
 etapa2/lex\.yy\.o
+
+etapa1/y\.tab\.h
+
+etapa1/parser\.tab\.h
+
+etapa1/parser\.tab\.c
+
+etapa1/parser\.output
