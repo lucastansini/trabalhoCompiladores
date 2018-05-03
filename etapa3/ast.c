@@ -2,9 +2,9 @@
 
 
 #define FILHOZERO 0
-#define FILHOUM 0
-#define FILHODOIS 0
-#define FILHOTRES 0
+#define FILHOUM 1
+#define FILHODOIS 2
+#define FILHOTRES 3
 
 
 AST* astCreate(int Type, HASH*Symbol , AST *Son0 , AST *Son1 , AST *Son2, AST *Son3){
