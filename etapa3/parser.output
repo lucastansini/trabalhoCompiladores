@@ -1,28 +1,18 @@
-Terminals unused in grammar
+Terminais sem uso na gramática
 
    TOKEN_ERROR
 
 
-Rules useless in parser due to conflicts
-
-   36 cmd: %empty
-
-
-State 20 conflicts: 1 reduce/reduce
-State 37 conflicts: 3 shift/reduce
-State 48 conflicts: 1 shift/reduce
-State 65 conflicts: 6 shift/reduce, 1 reduce/reduce
-State 79 conflicts: 3 shift/reduce
-State 87 conflicts: 13 shift/reduce, 17 reduce/reduce
-State 96 conflicts: 6 shift/reduce, 1 reduce/reduce
-State 97 conflicts: 13 shift/reduce
-State 120 conflicts: 7 shift/reduce, 1 reduce/reduce
-State 127 conflicts: 1 shift/reduce
-State 145 conflicts: 6 shift/reduce, 1 reduce/reduce
-State 156 conflicts: 6 shift/reduce, 1 reduce/reduce
+Estado 46 conflitos: 1 de deslocamento/redução
+Estado 63 conflitos: 6 de deslocamento/redução
+Estado 87 conflitos: 6 de deslocamento/redução
+Estado 112 conflitos: 6 de deslocamento/redução
+Estado 146 conflitos: 1 de deslocamento/redução
+Estado 166 conflitos: 6 de deslocamento/redução
+Estado 180 conflitos: 6 de deslocamento/redução
 
 
-Grammar
+Gramática
 
     0 $accept: program $end
 
@@ -36,2396 +26,2982 @@ Grammar
     6    | KW_WHILE '(' exp ')' lcmd
     7    | KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
     8    | func_dec
-    9    | type TK_IDENTIFIER '=' lit ';'
-   10    | type TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
-   11    | type TK_IDENTIFIER '[' exp ']' ';'
-   12    | type '#' TK_IDENTIFIER '=' lit ';'
+    9    | type TK_IDENTIFIER '=' LIT_REAL ';'
+   10    | type TK_IDENTIFIER '=' LIT_CHAR ';'
+   11    | type TK_IDENTIFIER '=' LIT_INTEGER ';'
+   12    | type TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   13    | type TK_IDENTIFIER '[' exp ']' ';'
+   14    | type '#' TK_IDENTIFIER '=' LIT_REAL ';'
+   15    | type '#' TK_IDENTIFIER '=' LIT_CHAR ';'
+   16    | type '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
 
-   13 reset: ',' func_args reset
-   14      | %empty
+   17 reset: ',' func_args reset
+   18      | %empty
 
-   15 block: '{' lcmd '}'
-   16      | %empty
+   19 block: '{' lcmd '}'
+   20      | %empty
 
-   17 lcmd: cmd ';' lcmd
-   18     | %empty
-   19     | cmd ';' cmd lcmd
-   20     | dec
+   21 lcmd: cmd ';' lcmd
+   22     | dec
+   23     | %empty
 
-   21 cmd: block
-   22    | TK_IDENTIFIER '=' exp
-   23    | '#' TK_IDENTIFIER '=' exp
-   24    | '&' TK_IDENTIFIER '=' exp
-   25    | TK_IDENTIFIER '=' '#' exp
-   26    | TK_IDENTIFIER '=' '&' exp
-   27    | TK_IDENTIFIER '[' exp ']' '=' exp
-   28    | '#' TK_IDENTIFIER '[' exp ']' '=' exp
-   29    | '&' TK_IDENTIFIER '[' exp ']' '=' exp
-   30    | TK_IDENTIFIER '=' '[' exp ']' '#' exp
-   31    | TK_IDENTIFIER '=' '[' exp ']' '&' exp
-   32    | func_call
-   33    | print
-   34    | read
-   35    | KW_RETURN exp
-   36    | %empty
+   24 cmd: block
+   25    | TK_IDENTIFIER '=' exp
+   26    | '#' TK_IDENTIFIER '=' exp
+   27    | '&' TK_IDENTIFIER '=' exp
+   28    | TK_IDENTIFIER '=' '#' exp
+   29    | TK_IDENTIFIER '=' '&' exp
+   30    | TK_IDENTIFIER '[' exp ']' '=' exp
+   31    | '#' TK_IDENTIFIER '[' exp ']' '=' exp
+   32    | '&' TK_IDENTIFIER '[' exp ']' '=' exp
+   33    | TK_IDENTIFIER '=' '[' exp ']' '#' exp
+   34    | TK_IDENTIFIER '=' '[' exp ']' '&' exp
+   35    | TK_IDENTIFIER '(' l_func_args reset ')'
+   36    | print
+   37    | read
+   38    | KW_RETURN exp
 
-   37 type: KW_INT
-   38     | KW_FLOAT
-   39     | KW_CHAR
+   39 type: KW_INT
+   40     | KW_FLOAT
+   41     | KW_CHAR
 
-   40 lit: LIT_REAL
-   41    | LIT_CHAR
-   42    | LIT_INTEGER
+   42 vet_dec: LIT_REAL vet_dec
+   43        | LIT_CHAR vet_dec
+   44        | LIT_INTEGER vet_dec
+   45        | LIT_REAL
+   46        | LIT_CHAR
+   47        | LIT_INTEGER
 
-   43 vet_dec: lit vet_dec
-   44        | lit
+   48 exp: TK_IDENTIFIER
+   49    | TK_IDENTIFIER '[' exp ']'
+   50    | LIT_CHAR
+   51    | LIT_REAL
+   52    | LIT_INTEGER
+   53    | exp '+' exp
+   54    | exp '-' exp
+   55    | exp '*' exp
+   56    | exp '/' exp
+   57    | exp '<' exp
+   58    | exp '>' exp
+   59    | exp '!' exp
+   60    | exp OPERATOR_LE exp
+   61    | exp OPERATOR_GE exp
+   62    | exp OPERATOR_EQ exp
+   63    | exp OPERATOR_NE exp
+   64    | exp OPERATOR_AND exp
+   65    | exp OPERATOR_OR exp
+   66    | TK_IDENTIFIER '(' ')'
+   67    | TK_IDENTIFIER '(' l_func_args reset ')'
+   68    | '(' exp ')'
 
-   45 exp: TK_IDENTIFIER
-   46    | TK_IDENTIFIER '[' exp ']'
-   47    | lit
-   48    | exp op exp
-   49    | TK_IDENTIFIER '(' ')'
-   50    | func_call
+   69 func_args: LIT_REAL
+   70          | LIT_CHAR
+   71          | LIT_INTEGER
+   72          | TK_IDENTIFIER
+   73          | '#' TK_IDENTIFIER
+   74          | '&' TK_IDENTIFIER
 
-   51 func_call: TK_IDENTIFIER '(' l_func_args reset ')'
+   75 l_func_args: func_args l_func_args
+   76            | %empty
 
-   52 func_args: lit
-   53          | TK_IDENTIFIER
-   54          | '#' TK_IDENTIFIER
-   55          | '&' TK_IDENTIFIER
+   77 func_dec: func_header block
 
-   56 l_func_args: func_args l_func_args
-   57            | %empty
+   78 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
-   58 func_dec: func_header block
+   79 func_par: type TK_IDENTIFIER
 
-   59 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+   80 l_func_par: func_par l_func_par
+   81           | %empty
 
-   60 func_par: type TK_IDENTIFIER
+   82 reset_func_par: ',' func_par reset_func_par
+   83               | %empty
 
-   61 l_func_par: func_par l_func_par
-   62           | %empty
+   84 print: KW_PRINT lpe
 
-   63 reset_func_par: ',' func_par reset_func_par
-   64               | %empty
+   85 pe: LIT_STRING
+   86   | TK_IDENTIFIER
+   87   | '&' TK_IDENTIFIER
+   88   | '#' TK_IDENTIFIER
 
-   65 op: '+'
-   66   | '-'
-   67   | '*'
-   68   | '/'
-   69   | '<'
-   70   | '>'
-   71   | '!'
-   72   | OPERATOR_LE
-   73   | OPERATOR_GE
-   74   | OPERATOR_EQ
-   75   | OPERATOR_NE
-   76   | OPERATOR_AND
-   77   | OPERATOR_OR
+   89 lpe: pe lpe
+   90    | %empty
 
-   78 print: KW_PRINT lpe
-
-   79 pe: LIT_STRING
-   80   | TK_IDENTIFIER
-   81   | '&' TK_IDENTIFIER
-   82   | '#' TK_IDENTIFIER
-
-   83 lpe: pe lpe
-   84    | %empty
-
-   85 read: KW_READ TK_IDENTIFIER
+   91 read: KW_READ TK_IDENTIFIER
 
 
-Terminals, with rules where they appear
+Terminais, com as regras onde eles aparecem
 
 $end (0) 0
-'!' (33) 71
-'#' (35) 12 23 25 28 30 54 82
-'&' (38) 24 26 29 31 55 81
-'(' (40) 4 5 6 7 49 51 59
-')' (41) 4 5 6 7 49 51 59
-'*' (42) 67
-'+' (43) 65
-',' (44) 13 63
-'-' (45) 66
-'/' (47) 68
-':' (58) 10
-';' (59) 9 10 11 12 17 19
-'<' (60) 69
-'=' (61) 7 9 12 22 23 24 25 26 27 28 29 30 31
-'>' (62) 70
-'[' (91) 10 11 27 28 29 30 31 46
-']' (93) 10 11 27 28 29 30 31 46
-'{' (123) 15
-'}' (125) 15
+'!' (33) 59
+'#' (35) 14 15 16 26 28 31 33 73 88
+'&' (38) 27 29 32 34 74 87
+'(' (40) 4 5 6 7 35 66 67 68 78
+')' (41) 4 5 6 7 35 66 67 68 78
+'*' (42) 55
+'+' (43) 53
+',' (44) 17 82
+'-' (45) 54
+'/' (47) 56
+':' (58) 12
+';' (59) 9 10 11 12 13 14 15 16 21
+'<' (60) 57
+'=' (61) 7 9 10 11 14 15 16 25 26 27 28 29 30 31 32 33 34
+'>' (62) 58
+'[' (91) 12 13 30 31 32 33 34 49
+']' (93) 12 13 30 31 32 33 34 49
+'{' (123) 19
+'}' (125) 19
 error (256)
-KW_CHAR (258) 39
-KW_INT (259) 37
-KW_FLOAT (260) 38
+KW_CHAR (258) 41
+KW_INT (259) 39
+KW_FLOAT (260) 40
 KW_IF (261) 4 5
 KW_THEN (262) 4 5
 KW_ELSE (263) 5
 KW_WHILE (264) 6
 KW_FOR (265) 7
-KW_READ (266) 85
-KW_RETURN (267) 35
-KW_PRINT (268) 78
+KW_READ (266) 91
+KW_RETURN (267) 38
+KW_PRINT (268) 84
 KW_TO (269) 7
-OPERATOR_LE (270) 72
-OPERATOR_GE (271) 73
-OPERATOR_EQ (272) 74
-OPERATOR_NE (273) 75
-OPERATOR_AND (274) 76
-OPERATOR_OR (275) 77
-TK_IDENTIFIER (276) 7 9 10 11 12 22 23 24 25 26 27 28 29 30 31 45 46
-    49 51 53 54 55 59 60 80 81 82 85
-LIT_INTEGER (277) 42
-LIT_REAL (278) 40
-LIT_CHAR (279) 41
-LIT_STRING (280) 79
+OPERATOR_LE (270) 60
+OPERATOR_GE (271) 61
+OPERATOR_EQ (272) 62
+OPERATOR_NE (273) 63
+OPERATOR_AND (274) 64
+OPERATOR_OR (275) 65
+TK_IDENTIFIER (276) 7 9 10 11 12 13 14 15 16 25 26 27 28 29 30 31 32
+    33 34 35 48 49 66 67 72 73 74 78 79 86 87 88 91
+LIT_INTEGER (277) 11 16 44 47 52 71
+LIT_REAL (278) 9 14 42 45 51 69
+LIT_CHAR (279) 10 15 43 46 50 70
+LIT_STRING (280) 85
 TOKEN_ERROR (281)
 
 
-Nonterminals, with rules where they appear
+Não terminais com as regras onde eles aparecem
 
 $accept (46)
-    on left: 0
+    à esquerda: 0
 program (47)
-    on left: 1, on right: 0
+    à esquerda: 1, à direita: 0
 ldec (48)
-    on left: 2 3, on right: 1 2
+    à esquerda: 2 3, à direita: 1 2
 dec (49)
-    on left: 4 5 6 7 8 9 10 11 12, on right: 2 20
+    à esquerda: 4 5 6 7 8 9 10 11 12 13 14 15 16, à direita: 2 22
 reset (50)
-    on left: 13 14, on right: 13 51
+    à esquerda: 17 18, à direita: 17 35 67
 block (51)
-    on left: 15 16, on right: 21 58
+    à esquerda: 19 20, à direita: 24 77
 lcmd (52)
-    on left: 17 18 19 20, on right: 4 5 6 7 15 17 19
+    à esquerda: 21 22 23, à direita: 4 5 6 7 19 21
 cmd (53)
-    on left: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36, on right:
-    17 19
+    à esquerda: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38, à direita:
+    21
 type (54)
-    on left: 37 38 39, on right: 9 10 11 12 59 60
-lit (55)
-    on left: 40 41 42, on right: 9 12 43 44 47 52
-vet_dec (56)
-    on left: 43 44, on right: 10 43
-exp (57)
-    on left: 45 46 47 48 49 50, on right: 4 5 6 7 10 11 22 23 24 25
-    26 27 28 29 30 31 35 46 48
-func_call (58)
-    on left: 51, on right: 32 50
-func_args (59)
-    on left: 52 53 54 55, on right: 13 56
-l_func_args (60)
-    on left: 56 57, on right: 51 56
-func_dec (61)
-    on left: 58, on right: 8
-func_header (62)
-    on left: 59, on right: 58
-func_par (63)
-    on left: 60, on right: 61 63
-l_func_par (64)
-    on left: 61 62, on right: 59 61
-reset_func_par (65)
-    on left: 63 64, on right: 59 63
-op (66)
-    on left: 65 66 67 68 69 70 71 72 73 74 75 76 77, on right: 48
-print (67)
-    on left: 78, on right: 33
-pe (68)
-    on left: 79 80 81 82, on right: 83
-lpe (69)
-    on left: 83 84, on right: 78 83
-read (70)
-    on left: 85, on right: 34
+    à esquerda: 39 40 41, à direita: 9 10 11 12 13 14 15 16 78 79
+vet_dec (55)
+    à esquerda: 42 43 44 45 46 47, à direita: 12 42 43 44
+exp (56)
+    à esquerda: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
+    65 66 67 68, à direita: 4 5 6 7 12 13 25 26 27 28 29 30 31 32
+    33 34 38 49 53 54 55 56 57 58 59 60 61 62 63 64 65 68
+func_args (57)
+    à esquerda: 69 70 71 72 73 74, à direita: 17 75
+l_func_args (58)
+    à esquerda: 75 76, à direita: 35 67 75
+func_dec (59)
+    à esquerda: 77, à direita: 8
+func_header (60)
+    à esquerda: 78, à direita: 77
+func_par (61)
+    à esquerda: 79, à direita: 80 82
+l_func_par (62)
+    à esquerda: 80 81, à direita: 78 80
+reset_func_par (63)
+    à esquerda: 82 83, à direita: 78 82
+print (64)
+    à esquerda: 84, à direita: 36
+pe (65)
+    à esquerda: 85 86 87 88, à direita: 89
+lpe (66)
+    à esquerda: 89 90, à direita: 84 89
+read (67)
+    à esquerda: 91, à direita: 37
 
 
-State 0
+Estado 0
 
     0 $accept: . program $end
 
-    KW_CHAR   shift, and go to state 1
-    KW_INT    shift, and go to state 2
-    KW_FLOAT  shift, and go to state 3
-    KW_IF     shift, and go to state 4
-    KW_WHILE  shift, and go to state 5
-    KW_FOR    shift, and go to state 6
+    KW_CHAR   deslocar, e ir ao estado 1
+    KW_INT    deslocar, e ir ao estado 2
+    KW_FLOAT  deslocar, e ir ao estado 3
+    KW_IF     deslocar, e ir ao estado 4
+    KW_WHILE  deslocar, e ir ao estado 5
+    KW_FOR    deslocar, e ir ao estado 6
 
-    $default  reduce using rule 3 (ldec)
+    $padrão  reduzir usando a regra 3 (ldec)
 
-    program      go to state 7
-    ldec         go to state 8
-    dec          go to state 9
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-
-
-State 1
-
-   39 type: KW_CHAR .
-
-    $default  reduce using rule 39 (type)
+    program      ir ao estado 7
+    ldec         ir ao estado 8
+    dec          ir ao estado 9
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
 
 
-State 2
+Estado 1
 
-   37 type: KW_INT .
+   41 type: KW_CHAR .
 
-    $default  reduce using rule 37 (type)
-
-
-State 3
-
-   38 type: KW_FLOAT .
-
-    $default  reduce using rule 38 (type)
+    $padrão  reduzir usando a regra 41 (type)
 
 
-State 4
+Estado 2
+
+   39 type: KW_INT .
+
+    $padrão  reduzir usando a regra 39 (type)
+
+
+Estado 3
+
+   40 type: KW_FLOAT .
+
+    $padrão  reduzir usando a regra 40 (type)
+
+
+Estado 4
 
     4 dec: KW_IF . '(' exp ')' KW_THEN lcmd
     5    | KW_IF . '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
 
-    '('  shift, and go to state 13
+    '('  deslocar, e ir ao estado 13
 
 
-State 5
+Estado 5
 
     6 dec: KW_WHILE . '(' exp ')' lcmd
 
-    '('  shift, and go to state 14
+    '('  deslocar, e ir ao estado 14
 
 
-State 6
+Estado 6
 
     7 dec: KW_FOR . '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
 
-    '('  shift, and go to state 15
+    '('  deslocar, e ir ao estado 15
 
 
-State 7
+Estado 7
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 16
+    $end  deslocar, e ir ao estado 16
 
 
-State 8
+Estado 8
 
     1 program: ldec .
 
-    $default  reduce using rule 1 (program)
+    $padrão  reduzir usando a regra 1 (program)
 
 
-State 9
+Estado 9
 
     2 ldec: dec . ldec
 
-    KW_CHAR   shift, and go to state 1
-    KW_INT    shift, and go to state 2
-    KW_FLOAT  shift, and go to state 3
-    KW_IF     shift, and go to state 4
-    KW_WHILE  shift, and go to state 5
-    KW_FOR    shift, and go to state 6
+    KW_CHAR   deslocar, e ir ao estado 1
+    KW_INT    deslocar, e ir ao estado 2
+    KW_FLOAT  deslocar, e ir ao estado 3
+    KW_IF     deslocar, e ir ao estado 4
+    KW_WHILE  deslocar, e ir ao estado 5
+    KW_FOR    deslocar, e ir ao estado 6
 
-    $default  reduce using rule 3 (ldec)
+    $padrão  reduzir usando a regra 3 (ldec)
 
-    ldec         go to state 17
-    dec          go to state 9
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-
-
-State 10
-
-    9 dec: type . TK_IDENTIFIER '=' lit ';'
-   10    | type . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
-   11    | type . TK_IDENTIFIER '[' exp ']' ';'
-   12    | type . '#' TK_IDENTIFIER '=' lit ';'
-   59 func_header: type . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
-
-    TK_IDENTIFIER  shift, and go to state 18
-    '#'            shift, and go to state 19
+    ldec         ir ao estado 17
+    dec          ir ao estado 9
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
 
 
-State 11
+Estado 10
+
+    9 dec: type . TK_IDENTIFIER '=' LIT_REAL ';'
+   10    | type . TK_IDENTIFIER '=' LIT_CHAR ';'
+   11    | type . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   12    | type . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   13    | type . TK_IDENTIFIER '[' exp ']' ';'
+   14    | type . '#' TK_IDENTIFIER '=' LIT_REAL ';'
+   15    | type . '#' TK_IDENTIFIER '=' LIT_CHAR ';'
+   16    | type . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   78 func_header: type . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 18
+    '#'            deslocar, e ir ao estado 19
+
+
+Estado 11
 
     8 dec: func_dec .
 
-    $default  reduce using rule 8 (dec)
+    $padrão  reduzir usando a regra 8 (dec)
 
 
-State 12
+Estado 12
 
-   58 func_dec: func_header . block
+   77 func_dec: func_header . block
 
-    '{'  shift, and go to state 20
+    '{'  deslocar, e ir ao estado 20
 
-    $default  reduce using rule 16 (block)
+    $padrão  reduzir usando a regra 20 (block)
 
-    block  go to state 21
+    block  ir ao estado 21
 
 
-State 13
+Estado 13
 
     4 dec: KW_IF '(' . exp ')' KW_THEN lcmd
     5    | KW_IF '(' . exp ')' KW_THEN lcmd KW_ELSE lcmd
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit        go to state 26
-    exp        go to state 27
-    func_call  go to state 28
+    exp  ir ao estado 27
 
 
-State 14
+Estado 14
 
     6 dec: KW_WHILE '(' . exp ')' lcmd
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit        go to state 26
-    exp        go to state 29
-    func_call  go to state 28
+    exp  ir ao estado 28
 
 
-State 15
+Estado 15
 
     7 dec: KW_FOR '(' . TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
 
-    TK_IDENTIFIER  shift, and go to state 30
+    TK_IDENTIFIER  deslocar, e ir ao estado 29
 
 
-State 16
+Estado 16
 
     0 $accept: program $end .
 
-    $default  accept
+    $padrão  aceitar
 
 
-State 17
+Estado 17
 
     2 ldec: dec ldec .
 
-    $default  reduce using rule 2 (ldec)
+    $padrão  reduzir usando a regra 2 (ldec)
 
 
-State 18
+Estado 18
 
-    9 dec: type TK_IDENTIFIER . '=' lit ';'
-   10    | type TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
-   11    | type TK_IDENTIFIER . '[' exp ']' ';'
-   59 func_header: type TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
+    9 dec: type TK_IDENTIFIER . '=' LIT_REAL ';'
+   10    | type TK_IDENTIFIER . '=' LIT_CHAR ';'
+   11    | type TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   12    | type TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
+   13    | type TK_IDENTIFIER . '[' exp ']' ';'
+   78 func_header: type TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
 
-    '='  shift, and go to state 31
-    '('  shift, and go to state 32
-    '['  shift, and go to state 33
-
-
-State 19
-
-   12 dec: type '#' . TK_IDENTIFIER '=' lit ';'
-
-    TK_IDENTIFIER  shift, and go to state 34
+    '='  deslocar, e ir ao estado 30
+    '('  deslocar, e ir ao estado 31
+    '['  deslocar, e ir ao estado 32
 
 
-State 20
+Estado 19
 
-   15 block: '{' . lcmd '}'
+   14 dec: type '#' . TK_IDENTIFIER '=' LIT_REAL ';'
+   15    | type '#' . TK_IDENTIFIER '=' LIT_CHAR ';'
+   16    | type '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
-
-    ';'       reduce using rule 16 (block)
-    ';'       [reduce using rule 36 (cmd)]
-    '}'       reduce using rule 18 (lcmd)
-    $default  reduce using rule 16 (block)
-
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 43
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
+    TK_IDENTIFIER  deslocar, e ir ao estado 33
 
 
-State 21
+Estado 20
 
-   58 func_dec: func_header block .
+   19 block: '{' . lcmd '}'
 
-    $default  reduce using rule 58 (func_dec)
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
+    '}'       reduzir usando a regra 23 (lcmd)
+    $padrão  reduzir usando a regra 20 (block)
 
-State 22
-
-   45 exp: TK_IDENTIFIER .
-   46    | TK_IDENTIFIER . '[' exp ']'
-   49    | TK_IDENTIFIER . '(' ')'
-   51 func_call: TK_IDENTIFIER . '(' l_func_args reset ')'
-
-    '('  shift, and go to state 48
-    '['  shift, and go to state 49
-
-    $default  reduce using rule 45 (exp)
-
-
-State 23
-
-   42 lit: LIT_INTEGER .
-
-    $default  reduce using rule 42 (lit)
-
-
-State 24
-
-   40 lit: LIT_REAL .
-
-    $default  reduce using rule 40 (lit)
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 42
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
 
-State 25
+Estado 21
 
-   41 lit: LIT_CHAR .
+   77 func_dec: func_header block .
 
-    $default  reduce using rule 41 (lit)
-
-
-State 26
-
-   47 exp: lit .
-
-    $default  reduce using rule 47 (exp)
+    $padrão  reduzir usando a regra 77 (func_dec)
 
 
-State 27
+Estado 22
+
+   48 exp: TK_IDENTIFIER .
+   49    | TK_IDENTIFIER . '[' exp ']'
+   66    | TK_IDENTIFIER . '(' ')'
+   67    | TK_IDENTIFIER . '(' l_func_args reset ')'
+
+    '('  deslocar, e ir ao estado 46
+    '['  deslocar, e ir ao estado 47
+
+    $padrão  reduzir usando a regra 48 (exp)
+
+
+Estado 23
+
+   52 exp: LIT_INTEGER .
+
+    $padrão  reduzir usando a regra 52 (exp)
+
+
+Estado 24
+
+   51 exp: LIT_REAL .
+
+    $padrão  reduzir usando a regra 51 (exp)
+
+
+Estado 25
+
+   50 exp: LIT_CHAR .
+
+    $padrão  reduzir usando a regra 50 (exp)
+
+
+Estado 26
+
+   68 exp: '(' . exp ')'
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 48
+
+
+Estado 27
 
     4 dec: KW_IF '(' exp . ')' KW_THEN lcmd
     5    | KW_IF '(' exp . ')' KW_THEN lcmd KW_ELSE lcmd
-   48 exp: exp . op exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ')'           shift, and go to state 60
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    op  go to state 64
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ')'           deslocar, e ir ao estado 62
 
 
-State 28
-
-   50 exp: func_call .
-
-    $default  reduce using rule 50 (exp)
-
-
-State 29
+Estado 28
 
     6 dec: KW_WHILE '(' exp . ')' lcmd
-   48 exp: exp . op exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ')'           shift, and go to state 65
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    op  go to state 64
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ')'           deslocar, e ir ao estado 63
 
 
-State 30
+Estado 29
 
     7 dec: KW_FOR '(' TK_IDENTIFIER . '=' exp KW_TO exp ')' lcmd
 
-    '='  shift, and go to state 66
+    '='  deslocar, e ir ao estado 64
 
 
-State 31
+Estado 30
 
-    9 dec: type TK_IDENTIFIER '=' . lit ';'
+    9 dec: type TK_IDENTIFIER '=' . LIT_REAL ';'
+   10    | type TK_IDENTIFIER '=' . LIT_CHAR ';'
+   11    | type TK_IDENTIFIER '=' . LIT_INTEGER ';'
 
-    LIT_INTEGER  shift, and go to state 23
-    LIT_REAL     shift, and go to state 24
-    LIT_CHAR     shift, and go to state 25
+    LIT_INTEGER  deslocar, e ir ao estado 65
+    LIT_REAL     deslocar, e ir ao estado 66
+    LIT_CHAR     deslocar, e ir ao estado 67
 
-    lit  go to state 67
 
+Estado 31
 
-State 32
+   78 func_header: type TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
-   59 func_header: type TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
+    KW_CHAR   deslocar, e ir ao estado 1
+    KW_INT    deslocar, e ir ao estado 2
+    KW_FLOAT  deslocar, e ir ao estado 3
 
-    KW_CHAR   shift, and go to state 1
-    KW_INT    shift, and go to state 2
-    KW_FLOAT  shift, and go to state 3
+    $padrão  reduzir usando a regra 81 (l_func_par)
 
-    $default  reduce using rule 62 (l_func_par)
+    type        ir ao estado 68
+    func_par    ir ao estado 69
+    l_func_par  ir ao estado 70
 
-    type        go to state 68
-    func_par    go to state 69
-    l_func_par  go to state 70
 
+Estado 32
 
-State 33
+   12 dec: type TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
+   13    | type TK_IDENTIFIER '[' . exp ']' ';'
 
-   10 dec: type TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
-   11    | type TK_IDENTIFIER '[' . exp ']' ';'
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    exp  ir ao estado 71
 
-    lit        go to state 26
-    exp        go to state 71
-    func_call  go to state 28
 
+Estado 33
 
-State 34
+   14 dec: type '#' TK_IDENTIFIER . '=' LIT_REAL ';'
+   15    | type '#' TK_IDENTIFIER . '=' LIT_CHAR ';'
+   16    | type '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
 
-   12 dec: type '#' TK_IDENTIFIER . '=' lit ';'
+    '='  deslocar, e ir ao estado 72
 
-    '='  shift, and go to state 72
 
+Estado 34
 
-State 35
+   91 read: KW_READ . TK_IDENTIFIER
 
-   85 read: KW_READ . TK_IDENTIFIER
+    TK_IDENTIFIER  deslocar, e ir ao estado 73
 
-    TK_IDENTIFIER  shift, and go to state 73
 
+Estado 35
 
-State 36
+   38 cmd: KW_RETURN . exp
 
-   35 cmd: KW_RETURN . exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    exp  ir ao estado 74
 
-    lit        go to state 26
-    exp        go to state 74
-    func_call  go to state 28
 
+Estado 36
 
-State 37
+   84 print: KW_PRINT . lpe
 
-   78 print: KW_PRINT . lpe
+    TK_IDENTIFIER  deslocar, e ir ao estado 75
+    LIT_STRING     deslocar, e ir ao estado 76
+    '#'            deslocar, e ir ao estado 77
+    '&'            deslocar, e ir ao estado 78
 
-    TK_IDENTIFIER  shift, and go to state 75
-    LIT_STRING     shift, and go to state 76
-    '#'            shift, and go to state 77
-    '&'            shift, and go to state 78
+    $padrão  reduzir usando a regra 90 (lpe)
 
-    TK_IDENTIFIER  [reduce using rule 84 (lpe)]
-    '#'            [reduce using rule 84 (lpe)]
-    '&'            [reduce using rule 84 (lpe)]
-    $default       reduce using rule 84 (lpe)
+    pe   ir ao estado 79
+    lpe  ir ao estado 80
 
-    pe   go to state 79
-    lpe  go to state 80
 
+Estado 37
 
-State 38
+   25 cmd: TK_IDENTIFIER . '=' exp
+   28    | TK_IDENTIFIER . '=' '#' exp
+   29    | TK_IDENTIFIER . '=' '&' exp
+   30    | TK_IDENTIFIER . '[' exp ']' '=' exp
+   33    | TK_IDENTIFIER . '=' '[' exp ']' '#' exp
+   34    | TK_IDENTIFIER . '=' '[' exp ']' '&' exp
+   35    | TK_IDENTIFIER . '(' l_func_args reset ')'
 
-   22 cmd: TK_IDENTIFIER . '=' exp
-   25    | TK_IDENTIFIER . '=' '#' exp
-   26    | TK_IDENTIFIER . '=' '&' exp
-   27    | TK_IDENTIFIER . '[' exp ']' '=' exp
-   30    | TK_IDENTIFIER . '=' '[' exp ']' '#' exp
-   31    | TK_IDENTIFIER . '=' '[' exp ']' '&' exp
-   51 func_call: TK_IDENTIFIER . '(' l_func_args reset ')'
+    '='  deslocar, e ir ao estado 81
+    '('  deslocar, e ir ao estado 82
+    '['  deslocar, e ir ao estado 83
 
-    '='  shift, and go to state 81
-    '('  shift, and go to state 82
-    '['  shift, and go to state 83
 
+Estado 38
 
-State 39
+   26 cmd: '#' . TK_IDENTIFIER '=' exp
+   31    | '#' . TK_IDENTIFIER '[' exp ']' '=' exp
 
-   23 cmd: '#' . TK_IDENTIFIER '=' exp
-   28    | '#' . TK_IDENTIFIER '[' exp ']' '=' exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 84
 
-    TK_IDENTIFIER  shift, and go to state 84
 
+Estado 39
 
-State 40
+   27 cmd: '&' . TK_IDENTIFIER '=' exp
+   32    | '&' . TK_IDENTIFIER '[' exp ']' '=' exp
 
-   24 cmd: '&' . TK_IDENTIFIER '=' exp
-   29    | '&' . TK_IDENTIFIER '[' exp ']' '=' exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 85
 
-    TK_IDENTIFIER  shift, and go to state 85
 
+Estado 40
 
-State 41
+   22 lcmd: dec .
 
-   20 lcmd: dec .
+    $padrão  reduzir usando a regra 22 (lcmd)
 
-    $default  reduce using rule 20 (lcmd)
 
+Estado 41
 
-State 42
+   24 cmd: block .
 
-   21 cmd: block .
+    $padrão  reduzir usando a regra 24 (cmd)
 
-    $default  reduce using rule 21 (cmd)
 
+Estado 42
 
-State 43
+   19 block: '{' lcmd . '}'
 
-   15 block: '{' lcmd . '}'
+    '}'  deslocar, e ir ao estado 86
 
-    '}'  shift, and go to state 86
 
+Estado 43
 
-State 44
+   21 lcmd: cmd . ';' lcmd
 
-   17 lcmd: cmd . ';' lcmd
-   19     | cmd . ';' cmd lcmd
+    ';'  deslocar, e ir ao estado 87
 
-    ';'  shift, and go to state 87
 
+Estado 44
 
-State 45
+   36 cmd: print .
 
-   32 cmd: func_call .
+    $padrão  reduzir usando a regra 36 (cmd)
 
-    $default  reduce using rule 32 (cmd)
 
+Estado 45
 
-State 46
+   37 cmd: read .
 
-   33 cmd: print .
+    $padrão  reduzir usando a regra 37 (cmd)
 
-    $default  reduce using rule 33 (cmd)
 
+Estado 46
 
-State 47
+   66 exp: TK_IDENTIFIER '(' . ')'
+   67    | TK_IDENTIFIER '(' . l_func_args reset ')'
 
-   34 cmd: read .
+    TK_IDENTIFIER  deslocar, e ir ao estado 88
+    LIT_INTEGER    deslocar, e ir ao estado 89
+    LIT_REAL       deslocar, e ir ao estado 90
+    LIT_CHAR       deslocar, e ir ao estado 91
+    ')'            deslocar, e ir ao estado 92
+    '#'            deslocar, e ir ao estado 93
+    '&'            deslocar, e ir ao estado 94
 
-    $default  reduce using rule 34 (cmd)
+    ')'       [reduzir usando a regra 76 (l_func_args)]
+    $padrão  reduzir usando a regra 76 (l_func_args)
 
+    func_args    ir ao estado 95
+    l_func_args  ir ao estado 96
 
-State 48
 
-   49 exp: TK_IDENTIFIER '(' . ')'
-   51 func_call: TK_IDENTIFIER '(' . l_func_args reset ')'
+Estado 47
 
-    TK_IDENTIFIER  shift, and go to state 88
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    ')'            shift, and go to state 89
-    '#'            shift, and go to state 90
-    '&'            shift, and go to state 91
+   49 exp: TK_IDENTIFIER '[' . exp ']'
 
-    ')'       [reduce using rule 57 (l_func_args)]
-    $default  reduce using rule 57 (l_func_args)
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit          go to state 92
-    func_args    go to state 93
-    l_func_args  go to state 94
+    exp  ir ao estado 97
 
 
-State 49
+Estado 48
 
-   46 exp: TK_IDENTIFIER '[' . exp ']'
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+   68    | '(' exp . ')'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ')'           deslocar, e ir ao estado 98
 
-    lit        go to state 26
-    exp        go to state 95
-    func_call  go to state 28
 
+Estado 49
 
-State 50
+   60 exp: exp OPERATOR_LE . exp
 
-   72 op: OPERATOR_LE .
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    $default  reduce using rule 72 (op)
+    exp  ir ao estado 99
 
 
-State 51
+Estado 50
 
-   73 op: OPERATOR_GE .
+   61 exp: exp OPERATOR_GE . exp
 
-    $default  reduce using rule 73 (op)
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
+    exp  ir ao estado 100
 
-State 52
 
-   74 op: OPERATOR_EQ .
+Estado 51
 
-    $default  reduce using rule 74 (op)
+   62 exp: exp OPERATOR_EQ . exp
 
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-State 53
+    exp  ir ao estado 101
 
-   75 op: OPERATOR_NE .
 
-    $default  reduce using rule 75 (op)
+Estado 52
 
+   63 exp: exp OPERATOR_NE . exp
 
-State 54
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-   76 op: OPERATOR_AND .
+    exp  ir ao estado 102
 
-    $default  reduce using rule 76 (op)
 
+Estado 53
 
-State 55
+   64 exp: exp OPERATOR_AND . exp
 
-   77 op: OPERATOR_OR .
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    $default  reduce using rule 77 (op)
+    exp  ir ao estado 103
 
 
-State 56
+Estado 54
 
-   65 op: '+' .
+   65 exp: exp OPERATOR_OR . exp
 
-    $default  reduce using rule 65 (op)
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
+    exp  ir ao estado 104
 
-State 57
 
-   66 op: '-' .
+Estado 55
 
-    $default  reduce using rule 66 (op)
+   53 exp: exp '+' . exp
 
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-State 58
+    exp  ir ao estado 105
 
-   67 op: '*' .
 
-    $default  reduce using rule 67 (op)
+Estado 56
 
+   54 exp: exp '-' . exp
 
-State 59
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-   68 op: '/' .
+    exp  ir ao estado 106
 
-    $default  reduce using rule 68 (op)
 
+Estado 57
 
-State 60
+   55 exp: exp '*' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 107
+
+
+Estado 58
+
+   56 exp: exp '/' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 108
+
+
+Estado 59
+
+   59 exp: exp '!' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 109
+
+
+Estado 60
+
+   57 exp: exp '<' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 110
+
+
+Estado 61
+
+   58 exp: exp '>' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 111
+
+
+Estado 62
 
     4 dec: KW_IF '(' exp ')' . KW_THEN lcmd
     5    | KW_IF '(' exp ')' . KW_THEN lcmd KW_ELSE lcmd
 
-    KW_THEN  shift, and go to state 96
+    KW_THEN  deslocar, e ir ao estado 112
 
 
-State 61
-
-   69 op: '<' .
-
-    $default  reduce using rule 69 (op)
-
-
-State 62
-
-   70 op: '>' .
-
-    $default  reduce using rule 70 (op)
-
-
-State 63
-
-   71 op: '!' .
-
-    $default  reduce using rule 71 (op)
-
-
-State 64
-
-   48 exp: exp op . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-
-    lit        go to state 26
-    exp        go to state 97
-    func_call  go to state 28
-
-
-State 65
+Estado 63
 
     6 dec: KW_WHILE '(' exp ')' . lcmd
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
-    KW_CHAR   [reduce using rule 18 (lcmd)]
-    KW_INT    [reduce using rule 18 (lcmd)]
-    KW_FLOAT  [reduce using rule 18 (lcmd)]
-    KW_IF     [reduce using rule 18 (lcmd)]
-    KW_WHILE  [reduce using rule 18 (lcmd)]
-    KW_FOR    [reduce using rule 18 (lcmd)]
-    ';'       reduce using rule 16 (block)
-    ';'       [reduce using rule 36 (cmd)]
-    $default  reduce using rule 18 (lcmd)
+    KW_CHAR   [reduzir usando a regra 23 (lcmd)]
+    KW_INT    [reduzir usando a regra 23 (lcmd)]
+    KW_FLOAT  [reduzir usando a regra 23 (lcmd)]
+    KW_IF     [reduzir usando a regra 23 (lcmd)]
+    KW_WHILE  [reduzir usando a regra 23 (lcmd)]
+    KW_FOR    [reduzir usando a regra 23 (lcmd)]
+    ';'       reduzir usando a regra 20 (block)
+    $padrão  reduzir usando a regra 23 (lcmd)
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 98
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 113
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
 
-State 66
+Estado 64
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' . exp KW_TO exp ')' lcmd
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit        go to state 26
-    exp        go to state 99
-    func_call  go to state 28
+    exp  ir ao estado 114
 
 
-State 67
+Estado 65
 
-    9 dec: type TK_IDENTIFIER '=' lit . ';'
+   11 dec: type TK_IDENTIFIER '=' LIT_INTEGER . ';'
 
-    ';'  shift, and go to state 100
+    ';'  deslocar, e ir ao estado 115
 
 
-State 68
+Estado 66
 
-   60 func_par: type . TK_IDENTIFIER
+    9 dec: type TK_IDENTIFIER '=' LIT_REAL . ';'
 
-    TK_IDENTIFIER  shift, and go to state 101
+    ';'  deslocar, e ir ao estado 116
 
 
-State 69
+Estado 67
 
-   61 l_func_par: func_par . l_func_par
+   10 dec: type TK_IDENTIFIER '=' LIT_CHAR . ';'
 
-    KW_CHAR   shift, and go to state 1
-    KW_INT    shift, and go to state 2
-    KW_FLOAT  shift, and go to state 3
+    ';'  deslocar, e ir ao estado 117
 
-    $default  reduce using rule 62 (l_func_par)
 
-    type        go to state 68
-    func_par    go to state 69
-    l_func_par  go to state 102
+Estado 68
 
+   79 func_par: type . TK_IDENTIFIER
 
-State 70
+    TK_IDENTIFIER  deslocar, e ir ao estado 118
 
-   59 func_header: type TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
 
-    ','  shift, and go to state 103
+Estado 69
 
-    $default  reduce using rule 64 (reset_func_par)
+   80 l_func_par: func_par . l_func_par
 
-    reset_func_par  go to state 104
+    KW_CHAR   deslocar, e ir ao estado 1
+    KW_INT    deslocar, e ir ao estado 2
+    KW_FLOAT  deslocar, e ir ao estado 3
 
+    $padrão  reduzir usando a regra 81 (l_func_par)
 
-State 71
+    type        ir ao estado 68
+    func_par    ir ao estado 69
+    l_func_par  ir ao estado 119
 
-   10 dec: type TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
-   11    | type TK_IDENTIFIER '[' exp . ']' ';'
-   48 exp: exp . op exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 105
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+Estado 70
 
-    op  go to state 64
+   78 func_header: type TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
 
+    ','  deslocar, e ir ao estado 120
 
-State 72
+    $padrão  reduzir usando a regra 83 (reset_func_par)
 
-   12 dec: type '#' TK_IDENTIFIER '=' . lit ';'
+    reset_func_par  ir ao estado 121
 
-    LIT_INTEGER  shift, and go to state 23
-    LIT_REAL     shift, and go to state 24
-    LIT_CHAR     shift, and go to state 25
 
-    lit  go to state 106
+Estado 71
 
+   12 dec: type TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
+   13    | type TK_IDENTIFIER '[' exp . ']' ';'
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-State 73
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 122
 
-   85 read: KW_READ TK_IDENTIFIER .
 
-    $default  reduce using rule 85 (read)
+Estado 72
 
+   14 dec: type '#' TK_IDENTIFIER '=' . LIT_REAL ';'
+   15    | type '#' TK_IDENTIFIER '=' . LIT_CHAR ';'
+   16    | type '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
 
-State 74
+    LIT_INTEGER  deslocar, e ir ao estado 123
+    LIT_REAL     deslocar, e ir ao estado 124
+    LIT_CHAR     deslocar, e ir ao estado 125
 
-   35 cmd: KW_RETURN exp .
-   48 exp: exp . op exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+Estado 73
 
-    $default  reduce using rule 35 (cmd)
+   91 read: KW_READ TK_IDENTIFIER .
 
-    op  go to state 64
+    $padrão  reduzir usando a regra 91 (read)
 
 
-State 75
+Estado 74
 
-   80 pe: TK_IDENTIFIER .
+   38 cmd: KW_RETURN exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    $default  reduce using rule 80 (pe)
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
+    $padrão  reduzir usando a regra 38 (cmd)
 
-State 76
 
-   79 pe: LIT_STRING .
+Estado 75
 
-    $default  reduce using rule 79 (pe)
+   86 pe: TK_IDENTIFIER .
 
+    $padrão  reduzir usando a regra 86 (pe)
 
-State 77
 
-   82 pe: '#' . TK_IDENTIFIER
+Estado 76
 
-    TK_IDENTIFIER  shift, and go to state 107
+   85 pe: LIT_STRING .
 
+    $padrão  reduzir usando a regra 85 (pe)
 
-State 78
 
-   81 pe: '&' . TK_IDENTIFIER
+Estado 77
 
-    TK_IDENTIFIER  shift, and go to state 108
+   88 pe: '#' . TK_IDENTIFIER
 
+    TK_IDENTIFIER  deslocar, e ir ao estado 126
 
-State 79
 
-   83 lpe: pe . lpe
+Estado 78
 
-    TK_IDENTIFIER  shift, and go to state 75
-    LIT_STRING     shift, and go to state 76
-    '#'            shift, and go to state 77
-    '&'            shift, and go to state 78
+   87 pe: '&' . TK_IDENTIFIER
 
-    TK_IDENTIFIER  [reduce using rule 84 (lpe)]
-    '#'            [reduce using rule 84 (lpe)]
-    '&'            [reduce using rule 84 (lpe)]
-    $default       reduce using rule 84 (lpe)
+    TK_IDENTIFIER  deslocar, e ir ao estado 127
 
-    pe   go to state 79
-    lpe  go to state 109
 
+Estado 79
 
-State 80
+   89 lpe: pe . lpe
 
-   78 print: KW_PRINT lpe .
+    TK_IDENTIFIER  deslocar, e ir ao estado 75
+    LIT_STRING     deslocar, e ir ao estado 76
+    '#'            deslocar, e ir ao estado 77
+    '&'            deslocar, e ir ao estado 78
 
-    $default  reduce using rule 78 (print)
+    $padrão  reduzir usando a regra 90 (lpe)
 
+    pe   ir ao estado 79
+    lpe  ir ao estado 128
 
-State 81
 
-   22 cmd: TK_IDENTIFIER '=' . exp
-   25    | TK_IDENTIFIER '=' . '#' exp
-   26    | TK_IDENTIFIER '=' . '&' exp
-   30    | TK_IDENTIFIER '=' . '[' exp ']' '#' exp
-   31    | TK_IDENTIFIER '=' . '[' exp ']' '&' exp
+Estado 80
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '['            shift, and go to state 110
-    '#'            shift, and go to state 111
-    '&'            shift, and go to state 112
+   84 print: KW_PRINT lpe .
 
-    lit        go to state 26
-    exp        go to state 113
-    func_call  go to state 28
+    $padrão  reduzir usando a regra 84 (print)
 
 
-State 82
+Estado 81
 
-   51 func_call: TK_IDENTIFIER '(' . l_func_args reset ')'
+   25 cmd: TK_IDENTIFIER '=' . exp
+   28    | TK_IDENTIFIER '=' . '#' exp
+   29    | TK_IDENTIFIER '=' . '&' exp
+   33    | TK_IDENTIFIER '=' . '[' exp ']' '#' exp
+   34    | TK_IDENTIFIER '=' . '[' exp ']' '&' exp
 
-    TK_IDENTIFIER  shift, and go to state 88
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '#'            shift, and go to state 90
-    '&'            shift, and go to state 91
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+    '['            deslocar, e ir ao estado 129
+    '#'            deslocar, e ir ao estado 130
+    '&'            deslocar, e ir ao estado 131
 
-    $default  reduce using rule 57 (l_func_args)
+    exp  ir ao estado 132
 
-    lit          go to state 92
-    func_args    go to state 93
-    l_func_args  go to state 94
 
+Estado 82
 
-State 83
+   35 cmd: TK_IDENTIFIER '(' . l_func_args reset ')'
 
-   27 cmd: TK_IDENTIFIER '[' . exp ']' '=' exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 88
+    LIT_INTEGER    deslocar, e ir ao estado 89
+    LIT_REAL       deslocar, e ir ao estado 90
+    LIT_CHAR       deslocar, e ir ao estado 91
+    '#'            deslocar, e ir ao estado 93
+    '&'            deslocar, e ir ao estado 94
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    $padrão  reduzir usando a regra 76 (l_func_args)
 
-    lit        go to state 26
-    exp        go to state 114
-    func_call  go to state 28
+    func_args    ir ao estado 95
+    l_func_args  ir ao estado 133
 
 
-State 84
+Estado 83
 
-   23 cmd: '#' TK_IDENTIFIER . '=' exp
-   28    | '#' TK_IDENTIFIER . '[' exp ']' '=' exp
+   30 cmd: TK_IDENTIFIER '[' . exp ']' '=' exp
 
-    '='  shift, and go to state 115
-    '['  shift, and go to state 116
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
+    exp  ir ao estado 134
 
-State 85
 
-   24 cmd: '&' TK_IDENTIFIER . '=' exp
-   29    | '&' TK_IDENTIFIER . '[' exp ']' '=' exp
+Estado 84
 
-    '='  shift, and go to state 117
-    '['  shift, and go to state 118
+   26 cmd: '#' TK_IDENTIFIER . '=' exp
+   31    | '#' TK_IDENTIFIER . '[' exp ']' '=' exp
 
+    '='  deslocar, e ir ao estado 135
+    '['  deslocar, e ir ao estado 136
 
-State 86
 
-   15 block: '{' lcmd '}' .
+Estado 85
 
-    $default  reduce using rule 15 (block)
+   27 cmd: '&' TK_IDENTIFIER . '=' exp
+   32    | '&' TK_IDENTIFIER . '[' exp ']' '=' exp
 
+    '='  deslocar, e ir ao estado 137
+    '['  deslocar, e ir ao estado 138
 
-State 87
 
-   17 lcmd: cmd ';' . lcmd
-   19     | cmd ';' . cmd lcmd
+Estado 86
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+   19 block: '{' lcmd '}' .
 
-    $end           reduce using rule 16 (block)
-    $end           [reduce using rule 18 (lcmd)]
-    $end           [reduce using rule 36 (cmd)]
-    KW_CHAR        [reduce using rule 16 (block)]
-    KW_CHAR        [reduce using rule 18 (lcmd)]
-    KW_CHAR        [reduce using rule 36 (cmd)]
-    KW_INT         [reduce using rule 16 (block)]
-    KW_INT         [reduce using rule 18 (lcmd)]
-    KW_INT         [reduce using rule 36 (cmd)]
-    KW_FLOAT       [reduce using rule 16 (block)]
-    KW_FLOAT       [reduce using rule 18 (lcmd)]
-    KW_FLOAT       [reduce using rule 36 (cmd)]
-    KW_IF          [reduce using rule 16 (block)]
-    KW_IF          [reduce using rule 18 (lcmd)]
-    KW_IF          [reduce using rule 36 (cmd)]
-    KW_ELSE        reduce using rule 16 (block)
-    KW_ELSE        [reduce using rule 18 (lcmd)]
-    KW_ELSE        [reduce using rule 36 (cmd)]
-    KW_WHILE       [reduce using rule 16 (block)]
-    KW_WHILE       [reduce using rule 18 (lcmd)]
-    KW_WHILE       [reduce using rule 36 (cmd)]
-    KW_FOR         [reduce using rule 16 (block)]
-    KW_FOR         [reduce using rule 18 (lcmd)]
-    KW_FOR         [reduce using rule 36 (cmd)]
-    KW_READ        [reduce using rule 16 (block)]
-    KW_READ        [reduce using rule 36 (cmd)]
-    KW_RETURN      [reduce using rule 16 (block)]
-    KW_RETURN      [reduce using rule 36 (cmd)]
-    KW_PRINT       [reduce using rule 16 (block)]
-    KW_PRINT       [reduce using rule 36 (cmd)]
-    TK_IDENTIFIER  [reduce using rule 16 (block)]
-    TK_IDENTIFIER  [reduce using rule 36 (cmd)]
-    ';'            reduce using rule 16 (block)
-    ';'            [reduce using rule 36 (cmd)]
-    '#'            [reduce using rule 16 (block)]
-    '#'            [reduce using rule 36 (cmd)]
-    '{'            [reduce using rule 16 (block)]
-    '{'            [reduce using rule 36 (cmd)]
-    '}'            reduce using rule 16 (block)
-    '}'            [reduce using rule 18 (lcmd)]
-    '}'            [reduce using rule 36 (cmd)]
-    '&'            [reduce using rule 16 (block)]
-    '&'            [reduce using rule 36 (cmd)]
-    $default       reduce using rule 16 (block)
+    $padrão  reduzir usando a regra 19 (block)
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 119
-    cmd          go to state 120
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
 
+Estado 87
 
-State 88
+   21 lcmd: cmd ';' . lcmd
 
-   53 func_args: TK_IDENTIFIER .
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
-    $default  reduce using rule 53 (func_args)
+    KW_CHAR   [reduzir usando a regra 23 (lcmd)]
+    KW_INT    [reduzir usando a regra 23 (lcmd)]
+    KW_FLOAT  [reduzir usando a regra 23 (lcmd)]
+    KW_IF     [reduzir usando a regra 23 (lcmd)]
+    KW_WHILE  [reduzir usando a regra 23 (lcmd)]
+    KW_FOR    [reduzir usando a regra 23 (lcmd)]
+    ';'       reduzir usando a regra 20 (block)
+    $padrão  reduzir usando a regra 23 (lcmd)
 
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 139
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
-State 89
 
-   49 exp: TK_IDENTIFIER '(' ')' .
+Estado 88
 
-    $default  reduce using rule 49 (exp)
+   72 func_args: TK_IDENTIFIER .
 
+    $padrão  reduzir usando a regra 72 (func_args)
 
-State 90
 
-   54 func_args: '#' . TK_IDENTIFIER
+Estado 89
 
-    TK_IDENTIFIER  shift, and go to state 121
+   71 func_args: LIT_INTEGER .
 
+    $padrão  reduzir usando a regra 71 (func_args)
 
-State 91
 
-   55 func_args: '&' . TK_IDENTIFIER
+Estado 90
 
-    TK_IDENTIFIER  shift, and go to state 122
+   69 func_args: LIT_REAL .
 
+    $padrão  reduzir usando a regra 69 (func_args)
 
-State 92
 
-   52 func_args: lit .
+Estado 91
 
-    $default  reduce using rule 52 (func_args)
+   70 func_args: LIT_CHAR .
 
+    $padrão  reduzir usando a regra 70 (func_args)
 
-State 93
 
-   56 l_func_args: func_args . l_func_args
+Estado 92
 
-    TK_IDENTIFIER  shift, and go to state 88
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '#'            shift, and go to state 90
-    '&'            shift, and go to state 91
+   66 exp: TK_IDENTIFIER '(' ')' .
 
-    $default  reduce using rule 57 (l_func_args)
+    $padrão  reduzir usando a regra 66 (exp)
 
-    lit          go to state 92
-    func_args    go to state 93
-    l_func_args  go to state 123
 
+Estado 93
 
-State 94
+   73 func_args: '#' . TK_IDENTIFIER
 
-   51 func_call: TK_IDENTIFIER '(' l_func_args . reset ')'
+    TK_IDENTIFIER  deslocar, e ir ao estado 140
 
-    ','  shift, and go to state 124
 
-    $default  reduce using rule 14 (reset)
+Estado 94
 
-    reset  go to state 125
+   74 func_args: '&' . TK_IDENTIFIER
 
+    TK_IDENTIFIER  deslocar, e ir ao estado 141
 
-State 95
 
-   46 exp: TK_IDENTIFIER '[' exp . ']'
-   48    | exp . op exp
+Estado 95
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 126
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+   75 l_func_args: func_args . l_func_args
 
-    op  go to state 64
+    TK_IDENTIFIER  deslocar, e ir ao estado 88
+    LIT_INTEGER    deslocar, e ir ao estado 89
+    LIT_REAL       deslocar, e ir ao estado 90
+    LIT_CHAR       deslocar, e ir ao estado 91
+    '#'            deslocar, e ir ao estado 93
+    '&'            deslocar, e ir ao estado 94
 
+    $padrão  reduzir usando a regra 76 (l_func_args)
 
-State 96
+    func_args    ir ao estado 95
+    l_func_args  ir ao estado 142
+
+
+Estado 96
+
+   67 exp: TK_IDENTIFIER '(' l_func_args . reset ')'
+
+    ','  deslocar, e ir ao estado 143
+
+    $padrão  reduzir usando a regra 18 (reset)
+
+    reset  ir ao estado 144
+
+
+Estado 97
+
+   49 exp: TK_IDENTIFIER '[' exp . ']'
+   53    | exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 145
+
+
+Estado 98
+
+   68 exp: '(' exp ')' .
+
+    $padrão  reduzir usando a regra 68 (exp)
+
+
+Estado 99
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   60    | exp OPERATOR_LE exp .
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 60 (exp)
+
+
+Estado 100
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   61    | exp OPERATOR_GE exp .
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 61 (exp)
+
+
+Estado 101
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   62    | exp OPERATOR_EQ exp .
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 62 (exp)
+
+
+Estado 102
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   63    | exp OPERATOR_NE exp .
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 63 (exp)
+
+
+Estado 103
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   64    | exp OPERATOR_AND exp .
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 64 (exp)
+
+
+Estado 104
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+   65    | exp OPERATOR_OR exp .
+
+    $padrão  reduzir usando a regra 65 (exp)
+
+
+Estado 105
+
+   53 exp: exp . '+' exp
+   53    | exp '+' exp .
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 53 (exp)
+
+
+Estado 106
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   54    | exp '-' exp .
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 54 (exp)
+
+
+Estado 107
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   55    | exp '*' exp .
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 55 (exp)
+
+
+Estado 108
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   56    | exp '/' exp .
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 56 (exp)
+
+
+Estado 109
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   59    | exp '!' exp .
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 59 (exp)
+
+
+Estado 110
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   57    | exp '<' exp .
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 57 (exp)
+
+
+Estado 111
+
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   58    | exp '>' exp .
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    $padrão  reduzir usando a regra 58 (exp)
+
+
+Estado 112
 
     4 dec: KW_IF '(' exp ')' KW_THEN . lcmd
     5    | KW_IF '(' exp ')' KW_THEN . lcmd KW_ELSE lcmd
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
-    KW_CHAR   [reduce using rule 18 (lcmd)]
-    KW_INT    [reduce using rule 18 (lcmd)]
-    KW_FLOAT  [reduce using rule 18 (lcmd)]
-    KW_IF     [reduce using rule 18 (lcmd)]
-    KW_WHILE  [reduce using rule 18 (lcmd)]
-    KW_FOR    [reduce using rule 18 (lcmd)]
-    ';'       reduce using rule 16 (block)
-    ';'       [reduce using rule 36 (cmd)]
-    $default  reduce using rule 18 (lcmd)
+    KW_CHAR   [reduzir usando a regra 23 (lcmd)]
+    KW_INT    [reduzir usando a regra 23 (lcmd)]
+    KW_FLOAT  [reduzir usando a regra 23 (lcmd)]
+    KW_IF     [reduzir usando a regra 23 (lcmd)]
+    KW_WHILE  [reduzir usando a regra 23 (lcmd)]
+    KW_FOR    [reduzir usando a regra 23 (lcmd)]
+    ';'       reduzir usando a regra 20 (block)
+    $padrão  reduzir usando a regra 23 (lcmd)
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 127
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 146
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
 
-State 97
-
-   48 exp: exp . op exp
-   48    | exp op exp .
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    OPERATOR_LE   [reduce using rule 48 (exp)]
-    OPERATOR_GE   [reduce using rule 48 (exp)]
-    OPERATOR_EQ   [reduce using rule 48 (exp)]
-    OPERATOR_NE   [reduce using rule 48 (exp)]
-    OPERATOR_AND  [reduce using rule 48 (exp)]
-    OPERATOR_OR   [reduce using rule 48 (exp)]
-    '+'           [reduce using rule 48 (exp)]
-    '-'           [reduce using rule 48 (exp)]
-    '*'           [reduce using rule 48 (exp)]
-    '/'           [reduce using rule 48 (exp)]
-    '<'           [reduce using rule 48 (exp)]
-    '>'           [reduce using rule 48 (exp)]
-    '!'           [reduce using rule 48 (exp)]
-    $default      reduce using rule 48 (exp)
-
-    op  go to state 64
-
-
-State 98
+Estado 113
 
     6 dec: KW_WHILE '(' exp ')' lcmd .
 
-    $default  reduce using rule 6 (dec)
+    $padrão  reduzir usando a regra 6 (dec)
 
 
-State 99
+Estado 114
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp . KW_TO exp ')' lcmd
-   48 exp: exp . op exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    KW_TO         shift, and go to state 128
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    KW_TO         deslocar, e ir ao estado 147
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
-    op  go to state 64
 
+Estado 115
 
-State 100
+   11 dec: type TK_IDENTIFIER '=' LIT_INTEGER ';' .
 
-    9 dec: type TK_IDENTIFIER '=' lit ';' .
+    $padrão  reduzir usando a regra 11 (dec)
 
-    $default  reduce using rule 9 (dec)
 
+Estado 116
 
-State 101
+    9 dec: type TK_IDENTIFIER '=' LIT_REAL ';' .
 
-   60 func_par: type TK_IDENTIFIER .
+    $padrão  reduzir usando a regra 9 (dec)
 
-    $default  reduce using rule 60 (func_par)
 
+Estado 117
 
-State 102
+   10 dec: type TK_IDENTIFIER '=' LIT_CHAR ';' .
 
-   61 l_func_par: func_par l_func_par .
+    $padrão  reduzir usando a regra 10 (dec)
 
-    $default  reduce using rule 61 (l_func_par)
 
+Estado 118
 
-State 103
+   79 func_par: type TK_IDENTIFIER .
 
-   63 reset_func_par: ',' . func_par reset_func_par
+    $padrão  reduzir usando a regra 79 (func_par)
 
-    KW_CHAR   shift, and go to state 1
-    KW_INT    shift, and go to state 2
-    KW_FLOAT  shift, and go to state 3
 
-    type      go to state 68
-    func_par  go to state 129
+Estado 119
 
+   80 l_func_par: func_par l_func_par .
 
-State 104
+    $padrão  reduzir usando a regra 80 (l_func_par)
 
-   59 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
 
-    ')'  shift, and go to state 130
+Estado 120
 
+   82 reset_func_par: ',' . func_par reset_func_par
 
-State 105
+    KW_CHAR   deslocar, e ir ao estado 1
+    KW_INT    deslocar, e ir ao estado 2
+    KW_FLOAT  deslocar, e ir ao estado 3
 
-   10 dec: type TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
-   11    | type TK_IDENTIFIER '[' exp ']' . ';'
+    type      ir ao estado 68
+    func_par  ir ao estado 148
 
-    ';'  shift, and go to state 131
-    ':'  shift, and go to state 132
 
+Estado 121
 
-State 106
+   78 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
 
-   12 dec: type '#' TK_IDENTIFIER '=' lit . ';'
+    ')'  deslocar, e ir ao estado 149
 
-    ';'  shift, and go to state 133
 
+Estado 122
 
-State 107
+   12 dec: type TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
+   13    | type TK_IDENTIFIER '[' exp ']' . ';'
 
-   82 pe: '#' TK_IDENTIFIER .
+    ';'  deslocar, e ir ao estado 150
+    ':'  deslocar, e ir ao estado 151
 
-    $default  reduce using rule 82 (pe)
 
+Estado 123
 
-State 108
+   16 dec: type '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
 
-   81 pe: '&' TK_IDENTIFIER .
+    ';'  deslocar, e ir ao estado 152
 
-    $default  reduce using rule 81 (pe)
 
+Estado 124
 
-State 109
+   14 dec: type '#' TK_IDENTIFIER '=' LIT_REAL . ';'
 
-   83 lpe: pe lpe .
+    ';'  deslocar, e ir ao estado 153
 
-    $default  reduce using rule 83 (lpe)
 
+Estado 125
 
-State 110
+   15 dec: type '#' TK_IDENTIFIER '=' LIT_CHAR . ';'
 
-   30 cmd: TK_IDENTIFIER '=' '[' . exp ']' '#' exp
-   31    | TK_IDENTIFIER '=' '[' . exp ']' '&' exp
+    ';'  deslocar, e ir ao estado 154
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
 
-    lit        go to state 26
-    exp        go to state 134
-    func_call  go to state 28
+Estado 126
 
+   88 pe: '#' TK_IDENTIFIER .
 
-State 111
+    $padrão  reduzir usando a regra 88 (pe)
 
-   25 cmd: TK_IDENTIFIER '=' '#' . exp
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+Estado 127
 
-    lit        go to state 26
-    exp        go to state 135
-    func_call  go to state 28
+   87 pe: '&' TK_IDENTIFIER .
 
+    $padrão  reduzir usando a regra 87 (pe)
 
-State 112
 
-   26 cmd: TK_IDENTIFIER '=' '&' . exp
+Estado 128
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+   89 lpe: pe lpe .
 
-    lit        go to state 26
-    exp        go to state 136
-    func_call  go to state 28
+    $padrão  reduzir usando a regra 89 (lpe)
 
 
-State 113
+Estado 129
 
-   22 cmd: TK_IDENTIFIER '=' exp .
-   48 exp: exp . op exp
+   33 cmd: TK_IDENTIFIER '=' '[' . exp ']' '#' exp
+   34    | TK_IDENTIFIER '=' '[' . exp ']' '&' exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    $default  reduce using rule 22 (cmd)
+    exp  ir ao estado 155
 
-    op  go to state 64
 
+Estado 130
 
-State 114
+   28 cmd: TK_IDENTIFIER '=' '#' . exp
 
-   27 cmd: TK_IDENTIFIER '[' exp . ']' '=' exp
-   48 exp: exp . op exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 137
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    exp  ir ao estado 156
 
-    op  go to state 64
 
+Estado 131
 
-State 115
+   29 cmd: TK_IDENTIFIER '=' '&' . exp
 
-   23 cmd: '#' TK_IDENTIFIER '=' . exp
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    exp  ir ao estado 157
 
-    lit        go to state 26
-    exp        go to state 138
-    func_call  go to state 28
 
+Estado 132
 
-State 116
+   25 cmd: TK_IDENTIFIER '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-   28 cmd: '#' TK_IDENTIFIER '[' . exp ']' '=' exp
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    $padrão  reduzir usando a regra 25 (cmd)
 
-    lit        go to state 26
-    exp        go to state 139
-    func_call  go to state 28
 
+Estado 133
 
-State 117
+   35 cmd: TK_IDENTIFIER '(' l_func_args . reset ')'
 
-   24 cmd: '&' TK_IDENTIFIER '=' . exp
+    ','  deslocar, e ir ao estado 143
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    $padrão  reduzir usando a regra 18 (reset)
 
-    lit        go to state 26
-    exp        go to state 140
-    func_call  go to state 28
+    reset  ir ao estado 158
 
 
-State 118
+Estado 134
 
-   29 cmd: '&' TK_IDENTIFIER '[' . exp ']' '=' exp
+   30 cmd: TK_IDENTIFIER '[' exp . ']' '=' exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 159
 
-    lit        go to state 26
-    exp        go to state 141
-    func_call  go to state 28
 
+Estado 135
 
-State 119
+   26 cmd: '#' TK_IDENTIFIER '=' . exp
 
-   17 lcmd: cmd ';' lcmd .
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    $default  reduce using rule 17 (lcmd)
+    exp  ir ao estado 160
 
 
-State 120
+Estado 136
 
-   17 lcmd: cmd . ';' lcmd
-   19     | cmd . ';' cmd lcmd
-   19     | cmd ';' cmd . lcmd
+   31 cmd: '#' TK_IDENTIFIER '[' . exp ']' '=' exp
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    ';'            shift, and go to state 87
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    KW_CHAR   [reduce using rule 18 (lcmd)]
-    KW_INT    [reduce using rule 18 (lcmd)]
-    KW_FLOAT  [reduce using rule 18 (lcmd)]
-    KW_IF     [reduce using rule 18 (lcmd)]
-    KW_WHILE  [reduce using rule 18 (lcmd)]
-    KW_FOR    [reduce using rule 18 (lcmd)]
-    ';'       [reduce using rule 16 (block)]
-    ';'       [reduce using rule 36 (cmd)]
-    $default  reduce using rule 18 (lcmd)
+    exp  ir ao estado 161
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 142
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
 
+Estado 137
 
-State 121
+   27 cmd: '&' TK_IDENTIFIER '=' . exp
 
-   54 func_args: '#' TK_IDENTIFIER .
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    $default  reduce using rule 54 (func_args)
+    exp  ir ao estado 162
 
 
-State 122
+Estado 138
 
-   55 func_args: '&' TK_IDENTIFIER .
+   32 cmd: '&' TK_IDENTIFIER '[' . exp ']' '=' exp
 
-    $default  reduce using rule 55 (func_args)
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
+    exp  ir ao estado 163
 
-State 123
 
-   56 l_func_args: func_args l_func_args .
+Estado 139
 
-    $default  reduce using rule 56 (l_func_args)
+   21 lcmd: cmd ';' lcmd .
 
+    $padrão  reduzir usando a regra 21 (lcmd)
 
-State 124
 
-   13 reset: ',' . func_args reset
+Estado 140
 
-    TK_IDENTIFIER  shift, and go to state 88
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '#'            shift, and go to state 90
-    '&'            shift, and go to state 91
+   73 func_args: '#' TK_IDENTIFIER .
 
-    lit        go to state 92
-    func_args  go to state 143
+    $padrão  reduzir usando a regra 73 (func_args)
 
 
-State 125
+Estado 141
 
-   51 func_call: TK_IDENTIFIER '(' l_func_args reset . ')'
+   74 func_args: '&' TK_IDENTIFIER .
 
-    ')'  shift, and go to state 144
+    $padrão  reduzir usando a regra 74 (func_args)
 
 
-State 126
+Estado 142
 
-   46 exp: TK_IDENTIFIER '[' exp ']' .
+   75 l_func_args: func_args l_func_args .
 
-    $default  reduce using rule 46 (exp)
+    $padrão  reduzir usando a regra 75 (l_func_args)
 
 
-State 127
+Estado 143
+
+   17 reset: ',' . func_args reset
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 88
+    LIT_INTEGER    deslocar, e ir ao estado 89
+    LIT_REAL       deslocar, e ir ao estado 90
+    LIT_CHAR       deslocar, e ir ao estado 91
+    '#'            deslocar, e ir ao estado 93
+    '&'            deslocar, e ir ao estado 94
+
+    func_args  ir ao estado 164
+
+
+Estado 144
+
+   67 exp: TK_IDENTIFIER '(' l_func_args reset . ')'
+
+    ')'  deslocar, e ir ao estado 165
+
+
+Estado 145
+
+   49 exp: TK_IDENTIFIER '[' exp ']' .
+
+    $padrão  reduzir usando a regra 49 (exp)
+
+
+Estado 146
 
     4 dec: KW_IF '(' exp ')' KW_THEN lcmd .
     5    | KW_IF '(' exp ')' KW_THEN lcmd . KW_ELSE lcmd
 
-    KW_ELSE  shift, and go to state 145
+    KW_ELSE  deslocar, e ir ao estado 166
 
-    KW_ELSE   [reduce using rule 4 (dec)]
-    $default  reduce using rule 4 (dec)
+    KW_ELSE   [reduzir usando a regra 4 (dec)]
+    $padrão  reduzir usando a regra 4 (dec)
 
 
-State 128
+Estado 147
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO . exp ')' lcmd
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit        go to state 26
-    exp        go to state 146
-    func_call  go to state 28
+    exp  ir ao estado 167
 
 
-State 129
+Estado 148
 
-   63 reset_func_par: ',' func_par . reset_func_par
+   82 reset_func_par: ',' func_par . reset_func_par
 
-    ','  shift, and go to state 103
+    ','  deslocar, e ir ao estado 120
 
-    $default  reduce using rule 64 (reset_func_par)
+    $padrão  reduzir usando a regra 83 (reset_func_par)
 
-    reset_func_par  go to state 147
+    reset_func_par  ir ao estado 168
 
 
-State 130
+Estado 149
 
-   59 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+   78 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
-    $default  reduce using rule 59 (func_header)
+    $padrão  reduzir usando a regra 78 (func_header)
 
 
-State 131
+Estado 150
 
-   11 dec: type TK_IDENTIFIER '[' exp ']' ';' .
+   13 dec: type TK_IDENTIFIER '[' exp ']' ';' .
 
-    $default  reduce using rule 11 (dec)
+    $padrão  reduzir usando a regra 13 (dec)
 
 
-State 132
+Estado 151
 
-   10 dec: type TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
+   12 dec: type TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
 
-    LIT_INTEGER  shift, and go to state 23
-    LIT_REAL     shift, and go to state 24
-    LIT_CHAR     shift, and go to state 25
+    LIT_INTEGER  deslocar, e ir ao estado 169
+    LIT_REAL     deslocar, e ir ao estado 170
+    LIT_CHAR     deslocar, e ir ao estado 171
 
-    lit      go to state 148
-    vet_dec  go to state 149
+    vet_dec  ir ao estado 172
 
 
-State 133
+Estado 152
 
-   12 dec: type '#' TK_IDENTIFIER '=' lit ';' .
+   16 dec: type '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
 
-    $default  reduce using rule 12 (dec)
+    $padrão  reduzir usando a regra 16 (dec)
 
 
-State 134
+Estado 153
 
-   30 cmd: TK_IDENTIFIER '=' '[' exp . ']' '#' exp
-   31    | TK_IDENTIFIER '=' '[' exp . ']' '&' exp
-   48 exp: exp . op exp
+   14 dec: type '#' TK_IDENTIFIER '=' LIT_REAL ';' .
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 150
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    $padrão  reduzir usando a regra 14 (dec)
 
-    op  go to state 64
 
+Estado 154
 
-State 135
+   15 dec: type '#' TK_IDENTIFIER '=' LIT_CHAR ';' .
 
-   25 cmd: TK_IDENTIFIER '=' '#' exp .
-   48 exp: exp . op exp
+    $padrão  reduzir usando a regra 15 (dec)
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
 
-    $default  reduce using rule 25 (cmd)
+Estado 155
 
-    op  go to state 64
+   33 cmd: TK_IDENTIFIER '=' '[' exp . ']' '#' exp
+   34    | TK_IDENTIFIER '=' '[' exp . ']' '&' exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 173
 
-State 136
 
-   26 cmd: TK_IDENTIFIER '=' '&' exp .
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    $default  reduce using rule 26 (cmd)
-
-    op  go to state 64
-
-
-State 137
-
-   27 cmd: TK_IDENTIFIER '[' exp ']' . '=' exp
-
-    '='  shift, and go to state 151
-
-
-State 138
-
-   23 cmd: '#' TK_IDENTIFIER '=' exp .
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    $default  reduce using rule 23 (cmd)
-
-    op  go to state 64
-
-
-State 139
-
-   28 cmd: '#' TK_IDENTIFIER '[' exp . ']' '=' exp
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 152
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    op  go to state 64
-
-
-State 140
-
-   24 cmd: '&' TK_IDENTIFIER '=' exp .
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    $default  reduce using rule 24 (cmd)
-
-    op  go to state 64
-
-
-State 141
-
-   29 cmd: '&' TK_IDENTIFIER '[' exp . ']' '=' exp
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ']'           shift, and go to state 153
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    op  go to state 64
-
-
-State 142
-
-   19 lcmd: cmd ';' cmd lcmd .
-
-    $default  reduce using rule 19 (lcmd)
-
-
-State 143
-
-   13 reset: ',' func_args . reset
-
-    ','  shift, and go to state 124
-
-    $default  reduce using rule 14 (reset)
-
-    reset  go to state 154
-
-
-State 144
-
-   51 func_call: TK_IDENTIFIER '(' l_func_args reset ')' .
-
-    $default  reduce using rule 51 (func_call)
-
-
-State 145
+Estado 156
+
+   28 cmd: TK_IDENTIFIER '=' '#' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 28 (cmd)
+
+
+Estado 157
+
+   29 cmd: TK_IDENTIFIER '=' '&' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 29 (cmd)
+
+
+Estado 158
+
+   35 cmd: TK_IDENTIFIER '(' l_func_args reset . ')'
+
+    ')'  deslocar, e ir ao estado 174
+
+
+Estado 159
+
+   30 cmd: TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  deslocar, e ir ao estado 175
+
+
+Estado 160
+
+   26 cmd: '#' TK_IDENTIFIER '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 26 (cmd)
+
+
+Estado 161
+
+   31 cmd: '#' TK_IDENTIFIER '[' exp . ']' '=' exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 176
+
+
+Estado 162
+
+   27 cmd: '&' TK_IDENTIFIER '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 27 (cmd)
+
+
+Estado 163
+
+   32 cmd: '&' TK_IDENTIFIER '[' exp . ']' '=' exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ']'           deslocar, e ir ao estado 177
+
+
+Estado 164
+
+   17 reset: ',' func_args . reset
+
+    ','  deslocar, e ir ao estado 143
+
+    $padrão  reduzir usando a regra 18 (reset)
+
+    reset  ir ao estado 178
+
+
+Estado 165
+
+   67 exp: TK_IDENTIFIER '(' l_func_args reset ')' .
+
+    $padrão  reduzir usando a regra 67 (exp)
+
+
+Estado 166
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE . lcmd
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
-    KW_CHAR   [reduce using rule 18 (lcmd)]
-    KW_INT    [reduce using rule 18 (lcmd)]
-    KW_FLOAT  [reduce using rule 18 (lcmd)]
-    KW_IF     [reduce using rule 18 (lcmd)]
-    KW_WHILE  [reduce using rule 18 (lcmd)]
-    KW_FOR    [reduce using rule 18 (lcmd)]
-    ';'       reduce using rule 16 (block)
-    ';'       [reduce using rule 36 (cmd)]
-    $default  reduce using rule 18 (lcmd)
+    KW_CHAR   [reduzir usando a regra 23 (lcmd)]
+    KW_INT    [reduzir usando a regra 23 (lcmd)]
+    KW_FLOAT  [reduzir usando a regra 23 (lcmd)]
+    KW_IF     [reduzir usando a regra 23 (lcmd)]
+    KW_WHILE  [reduzir usando a regra 23 (lcmd)]
+    KW_FOR    [reduzir usando a regra 23 (lcmd)]
+    ';'       reduzir usando a regra 20 (block)
+    $padrão  reduzir usando a regra 23 (lcmd)
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 155
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 179
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
 
-State 146
+Estado 167
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp . ')' lcmd
-   48 exp: exp . op exp
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    ')'           shift, and go to state 156
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    op  go to state 64
-
-
-State 147
-
-   63 reset_func_par: ',' func_par reset_func_par .
-
-    $default  reduce using rule 63 (reset_func_par)
-
-
-State 148
-
-   43 vet_dec: lit . vet_dec
-   44        | lit .
-
-    LIT_INTEGER  shift, and go to state 23
-    LIT_REAL     shift, and go to state 24
-    LIT_CHAR     shift, and go to state 25
-
-    $default  reduce using rule 44 (vet_dec)
-
-    lit      go to state 148
-    vet_dec  go to state 157
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+    ')'           deslocar, e ir ao estado 180
 
 
-State 149
+Estado 168
 
-   10 dec: type TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
+   82 reset_func_par: ',' func_par reset_func_par .
 
-    ';'  shift, and go to state 158
-
-
-State 150
-
-   30 cmd: TK_IDENTIFIER '=' '[' exp ']' . '#' exp
-   31    | TK_IDENTIFIER '=' '[' exp ']' . '&' exp
-
-    '#'  shift, and go to state 159
-    '&'  shift, and go to state 160
+    $padrão  reduzir usando a regra 82 (reset_func_par)
 
 
-State 151
+Estado 169
 
-   27 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
+   44 vet_dec: LIT_INTEGER . vet_dec
+   47        | LIT_INTEGER .
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    LIT_INTEGER  deslocar, e ir ao estado 169
+    LIT_REAL     deslocar, e ir ao estado 170
+    LIT_CHAR     deslocar, e ir ao estado 171
 
-    lit        go to state 26
-    exp        go to state 161
-    func_call  go to state 28
+    $padrão  reduzir usando a regra 47 (vet_dec)
 
-
-State 152
-
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
-
-    '='  shift, and go to state 162
+    vet_dec  ir ao estado 181
 
 
-State 153
+Estado 170
 
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
+   42 vet_dec: LIT_REAL . vet_dec
+   45        | LIT_REAL .
 
-    '='  shift, and go to state 163
+    LIT_INTEGER  deslocar, e ir ao estado 169
+    LIT_REAL     deslocar, e ir ao estado 170
+    LIT_CHAR     deslocar, e ir ao estado 171
+
+    $padrão  reduzir usando a regra 45 (vet_dec)
+
+    vet_dec  ir ao estado 182
 
 
-State 154
+Estado 171
 
-   13 reset: ',' func_args reset .
+   43 vet_dec: LIT_CHAR . vet_dec
+   46        | LIT_CHAR .
 
-    $default  reduce using rule 13 (reset)
+    LIT_INTEGER  deslocar, e ir ao estado 169
+    LIT_REAL     deslocar, e ir ao estado 170
+    LIT_CHAR     deslocar, e ir ao estado 171
+
+    $padrão  reduzir usando a regra 46 (vet_dec)
+
+    vet_dec  ir ao estado 183
 
 
-State 155
+Estado 172
+
+   12 dec: type TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
+
+    ';'  deslocar, e ir ao estado 184
+
+
+Estado 173
+
+   33 cmd: TK_IDENTIFIER '=' '[' exp ']' . '#' exp
+   34    | TK_IDENTIFIER '=' '[' exp ']' . '&' exp
+
+    '#'  deslocar, e ir ao estado 185
+    '&'  deslocar, e ir ao estado 186
+
+
+Estado 174
+
+   35 cmd: TK_IDENTIFIER '(' l_func_args reset ')' .
+
+    $padrão  reduzir usando a regra 35 (cmd)
+
+
+Estado 175
+
+   30 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 187
+
+
+Estado 176
+
+   31 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  deslocar, e ir ao estado 188
+
+
+Estado 177
+
+   32 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  deslocar, e ir ao estado 189
+
+
+Estado 178
+
+   17 reset: ',' func_args reset .
+
+    $padrão  reduzir usando a regra 17 (reset)
+
+
+Estado 179
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd .
 
-    $default  reduce using rule 5 (dec)
+    $padrão  reduzir usando a regra 5 (dec)
 
 
-State 156
+Estado 180
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' . lcmd
 
-    KW_CHAR        shift, and go to state 1
-    KW_INT         shift, and go to state 2
-    KW_FLOAT       shift, and go to state 3
-    KW_IF          shift, and go to state 4
-    KW_WHILE       shift, and go to state 5
-    KW_FOR         shift, and go to state 6
-    KW_READ        shift, and go to state 35
-    KW_RETURN      shift, and go to state 36
-    KW_PRINT       shift, and go to state 37
-    TK_IDENTIFIER  shift, and go to state 38
-    '#'            shift, and go to state 39
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 40
+    KW_CHAR        deslocar, e ir ao estado 1
+    KW_INT         deslocar, e ir ao estado 2
+    KW_FLOAT       deslocar, e ir ao estado 3
+    KW_IF          deslocar, e ir ao estado 4
+    KW_WHILE       deslocar, e ir ao estado 5
+    KW_FOR         deslocar, e ir ao estado 6
+    KW_READ        deslocar, e ir ao estado 34
+    KW_RETURN      deslocar, e ir ao estado 35
+    KW_PRINT       deslocar, e ir ao estado 36
+    TK_IDENTIFIER  deslocar, e ir ao estado 37
+    '#'            deslocar, e ir ao estado 38
+    '{'            deslocar, e ir ao estado 20
+    '&'            deslocar, e ir ao estado 39
 
-    KW_CHAR   [reduce using rule 18 (lcmd)]
-    KW_INT    [reduce using rule 18 (lcmd)]
-    KW_FLOAT  [reduce using rule 18 (lcmd)]
-    KW_IF     [reduce using rule 18 (lcmd)]
-    KW_WHILE  [reduce using rule 18 (lcmd)]
-    KW_FOR    [reduce using rule 18 (lcmd)]
-    ';'       reduce using rule 16 (block)
-    ';'       [reduce using rule 36 (cmd)]
-    $default  reduce using rule 18 (lcmd)
+    KW_CHAR   [reduzir usando a regra 23 (lcmd)]
+    KW_INT    [reduzir usando a regra 23 (lcmd)]
+    KW_FLOAT  [reduzir usando a regra 23 (lcmd)]
+    KW_IF     [reduzir usando a regra 23 (lcmd)]
+    KW_WHILE  [reduzir usando a regra 23 (lcmd)]
+    KW_FOR    [reduzir usando a regra 23 (lcmd)]
+    ';'       reduzir usando a regra 20 (block)
+    $padrão  reduzir usando a regra 23 (lcmd)
 
-    dec          go to state 41
-    block        go to state 42
-    lcmd         go to state 164
-    cmd          go to state 44
-    type         go to state 10
-    func_call    go to state 45
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 46
-    read         go to state 47
+    dec          ir ao estado 40
+    block        ir ao estado 41
+    lcmd         ir ao estado 190
+    cmd          ir ao estado 43
+    type         ir ao estado 10
+    func_dec     ir ao estado 11
+    func_header  ir ao estado 12
+    print        ir ao estado 44
+    read         ir ao estado 45
 
 
-State 157
+Estado 181
 
-   43 vet_dec: lit vet_dec .
+   44 vet_dec: LIT_INTEGER vet_dec .
 
-    $default  reduce using rule 43 (vet_dec)
-
-
-State 158
-
-   10 dec: type TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
-
-    $default  reduce using rule 10 (dec)
+    $padrão  reduzir usando a regra 44 (vet_dec)
 
 
-State 159
+Estado 182
 
-   30 cmd: TK_IDENTIFIER '=' '[' exp ']' '#' . exp
+   42 vet_dec: LIT_REAL vet_dec .
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-
-    lit        go to state 26
-    exp        go to state 165
-    func_call  go to state 28
+    $padrão  reduzir usando a regra 42 (vet_dec)
 
 
-State 160
+Estado 183
 
-   31 cmd: TK_IDENTIFIER '=' '[' exp ']' '&' . exp
+   43 vet_dec: LIT_CHAR vet_dec .
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-
-    lit        go to state 26
-    exp        go to state 166
-    func_call  go to state 28
+    $padrão  reduzir usando a regra 43 (vet_dec)
 
 
-State 161
+Estado 184
 
-   27 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
-   48 exp: exp . op exp
+   12 dec: type TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    $default  reduce using rule 27 (cmd)
-
-    op  go to state 64
+    $padrão  reduzir usando a regra 12 (dec)
 
 
-State 162
+Estado 185
 
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
+   33 cmd: TK_IDENTIFIER '=' '[' exp ']' '#' . exp
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
 
-    lit        go to state 26
-    exp        go to state 167
-    func_call  go to state 28
-
-
-State 163
-
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-
-    lit        go to state 26
-    exp        go to state 168
-    func_call  go to state 28
+    exp  ir ao estado 191
 
 
-State 164
+Estado 186
+
+   34 cmd: TK_IDENTIFIER '=' '[' exp ']' '&' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 192
+
+
+Estado 187
+
+   30 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 30 (cmd)
+
+
+Estado 188
+
+   31 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 193
+
+
+Estado 189
+
+   32 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
+
+    TK_IDENTIFIER  deslocar, e ir ao estado 22
+    LIT_INTEGER    deslocar, e ir ao estado 23
+    LIT_REAL       deslocar, e ir ao estado 24
+    LIT_CHAR       deslocar, e ir ao estado 25
+    '('            deslocar, e ir ao estado 26
+
+    exp  ir ao estado 194
+
+
+Estado 190
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd .
 
-    $default  reduce using rule 7 (dec)
+    $padrão  reduzir usando a regra 7 (dec)
 
 
-State 165
+Estado 191
 
-   30 cmd: TK_IDENTIFIER '=' '[' exp ']' '#' exp .
-   48 exp: exp . op exp
+   33 cmd: TK_IDENTIFIER '=' '[' exp ']' '#' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
-    $default  reduce using rule 30 (cmd)
-
-    op  go to state 64
-
-
-State 166
-
-   31 cmd: TK_IDENTIFIER '=' '[' exp ']' '&' exp .
-   48 exp: exp . op exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
-
-    $default  reduce using rule 31 (cmd)
-
-    op  go to state 64
+    $padrão  reduzir usando a regra 33 (cmd)
 
 
-State 167
+Estado 192
 
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
-   48 exp: exp . op exp
+   34 cmd: TK_IDENTIFIER '=' '[' exp ']' '&' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
-    $default  reduce using rule 28 (cmd)
-
-    op  go to state 64
+    $padrão  reduzir usando a regra 34 (cmd)
 
 
-State 168
+Estado 193
 
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
-   48 exp: exp . op exp
+   31 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 56
-    '-'           shift, and go to state 57
-    '*'           shift, and go to state 58
-    '/'           shift, and go to state 59
-    '<'           shift, and go to state 61
-    '>'           shift, and go to state 62
-    '!'           shift, and go to state 63
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
 
-    $default  reduce using rule 29 (cmd)
+    $padrão  reduzir usando a regra 31 (cmd)
 
-    op  go to state 64
+
+Estado 194
+
+   32 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
+   53 exp: exp . '+' exp
+   54    | exp . '-' exp
+   55    | exp . '*' exp
+   56    | exp . '/' exp
+   57    | exp . '<' exp
+   58    | exp . '>' exp
+   59    | exp . '!' exp
+   60    | exp . OPERATOR_LE exp
+   61    | exp . OPERATOR_GE exp
+   62    | exp . OPERATOR_EQ exp
+   63    | exp . OPERATOR_NE exp
+   64    | exp . OPERATOR_AND exp
+   65    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   deslocar, e ir ao estado 49
+    OPERATOR_GE   deslocar, e ir ao estado 50
+    OPERATOR_EQ   deslocar, e ir ao estado 51
+    OPERATOR_NE   deslocar, e ir ao estado 52
+    OPERATOR_AND  deslocar, e ir ao estado 53
+    OPERATOR_OR   deslocar, e ir ao estado 54
+    '+'           deslocar, e ir ao estado 55
+    '-'           deslocar, e ir ao estado 56
+    '*'           deslocar, e ir ao estado 57
+    '/'           deslocar, e ir ao estado 58
+    '!'           deslocar, e ir ao estado 59
+    '<'           deslocar, e ir ao estado 60
+    '>'           deslocar, e ir ao estado 61
+
+    $padrão  reduzir usando a regra 32 (cmd)
