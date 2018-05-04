@@ -95,24 +95,24 @@ ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
     ;
 
 dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 0); }
-    |KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd { $$ = astCreate(AST_IF_THEN_ELSE, 0, $3, $6, $8, 0); }
-    |KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
-    |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
-    |func_dec {$$ = $1;}
-    |KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
-    |KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
-    |KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
-    |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
-    |KW_INT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
-    |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
-    |KW_FLOAT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,$2,$4,0,0,0);}
-    |KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,0,0,0);}
-    |KW_CHAR TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,$2,$4,0,0,0);}
+|KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd { $$ = astCreate(AST_IF_THEN_ELSE, 0, $3, $6, $8, 0); }
+|KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
+|KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
+|func_dec {$$ = $1;}
+|KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+|KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER'['exp']' ';'  {$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
+|KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
+|KW_FLOAT TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,$2,$4,0,0,0);}
+|KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,0,0,0);}
+|KW_CHAR TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,$2,$4,0,0,0);}
 
-    |KW_FLOAT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_FLOAT,$3,$5,0,0,0);}
-    |KW_CHAR '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_CHAR,$3,$5,0,0,0);}
-    |KW_INT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,$3,$5,0,0,0);}
-    ;
+|KW_FLOAT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_FLOAT,$3,$5,0,0,0);}
+|KW_CHAR '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_CHAR,$3,$5,0,0,0);}
+|KW_INT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,$3,$5,0,0,0);}
+;
 
 
 reset: ',' func_args reset  {(AST_FUNC_RESET, 0, $2, $3, 0, 0); }
@@ -156,10 +156,9 @@ lit:LIT_INTEGER {(AST_INT, $1,0,  0, 0, 0); }
     |LIT_CHAR  {(AST_CHAR, $1,0,  0, 0, 0); }
     ;
 
-vet_dec: KW_FLOAT vet_dec
-    |KW_CHAR	vet_dec
-    |KW_INT vet_dec
-    |lit
+vet_dec: lit vet_dec
+|lit
+;
 
     ;
 
