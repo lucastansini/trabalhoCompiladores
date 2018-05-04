@@ -1,11 +1,15 @@
 #include<stdio.h>
 #include <stdlib.h>
 extern FILE * yyin;
-
-extern AST* ast;
+extern int yydebug;
+extern AST* ast_Geral;
 
 int main(int argc, char **argv)
 {
+
+
+
+   FILE *saida = fopen("saida.txt","w+");
     int token;
     FILE    *fd;
 
@@ -26,7 +30,10 @@ int main(int argc, char **argv)
     yyparse();
 
 
-    //astPrint(ast,0);
+//astPrint();
+
+
+    astPrint(ast_Geral,0,saida);
 
 
 

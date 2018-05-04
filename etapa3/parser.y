@@ -4,7 +4,7 @@
 extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
-AST *ast;
+AST *ast_Geral;
     %}
 
 
@@ -87,7 +87,7 @@ AST *ast;
 
 
 %%
-program: ldec {ast = $1;}
+program: ldec {ast_Geral = $1;}
     ;
 
 ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}

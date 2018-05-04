@@ -27,18 +27,21 @@ AST* astCreate(int Type, HASH*Symbol , AST *Son0 , AST *Son1 , AST *Son2, AST *S
 }
 
 
-void astPrint(AST *node, int level){
+void astPrint(AST *node, int level, FILE* fileTree){
 
   int i = 0;
+  printf("oi");
 
   if(!node){
+     printf("oi");
     return;
   }
   for(i; i<level; i++)
     fprintf(stderr, "  ");
   fprintf(stderr,"AST(");
   switch(node->type){
-    case SYMBOL: fprintf(stderr, "AST_SYMBOL,\n"); fprtinf()      break;
+
+    case SYMBOL: fprintf(stderr, "AST_SYMBOL,\n");    break;
     case AST_ADD: fprintf(stderr, "AST_ADD,\n");      break;
     case AST_SUB: fprintf(stderr, "AST_SUB,\n");      break;
     case AST_DEC: fprintf(stderr, "AST_DEC,\n");      break;
@@ -46,7 +49,6 @@ void astPrint(AST *node, int level){
     case AST_LCMD: fprintf(stderr, "AST_LCMD,\n");      break;
     case AST_VARIABLE: fprintf(stderr, "AST_VARIABLE,\n");      break;
     case AST_LT: fprintf(stderr, "AST_LT,\n");      break;
-    case AST_FUNC_PAR_FLOAT: fprintf(stderr, "AST_FUNC_PAR_FLOAT,\n");      break;
     case AST_GT: fprintf(stderr, "AST_GT,\n");      break;
     case AST_LE: fprintf(stderr, "AST_LE,\n");      break;
     case AST_GE: fprintf(stderr, "AST_GE,\n");      break;
@@ -91,38 +93,38 @@ void astPrint(AST *node, int level){
     case AST_FUNC_PAR_LIST: fprintf(stderr, "AST_FUNC_PAR_LIST,\n");      break;
     case AST_FUNC_PAR: fprintf(stderr, "AST_FUNC_PAR,\n");      break;
     case AST_PRINT_LIST: fprintf(stderr, "AST_PRINT_LIST,\n");
-          fprintf(fileTree,"print",node->symbol->yytext);
-          nodeType(Son0);
+          fprintf(fileTree,"print");
+          astPrint(node->son[0],level,fileTree);
           //KW_PRINT lpe
           break;
     //case END_SYMBOL: fprintf(stderr, "END_SYMBOL,\n");      break;
     //case PTR_SYMBOL: fprintf(stderr, "PTR_SYMBOL,\n");
-          
+
           break;
     case AST_PRINT: fprintf(stderr, "AST_PRINT,\n");
           fprintf(fileTree,"print ");
-          nodeType(node->Son0);
+          astPrint(node->son[0],level,fileTree);
           //KW_PRINT lpe
           break;
     case AST_READ: fprintf(stderr, "AST_READ,\n");
-          fprintf(fileTree,"read $s",node->symbol->yytext);
+          fprintf(fileTree,"read %s",node->symbol->yytext);
           break;
     case AST_FUNC_HEADER_FLOAT: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
           fprintf(fileTree,"float %s (",node->symbol->yytext);
-          nodeType(node->son[0]);
-          nodeType(node->son[1]);
+          astPrint(node->son[0],level,fileTree);
+          astPrint(node->son[1],level,fileTree);
           fprintf(fileTree,")");
           break;
       case AST_FUNC_HEADER_CHAR: fprintf(stderr, "AST_FUNC_HEADER_CHAR,\n");
           fprintf(fileTree,"int %s (",node->symbol->yytext);
-          nodeType(node->son[0]);
-          nodeType(node->som[0]);
+          astPrint(node->son[0],level,fileTree);
+          astPrint(node->son[0],level,fileTree);
           fprintf(fileTree,")");
           break;
       case AST_FUNC_HEADER_INT: fprintf(stderr, "AST_FUNC_HEADER_INT,\n");
           fprintf(fileTree,"int %s (",node->symbol->yytext);
-          nodeType(node->son[0]);
-          nodeType(node->son[0]);
+          astPrint(node->son[0],level,fileTree);
+          astPrint(node->son[0],level,fileTree);
           fprintf(fileTree,")");
           break;
           //KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
@@ -133,28 +135,28 @@ void astPrint(AST *node, int level){
           fprintf(fileTree,"int %s ",node->symbol->yytext);
           //KW_INT TK_IDENTIFIER
           break;
-    case AST_FUNC_PAR_FLOAT: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
+    case AST_FUNC_PAR_FLOAT: fprintf(stderr, "AST_FUNC_PAR_FLOAT,\n");
           fprintf(fileTree,"float %s ",node->symbol->yytext);
           break;
-    case AST_END_VEC_ATRIBUTION: fprintf(stderr, "AST_END_VEC_ATRIBUTION,\n");'
+    case AST_END_VEC_ATRIBUTION: fprintf(stderr, "AST_END_VEC_ATRIBUTION,\n");
           fprintf(fileTree,"%s = &",node->symbol->yytext);
-          nodeType(nodeType->son[0);
+          astPrint(node->son[0],level,fileTree);
           fprintf(fileTree,"[");
-          fprintf(nodeType(son[1]);
+          astPrint(node->son[1],level,fileTree);
           fprintf(fileTree,"]");
           //TK_IDENTIFIER '=''&'exp'['exp']'
           break;
     case AST_VARIABLE_PTR_CHAR: fprintf(stderr, "AST_VARIABLE_PTR_CHAR,\n");
           fprintf(fileTree,"char # %s =",node->symbol->yytext);
-          nodeType(node->son[0]);
+          astPrint(node->son[0],level,fileTree);
           break;
     case AST_VARIABLE_PTR_INT: fprintf(stderr, "AST_VARIABLE_PTR_INT,\n");
           fprintf(fileTree,"int # %s =",node->symbol->yytext);
-          nodeType(node->son[0]);
+          astPrint(node->son[0],level,fileTree);
           break;
     case AST_VARIABLE_PTR_FLOAT: fprintf(stderr, "AST_VARIABLE_PTR_FLOAT,\n");
           fprintf(fileTree,"float # %s =",node->symbol->yytext);
-          nodeType(node->son[0]);
+          astPrint(node->son[0],level,fileTree);
           break;
 
     case AST_VAR_PRINT: fprintf(stderr, "AST_VAR_PRINT,\n");      break;
@@ -172,6 +174,6 @@ void astPrint(AST *node, int level){
   }
 
   for(i=0; i<MAX_SONS; i++)
-    astPrint(node->son[i],level+1);
+    astPrint(node->son[i],level+1,fileTree);
 
 }

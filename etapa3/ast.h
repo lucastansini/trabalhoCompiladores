@@ -3,8 +3,7 @@
 
 
 #include "hash.h"
-
-
+#include <stdio.h>
 //Número máximo de folhas
 #define MAX_SONS 4
 
@@ -82,16 +81,19 @@
 #define AST_VAR_PRINT 69
 #define AST_VAR_END 70
 #define AST_VAR_PTR 71
+#define AST_FUNC_PAR_CHAR 72
 
 typedef struct ast_node{
     int type;
     HASH *symbol;
+    HASH *text;
     struct ast_node *son[MAX_SONS];
 } AST;
 
 AST* astCreate(int type, HASH*symbol , AST *son0 , AST *son1 , AST *son2, AST *son3);
 
-void astPrint(AST *node, int level);
+void astPrint(AST *node, int level, FILE *fileTree);
+
 
 
 #endif
