@@ -39,7 +39,7 @@ AST *ast_Geral;
 %type <ast> func_args
 %type <ast> pe
 %type <ast> func_par
-
+%type <ast> lit
 
 
 
@@ -99,9 +99,9 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
 |KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
 |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
 |func_dec {$$ = $1;}
-|KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_INT,$2,$4,0,0,0);}
+|KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_FLOAT,$2,$4,0,0,0);}
 |KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_CHAR,$2,$4,0,0,0);}
-|KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_FLOAT,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_INT,$2,$4,0,0,0);}
 |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
 |KW_INT TK_IDENTIFIER'['exp']' ';'  {$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
 |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
@@ -114,7 +114,7 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
 |KW_INT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,$3,$5,0,0,0);}
 ;
 
-reset: ',' func_args reset  {(AST_FUNC_RESET, 0, $2, $3, 0, 0); }
+reset: ',' func_args reset  {$$ =astCreate(AST_FUNC_RESET, 0, $2, $3, 0, 0); }
     |{$$ = 0;}
     ;
 block: '{' lcmd '}' { $$ = astCreate(AST_BLOCK, 0, $2, 0, 0, 0); }
@@ -139,18 +139,18 @@ cmd:block
     | TK_IDENTIFIER '=''&'exp {$$ = astCreate(AST_END_ATRIBUTION,$1,$4, 0,0,0);}
     | TK_IDENTIFIER'['exp']' '=' exp {$$ = astCreate(AST_VEC_ATRIBUTION,$1,$3,$6,0 ,0);}
     | '#'TK_IDENTIFIER'['exp']' '='exp {$$ = astCreate(AST_TO_PTR_VEC_ATRIBUTION,$2,$4,$7,0 ,0);}
-    | '&'TK_IDENTIFIER'['exp']' '='exp {astCreate(AST_TO_END_VEC_ATRIBUTION,$2,$4,$7,0, 0);}
-    | TK_IDENTIFIER '=''#'exp '['exp']' {astCreate(AST_PTR_VEC_ATRIBUTION,$1,$4,$6,0, 0);}
-    | TK_IDENTIFIER '=''&'exp'['exp']' {astCreate(AST_END_VEC_ATRIBUTION, $1,$4,$6,0,0);}
-    |TK_IDENTIFIER'(' l_func_args reset')' {astCreate(AST_FUNCTIONCALL,$1,$3,$4,0,0);}
+    | '&'TK_IDENTIFIER'['exp']' '='exp {$$ =astCreate(AST_TO_END_VEC_ATRIBUTION,$2,$4,$7,0, 0);}
+    | TK_IDENTIFIER '=''#'exp '['exp']' {$$ =astCreate(AST_PTR_VEC_ATRIBUTION,$1,$4,$6,0, 0);}
+    | TK_IDENTIFIER '=''&'exp'['exp']' {$$ =astCreate(AST_END_VEC_ATRIBUTION, $1,$4,$6,0,0);}
+    |TK_IDENTIFIER'(' l_func_args reset')' {$$ =astCreate(AST_FUNCTIONCALL,$1,$3,$4,0,0);}
     |print  {$$ = $1;}
     |read  {$$ = $1;}
-    |KW_RETURN exp {astCreate(AST_RETURN,0,$2,0,0,0);}
+    |KW_RETURN exp {$$ =astCreate(AST_RETURN,0,$2,0,0,0);}
     ;
 
-lit:LIT_INTEGER {(AST_INT, $1,0,  0, 0, 0); }
-    |LIT_REAL {(AST_FLOAT, $1,0, 0, 0, 0); }
-    |LIT_CHAR  {(AST_CHAR, $1,0,  0, 0, 0); }
+lit:LIT_INTEGER {$$ =astCreate(AST_INT, $1,0,  0, 0, 0); }
+    |LIT_REAL {$$ =astCreate(AST_FLOAT, $1,0, 0, 0, 0); }
+    |LIT_CHAR  {$$ =astCreate(AST_CHAR, $1,0,  0, 0, 0); }
     ;
 
 vet_dec: lit vet_dec
@@ -205,7 +205,7 @@ func_par: KW_INT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_INT, $2,0,  0, 0, 0)
 |KW_FLOAT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_FLOAT, $2, 0, 0, 0, 0); }
 |KW_CHAR TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_CHAR,$2, 0,  0, 0, 0); }
     ;
-l_func_par: func_par l_func_par {$$ = astCreate(AST_FUNC_PAR_LIST, 0, $1, $2, 0, 0); }
+l_func_par: func_par l_func_par {$$ =astCreate(AST_FUNC_PAR_LIST, 0, $1, $2, 0, 0); }
     |{$$ = 0;}
     ;
 reset_func_par: ',' func_par reset_func_par {$$ = astCreate(AST_FUNC_PAR, 0, $2, $3, 0, 0); }

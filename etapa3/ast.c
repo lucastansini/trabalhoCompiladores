@@ -268,13 +268,13 @@ void astPrint(AST *node, int level, FILE* fileTree){
 
     case AST_MULT: fprintf(stderr, "AST_MULT,\n");
            astPrint(node->son[0],level,fileTree);
-            fprintf(fileTree,"*",node->symbol->yytext);
+            fprintf(fileTree,"*");
           astPrint(node->son[1],level,fileTree);
 
           break;
     case AST_DIV: fprintf(stderr, "AST_DIV,\n");
           astPrint(node->son[0],level,fileTree);
-          fprintf(fileTree,"/",node->symbol->yytext);
+          fprintf(fileTree,"/");
           astPrint(node->son[1],level,fileTree);
           break;
     case AST_PTR: fprintf(stderr, "AST_END,\n");
@@ -335,7 +335,7 @@ void astPrint(AST *node, int level, FILE* fileTree){
           fprintf(fileTree,")");
           break;
           //KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
-    case AST_FUNC_PAR_CHAR: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
+    case AST_FUNC_PAR_CHAR: fprintf(stderr, "AST_FUNC_HEADER_CHAR,\n");
           fprintf(fileTree,"char %s ",node->symbol->yytext);
           break;
     case AST_FUNC_PAR_INT: fprintf(stderr, "AST_FUNC_PAR_INT,\n");
