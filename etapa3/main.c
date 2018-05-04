@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     yyparse();
 
 
-    hashPrint();
+    astPrint();
 
     exit (0);
 }

@@ -13,8 +13,12 @@
 //Identificador SYMBOL recebe 1 nesse caso.
 #define AST_SYMBOL 1
 #define AST_ADD 2
-#define AST_VARIABLE 3
+#define AST_SUB 3
 #define AST_DEC 4
+#define AST_ASS 5
+#define AST_LCMD 6
+#define AST_VARIABLE 7
+
 
 typedef struct ast_node{
     int type;
