@@ -16,6 +16,15 @@
 %type <ast>lcmd
 %type <ast> read
 %type <ast> block
+%type <ast> type
+%type <ast> reset
+%type <ast> l_func_args
+%type <ast> reset_func_par
+%type <ast> lpe
+%type <ast> l_func_par
+
+
+
 
 %token KW_CHAR
 %token KW_INT
@@ -29,6 +38,7 @@
 %token KW_RETURN
 %token KW_PRINT
 %token KW_TO
+
 
 %token OPERATOR_LE
 %token OPERATOR_GE
@@ -75,9 +85,9 @@ ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
 dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $6, 0, 0); }
 |KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd { $$ = astreeCreate(AST_IF_THEN_ELSE, 0, $3, $6, $8, 0); }
 ;
-    |KW_WHILE '(' exp ')' lcmd
+    |KW_WHILE '(' exp ')' lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
     |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astreeCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
-    |func_dec
+    |func_dec 
     |type TK_IDENTIFIER '=' LIT_REAL ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
     |type TK_IDENTIFIER '=' LIT_CHAR ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
     |type TK_IDENTIFIER '=' LIT_INTEGER ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
@@ -89,19 +99,19 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $6, 
     ;
 
 reset: ',' func_args reset
-    |
+    |{$$ = 0;}
     ;
 block: '{' lcmd '}' { $$ = astreeCreate(ASTREE_BLOCK, 0, $2, 0, 0, 0); }
 
-    |     ;
+    |{$$ = 0;}     ;
 
 
 
 
-lcmd: cmd  ';'lcmd
-|
-| cmd ';'cmd lcmd
-|dec
+lcmd: cmd  ';'lcmd { $$ = astreeCreate(ASTREE_LCMD, 0, $1, $3, 0, 0);}
+|{$$ = 0;}
+| cmd ';'cmd lcmd { $$ = astreeCreate(ASTREE_LCMD, 0, $1, $3, $4, 0);}
+    |dec {$$ = $1;}
 ;
 
 
@@ -169,7 +179,7 @@ func_args: LIT_REAL
     ;
 
 l_func_args:func_args l_func_args
-    |
+    |{$$ = 0;}
     ;
 
 func_dec:func_header block
@@ -181,10 +191,10 @@ func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 func_par: type TK_IDENTIFIER
     ;
 l_func_par: func_par l_func_par
-    |
+    |{$$ = 0;}
     ;
 reset_func_par: ',' func_par reset_func_par
-    |
+    |{$$ = 0;}
     ;
 
 
@@ -201,7 +211,7 @@ pe:LIT_STRING
 
 
 lpe: pe lpe
-|
+|{$$ = 0;}
 ;
 read:KW_READ TK_IDENTIFIER { $$ = astreeCreate(AST_READ, $2, 0, 0, 0, 0); }
 ;
