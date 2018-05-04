@@ -38,7 +38,7 @@ void astPrint(AST *node, int level){
     fprintf(stderr, "  ");
   fprintf(stderr,"AST(");
   switch(node->type){
-    case SYMBOL: fprintf(stderr, "AST_SYMBOL,\n");      break;
+    case SYMBOL: fprintf(stderr, "AST_SYMBOL,\n"); fprtinf()      break;
     case AST_ADD: fprintf(stderr, "AST_ADD,\n");      break;
     case AST_SUB: fprintf(stderr, "AST_SUB,\n");      break;
     case AST_DEC: fprintf(stderr, "AST_DEC,\n");      break;
@@ -90,22 +90,81 @@ void astPrint(AST *node, int level){
     case AST_FUNC_HEADER: fprintf(stderr, "AST_FUNC_HEADER,\n");      break;
     case AST_FUNC_PAR_LIST: fprintf(stderr, "AST_FUNC_PAR_LIST,\n");      break;
     case AST_FUNC_PAR: fprintf(stderr, "AST_FUNC_PAR,\n");      break;
-    case AST_PRINT_LIST: fprintf(stderr, "AST_PRINT_LIST,\n");      break;
-    case END_SYMBOL: fprintf(stderr, "END_SYMBOL,\n");      break;
-    case PTR_SYMBOL: fprintf(stderr, "PTR_SYMBOL,\n");      break;
-    case AST_PRINT: fprintf(stderr, "AST_PRINT,\n");      break;
-    case AST_READ: fprintf(stderr, "AST_READ,\n");      break;
-    case AST_FUNC_HEADER_CHAR: fprintf(stderr, "AST_FUNC_HEADER_CHAR,\n");      break;
-    case AST_FUNC_HEADER_INT: fprintf(stderr, "AST_FUNC_HEADER_INT,\n");      break;
-    case AST_FUNC_HEADER_FLOAT: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");      break;
-    case AST_FUNC_PAR_INT: fprintf(stderr, "AST_FUNC_PAR_INT,\n");      break;
-    case AST_END_VEC_ATRIBUTION: fprintf(stderr, "AST_END_VEC_ATRIBUTION,\n");      break;
-    case AST_VARIABLE_PTR_CHAR: fprintf(stderr, "AST_VARIABLE_PTR_CHAR,\n");      break;
-    case AST_VARIABLE_PTR_INT: fprintf(stderr, "AST_VARIABLE_PTR_INT,\n");      break;
-    case AST_VARIABLE_PTR_FLOAT: fprintf(stderr, "AST_VARIABLE_PTR_FLOAT,\n");      break;
+    case AST_PRINT_LIST: fprintf(stderr, "AST_PRINT_LIST,\n");
+          fprintf(fileTree,"print");
+          nodeType(Son0);
+          //KW_PRINT lpe
+          break;
+    //case END_SYMBOL: fprintf(stderr, "END_SYMBOL,\n");      break;
+    //case PTR_SYMBOL: fprintf(stderr, "PTR_SYMBOL,\n");
+          
+          break;
+    case AST_PRINT: fprintf(stderr, "AST_PRINT,\n");
+          fprintf(fileTree,"print ");
+          nodeType(node->Son0);
+          //KW_PRINT lpe
+          break;
+    case AST_READ: fprintf(stderr, "AST_READ,\n");
+          fprintf(fileTree,"read $s",yytext);
+          break;
+    case AST_FUNC_HEADER_FLOAT: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
+          fprintf(fileTree,"float %s (",yytext);
+          nodeType(node->Son0);
+          nodeType(node->Son1);
+          fprintf(fileTree,")");
+          break;
+      case AST_FUNC_HEADER_CHAR: fprintf(stderr, "AST_FUNC_HEADER_CHAR,\n");
+          fprintf(fileTree,"int %s (",yytext);
+          nodeType(node->Son0);
+          nodeType(node->Son1);
+          fprintf(fileTree,")");
+          break;
+      case AST_FUNC_HEADER_INT: fprintf(stderr, "AST_FUNC_HEADER_INT,\n");
+          fprintf(fileTree,"int %s (",yytext);
+          nodeType(node->Son0);
+          nodeType(node->Son1);
+          fprintf(fileTree,")");
+          break;
+          //KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+    case AST_FUNC_PAR_CHAR: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
+          fprintf(fileTree,"char %s ",yytext);
+          break;
+    case AST_FUNC_PAR_INT: fprintf(stderr, "AST_FUNC_PAR_INT,\n");
+          fprintf(fileTree,"int %s ",yytext);
+          //KW_INT TK_IDENTIFIER
+          break;
+    case AST_FUNC_PAR_FLOAT: fprintf(stderr, "AST_FUNC_HEADER_FLOAT,\n");
+          fprintf(fileTree,"float %s ",yytext);
+          break;
+    case AST_END_VEC_ATRIBUTION: fprintf(stderr, "AST_END_VEC_ATRIBUTION,\n");'
+          fprintf(fileTree,"%s = &",yytext);
+          nodeType(nodeType->Son0);
+          fprintf(fileTree,"[");
+          fprintf(nodeType(Son1);
+          fprintf(fileTree,"]");
+          //TK_IDENTIFIER '=''&'exp'['exp']'
+          break;
+    case AST_VARIABLE_PTR_CHAR: fprintf(stderr, "AST_VARIABLE_PTR_CHAR,\n");
+          fprintf(fileTree,"char # $s =");
+          nodeType(node->Son0);
+          break;
+    case AST_VARIABLE_PTR_INT: fprintf(stderr, "AST_VARIABLE_PTR_INT,\n");
+          fprintf(fileTree,"int # $s =");
+          nodeType(node->Son0);
+          break;
+    case AST_VARIABLE_PTR_FLOAT: fprintf(stderr, "AST_VARIABLE_PTR_FLOAT,\n");
+          fprintf(fileTree,"float # $s =");
+          nodeType(node->Son0);
+          break;
+
     case AST_VAR_PRINT: fprintf(stderr, "AST_VAR_PRINT,\n");      break;
-    case AST_VAR_END: fprintf(stderr, "AST_VAR_END,\n");      break;
-    case AST_VAR_PTR: fprintf(stderr, "AST_VAR_PTR,\n");      break;
+          fprintf(fileTree,"%s",yytext);
+    case AST_VAR_END: fprintf(stderr, "AST_VAR_END,\n");
+          fprintf(fileTree,"&%s",yytext);
+          break;
+    case AST_VAR_PTR: fprintf(stderr, "AST_VAR_PTR,\n");
+          fprintf(fileTree,"#%s",yytext);
+          break;
 
 
 

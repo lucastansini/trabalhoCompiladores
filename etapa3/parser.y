@@ -205,7 +205,7 @@ func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCre
 
 func_par: KW_INT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_INT, $2,0,  0, 0, 0); }
 |KW_FLOAT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_FLOAT, $2, 0, 0, 0, 0); }
-|KW_CHAR TK_IDENTIFIER {$$ = astCreate(AST_FUNC_HEADER_CHAR,$2, 0,  0, 0, 0); }
+|KW_CHAR TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_CHAR,$2, 0,  0, 0, 0); }
     ;
 l_func_par: func_par l_func_par {$$ = astCreate(AST_FUNC_PAR_LIST, 0, $1, $2, 0, 0); }
     |{$$ = 0;}
