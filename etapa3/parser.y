@@ -90,7 +90,7 @@ AST *ast_Geral;
 program: ldec {ast_Geral = $1;}
     ;
 
-ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
+ldec:dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
     | {$$ = 0;}
     ;
 
@@ -99,9 +99,9 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
 |KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
 |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
 |func_dec {$$ = $1;}
-|KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
-|KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
-|KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+|KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_INT,$2,$4,0,0,0);}
+|KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_CHAR,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_FLOAT,$2,$4,0,0,0);}
 |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
 |KW_INT TK_IDENTIFIER'['exp']' ';'  {$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
 |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
@@ -120,8 +120,6 @@ reset: ',' func_args reset  {(AST_FUNC_RESET, 0, $2, $3, 0, 0); }
 block: '{' lcmd '}' { $$ = astCreate(AST_BLOCK, 0, $2, 0, 0, 0); }
 
     |{$$ = 0;}     ;
-
-
 
 
 lcmd: cmd  ';'lcmd { $$ = astCreate(AST_LCMD, 0, $1, $3, 0, 0);}
@@ -166,7 +164,7 @@ exp:TK_IDENTIFIER { $$ = astCreate(AST_VARIABLE,$1, 0,  0, 0, 0); }
     |LIT_CHAR { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
     |LIT_REAL { $$ = astCreate(SYMBOL,$1, 0,  0, 0, 0); }
     |LIT_INTEGER { $$ = astCreate(SYMBOL, $1, 0,  0, 0, 0); }
-    |exp '+' exp  { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0); }
+    |exp '+' exp  { $$ = astCreate(AST_ADD, 0, $1, $3, 0, 0); }
     |exp '-' exp  { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0); }
     |exp '*' exp  { $$ = astCreate(AST_MULT, 0, $1, $3, 0, 0); }
     |exp '/' exp  { $$ = astCreate(AST_DIV, 0, $1, $3, 0, 0); }

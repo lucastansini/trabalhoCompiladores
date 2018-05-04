@@ -82,6 +82,9 @@
 #define AST_VAR_END 70
 #define AST_VAR_PTR 71
 #define AST_FUNC_PAR_CHAR 72
+#define AST_VARIABLE_DEC_FLOAT 73
+#define AST_VARIABLE_DEC_INT 74
+#define AST_VARIABLE_DEC_CHAR 75
 
 typedef struct ast_node{
     int type;
