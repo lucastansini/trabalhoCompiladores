@@ -96,19 +96,19 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
     |KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
     |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
     |func_dec {$$ = $1;}
-    |KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';' {$$ = astCreate(AST_VARIABLE,0,$2,0,$4,0);}
-    |KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';' {$$ = astCreate(AST_VARIABLE,0,$2,0,$4,0);}
-    |KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';' {$$ = astCreate(AST_VARIABLE,0,$2,0,$4,0);}
-    |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,0,$2,$4,0,0);}
-    |KW_INT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_INT,0,$2,$4,0,0);}
-    |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,0,$2,$4,0,0);}
-    |KW_FLOAT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,0,$2,$4,0,0);}
-    |KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,0,$2,$4,0,0);}
-    |KW_CHAR TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,0,$2,$4,0,0);}
+    |KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+    |KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+    |KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE,$2,$4,0,0,0);}
+    |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
+    |KW_INT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
+    |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
+    |KW_FLOAT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,$2,$4,0,0,0);}
+    |KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,0,0,0);}
+    |KW_CHAR TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,$2,$4,0,0,0);}
 
-    |KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'{$$ = astCreate(AST_VARIABLE_PTR_FLOAT,0,$3,$5,0,0);}
-    |KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER ';'{$$ = astCreate(AST_VARIABLE_PTR_CHAR,0,$3,$5,0,0);}
-    |KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,0,$3,$5,0,0);}
+    |KW_FLOAT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_FLOAT,$3,$5,0,0,0);}
+    |KW_CHAR '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_CHAR,$3,$5,0,0,0);}
+    |KW_INT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,$3,$5,0,0,0);}
     ;
 
 
@@ -132,25 +132,25 @@ lcmd: cmd  ';'lcmd { $$ = astCreate(AST_LCMD, 0, $1, $3, 0, 0);}
 
 
 cmd:block
-    | TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,0, $1,$3,0,0);}
-    | '#'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_PTR_ATRIBUTION,0, $2,$4,0,0);}
-    | '&'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_END_ATRIBUTION,0, $2,$4,0,0);}
-    | TK_IDENTIFIER '=''#'exp {$$ = astCreate(AST_PTR_ATRIBUTION,0, $1,$4,0,0);}
-    | TK_IDENTIFIER '=''&'exp {$$ = astCreate(AST_END_ATRIBUTION,0, $1,$4,0,0);}
-    | TK_IDENTIFIER'['exp']' '=' exp {$$ = astCreate(AST_VEC_ATRIBUTION,0, $1,$3,$6,0);}
-    | '#'TK_IDENTIFIER'['exp']' '='exp {$$ = astCreate(AST_TO_PTR_VEC_ATRIBUTION,0, $2,$4,$7,0);}
-    | '&'TK_IDENTIFIER'['exp']' '='exp {astCreate(AST_TO_END_VEC_ATRIBUTION,0, $2,$4,$7,0);}
-    | TK_IDENTIFIER '=''#'exp '['exp']' {astCreate(AST_PTR_VEC_ATRIBUTION,0, $1,$4,$6,0);}
-    | TK_IDENTIFIER '=''&'exp'['exp']' {astCreate(AST_END_VEC_ATRIBUTION,0, $1,$4,$6,0);}
-    |TK_IDENTIFIER'(' l_func_args reset')' {astCreate(AST_FUNCTIONCALL,0,$1,$3,$4,0);}
+    | TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,$1,$3, 0,0,0);}
+    | '#'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_PTR_ATRIBUTION,$2, $4,0,0,0);}
+    | '&'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_END_ATRIBUTION,$2, $4,0,0,0);}
+    | TK_IDENTIFIER '=''#'exp {$$ = astCreate(AST_PTR_ATRIBUTION,$1,$4,0 ,0,0);}
+    | TK_IDENTIFIER '=''&'exp {$$ = astCreate(AST_END_ATRIBUTION,$1,$4, 0,0,0);}
+    | TK_IDENTIFIER'['exp']' '=' exp {$$ = astCreate(AST_VEC_ATRIBUTION,$1,$3,$6,0 ,0);}
+    | '#'TK_IDENTIFIER'['exp']' '='exp {$$ = astCreate(AST_TO_PTR_VEC_ATRIBUTION,$2,$4,$7,0 ,0);}
+    | '&'TK_IDENTIFIER'['exp']' '='exp {astCreate(AST_TO_END_VEC_ATRIBUTION,$2,$4,$7,0, 0);}
+    | TK_IDENTIFIER '=''#'exp '['exp']' {astCreate(AST_PTR_VEC_ATRIBUTION,$1,$4,$6,0, 0);}
+    | TK_IDENTIFIER '=''&'exp'['exp']' {astCreate(AST_END_VEC_ATRIBUTION, $1,$4,$6,0,0);}
+    |TK_IDENTIFIER'(' l_func_args reset')' {astCreate(AST_FUNCTIONCALL,$1,$3,$4,0,0);}
     |print  {$$ = $1;}
     |read  {$$ = $1;}
     |KW_RETURN exp {astCreate(AST_RETURN,0,$2,0,0,0);}
     ;
 
-lit:LIT_INTEGER {(AST_INT, 0, $1, 0, 0, 0); }
-    |LIT_REAL {(AST_FLOAT, 0, $1, 0, 0, 0); }
-    |LIT_CHAR  {(AST_CHAR, 0, $1, 0, 0, 0); }
+lit:LIT_INTEGER {(AST_INT, $1,0,  0, 0, 0); }
+    |LIT_REAL {(AST_FLOAT, $1,0, 0, 0, 0); }
+    |LIT_CHAR  {(AST_CHAR, $1,0,  0, 0, 0); }
     ;
 
 vet_dec: KW_FLOAT vet_dec
@@ -160,11 +160,11 @@ vet_dec: KW_FLOAT vet_dec
 
     ;
 
-exp:TK_IDENTIFIER { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
-    |TK_IDENTIFIER'['exp']' { $$ = astCreate(READ_VEC, 0, $1, $3, 0, 0); }
-    |LIT_CHAR { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
-    |LIT_REAL { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
-    |LIT_INTEGER { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
+exp:TK_IDENTIFIER { $$ = astCreate(AST_VAR,$1, 0,  0, 0, 0); }
+    |TK_IDENTIFIER'['exp']' { $$ = astCreate(READ_VEC, $1, $3, 0, 0, 0); }
+    |LIT_CHAR { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
+    |LIT_REAL { $$ = astCreate(SYMBOL,$1, 0,  0, 0, 0); }
+    |LIT_INTEGER { $$ = astCreate(SYMBOL, $1, 0,  0, 0, 0); }
     |exp '+' exp  { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0); }
     |exp '-' exp  { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0); }
     |exp '*' exp  { $$ = astCreate(AST_MULT, 0, $1, $3, 0, 0); }
@@ -178,16 +178,16 @@ exp:TK_IDENTIFIER { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
     |exp OPERATOR_NE exp { $$ = astCreate(AST_NE, 0, $1, $3, 0, 0); }
     |exp OPERATOR_AND exp { $$ = astCreate(AST_AND, 0, $1, $3, 0, 0); }
     |exp OPERATOR_OR exp { $$ = astCreate(AST_OR, 0, $1, $3, 0, 0); }
-    |TK_IDENTIFIER '(' l_func_args reset ')' { $$ = astCreate(AST_FUNCTIONCALL, 0, $1, $3, $4, 0); }
+    |TK_IDENTIFIER '(' l_func_args reset ')' { $$ = astCreate(AST_FUNCTIONCALL, $1, $3, $4,0,  0); }
     |'(' exp ')'  { $$ = astCreate(AST_PARENTHESES, 0, $2, 0, 0, 0); }
     ;
 
-func_args: LIT_REAL {$$ = $1;}
-    |LIT_CHAR  {$$ = $1;}
-    |LIT_INTEGER  {$$ = $1;}
-    |TK_IDENTIFIER  {$$ = $1;}
-    |'#' TK_IDENTIFIER  { $$ = astCreate(AST_PTR, 0, $2, 0, 0, 0);}
-    |'&' TK_IDENTIFIER  { $$ = astCreate(AST_END, 0, $2, 0, 0, 0);}
+func_args: LIT_REAL { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
+    |LIT_CHAR  { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
+    |LIT_INTEGER { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
+    |TK_IDENTIFIER  { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
+    |'#' TK_IDENTIFIER  { $$ = astCreate(AST_PTR, $2, 0, 0, 0, 0);}
+    |'&' TK_IDENTIFIER  { $$ = astCreate(AST_END, $2, 0, 0, 0, 0);}
     ;
 
 l_func_args:func_args l_func_args {$$ = astCreate(AST_FUNC_ARGL_LIST, 0, $1, $2, 0, 0); }
@@ -202,9 +202,9 @@ func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCre
 |KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_CHAR, 0, $4, $5, 0, 0); }
 ;
 
-func_par: KW_INT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_INT, 0, $2, 0, 0, 0); }
-|KW_FLOAT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_FLOAT, 0, $2, 0, 0, 0); }
-|KW_CHAR TK_IDENTIFIER {$$ = astCreate(AST_FUNC_HEADER_CHAR, 0, $2, 0, 0, 0); }
+func_par: KW_INT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_INT, $2,0,  0, 0, 0); }
+|KW_FLOAT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_FLOAT, $2, 0, 0, 0, 0); }
+|KW_CHAR TK_IDENTIFIER {$$ = astCreate(AST_FUNC_HEADER_CHAR,$2, 0,  0, 0, 0); }
     ;
 l_func_par: func_par l_func_par {$$ = astCreate(AST_FUNC_PAR_LIST, 0, $1, $2, 0, 0); }
     |{$$ = 0;}
@@ -218,10 +218,10 @@ print:KW_PRINT lpe {$$ = astCreate(AST_PRINT_LIST, 0, 0, $2, 0, 0); }
 ;
 
 
-pe:LIT_STRING { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
-|TK_IDENTIFIER { $$ = astCreate(SYMBOL, 0, $1, 0, 0, 0); }
-|'&'TK_IDENTIFIER { $$ = astCreate(END_SYMBOL, 0, $2, 0, 0, 0); }
-|'#'TK_IDENTIFIER { $$ = astCreate(PTR_SYMBOL, 0, $2, 0, 0, 0); }
+pe:LIT_STRING { $$ = astCreate(AST_VAR_PRINT, $1,0,  0, 0, 0); }
+|TK_IDENTIFIER { $$ = astCreate(AST_VAR_PRINT,$1, 0,  0, 0, 0); }
+|'&'TK_IDENTIFIER { $$ = astCreate(AST_VAR_END, $2,0,  0, 0, 0); }
+|'#'TK_IDENTIFIER { $$ = astCreate(AST_VAR_PTR,$2, 0,  0, 0, 0); }
 ;
 
 
