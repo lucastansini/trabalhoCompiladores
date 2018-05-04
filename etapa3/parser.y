@@ -1,7 +1,7 @@
 
 //Declarações para pegar o yylval.symbol
 %union{
-    #inclde<ast.h>
+    #include<AST.h>
     struct hash_node *symbol;
     struct ast_node *ast;
     
@@ -94,9 +94,9 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $6, 
     |KW_WHILE '(' exp ')' lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
     |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astreeCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
     |func_dec {$$ = $1;}
-    |type TK_IDENTIFIER '=' LIT_REAL ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
-    |type TK_IDENTIFIER '=' LIT_CHAR ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
-    |type TK_IDENTIFIER '=' LIT_INTEGER ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
+    |KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
+    |KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
+    |KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';' {$$ = astCreate(AST_VARIABLE,0,$1,0,$4,0);}
     |KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,0,$2,$4,0,0);}
     |KW_INT TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_INT,0,$2,$4,0,0);}
     |KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,0,$2,$4,0,0);}
@@ -104,7 +104,9 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astreeCreate(AST_IF_THEN, 0, $3, $6, 
     |KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,0,$2,$4,0,0);}
     |KW_CHAR TK_IDENTIFIER'['exp']' ';' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,0,$2,$4,0,0);}
 
-    |type '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+    |KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER {$$ = astCreate(AST_VARIABLE_PTR_FLOAT,0,$2,$4,0,0);} ';'
+    |KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER {$$ = astCreate(AST_VARIABLE_PTR_CHAR,0,$2,$4,0,0);} ';'
+    |KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER {$$ = astCreate(AST_VARIABLE_PTR_INT,0,$2,$4,0,0);} ';'
     ;
 
 
@@ -135,7 +137,7 @@ cmd:block
     | TK_IDENTIFIER '=''&'exp {$$ = astreeCreate(AST_END_ATRIBUTION,0, $1,$4,0,0);}
     | TK_IDENTIFIER'['exp']' '=' exp {$$ = astreeCreate(AST_VEC_ATRIBUTION,0, $1,$3,$6,0);}
     | '#'TK_IDENTIFIER'['exp']' '='exp {$$ = astreeCreate(AST_TO_PTR_VEC_ATRIBUTION,0, $2,$4,$7,0);}
-    | '&'TK_IDENTIFIER'['exp']' '='exp {astreeCreate(AST_TO_END VEC_ATRIBUTION,0, $2,$4,$7,0);}
+    | '&'TK_IDENTIFIER'['exp']' '='exp {astreeCreate(AST_TO_END_VEC_ATRIBUTION,0, $2,$4,$7,0);}
     | TK_IDENTIFIER '=''#'exp '['exp']' {astreeCreate(AST_PTR_VEC_ATRIBUTION,0, $1,$4,$6,0);}
     | TK_IDENTIFIER '=''&'exp'['exp']' {astreeCreate(AST_END_VEC_ATRIBUTION,0, $1,$4,$6,0);}
     |TK_IDENTIFIER'(' l_func_args reset')' {astreeCreate(AST_FUNC_CALL,0,$1,$3,$4,0);}
@@ -169,8 +171,8 @@ exp:TK_IDENTIFIER { $$ = astreeCreate(SYMBOL, 0, $1, 0, 0, 0); }
     |exp OPERATOR_LE exp { $$ = astreeCreate(AST_LE, 0, $1, $3, 0, 0); }
     |exp OPERATOR_GE exp { $$ = astreeCreate(AST_GE, 0, $1, $3, 0, 0); }
     |exp OPERATOR_EQ exp { $$ = astreeCreate(AST_EQ, 0, $1, $3, 0, 0); }
-    |exp OPERATOR_NE exp { $$ = astreeCreate(AST, 0, $1, $3, 0, 0); }
-    |exp OPERATOR_AND exp { $$ = astreeCreate(ASTAND, 0, $1, $3, 0, 0); }
+    |exp OPERATOR_NE exp { $$ = astreeCreate(AST_NE, 0, $1, $3, 0, 0); }
+    |exp OPERATOR_AND exp { $$ = astreeCreate(AST_AND, 0, $1, $3, 0, 0); }
     |exp OPERATOR_OR exp { $$ = astreeCreate(AST_OR, 0, $1, $3, 0, 0); }
     |TK_IDENTIFIER '(' l_func_args reset ')' { $$ = astreeCreate(FUNC_CALL, 0, $1, $3, $4, 0); }
     |'(' exp ')'  { $$ = astreeCreate(AST_PARENTHESES, 0, $2, 0, 0, 0); }
