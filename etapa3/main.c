@@ -2,6 +2,8 @@
 #include <stdlib.h>
 extern FILE * yyin;
 
+extern AST* ast;
+
 int main(int argc, char **argv)
 {
     int token;
@@ -24,7 +26,7 @@ int main(int argc, char **argv)
     yyparse();
 
 
-    //astPrint();
+    astPrint(ast,0);
 
     exit (0);
 }

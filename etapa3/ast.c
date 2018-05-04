@@ -1,5 +1,6 @@
-#include "AST.h"
-
+#include "ast.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #define FILHOZERO 0
 #define FILHOUM 1
@@ -35,9 +36,9 @@ void astPrint(AST *node, int level){
   }
   for(i; i<level; i++)
     fprintf(stderr, "  ");
-  fprintf(sterr,"AST(");
+  fprintf(stderr,"AST(");
   switch(node->type){
-    case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL,\n");
+    case SYMBOL: fprintf(stderr, "AST_SYMBOL,\n");
       break;
     default: fprintf(stderr,"UNKNOWN,\n");
   }

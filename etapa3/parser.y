@@ -1,9 +1,10 @@
 
 %{
+#include "ast.c"
 extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
-#include "ast.h"
+AST *ast;
     %}
 
 
@@ -86,7 +87,7 @@ extern int getLineNumber();
 
 
 %%
-program: ldec {$$ = $1; astPrint($1,0);}
+program: ldec {ast = $1;}
     ;
 
 ldec: dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
