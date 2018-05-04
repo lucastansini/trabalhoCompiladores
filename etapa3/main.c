@@ -26,7 +26,9 @@ int main(int argc, char **argv)
     yyparse();
 
 
-    astPrint(ast,0);
+    //astPrint(ast,0);
+
+
 
     exit (0);
 }
