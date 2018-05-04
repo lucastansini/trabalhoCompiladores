@@ -34,10 +34,10 @@ to   				{return KW_TO;}
 
 
 "'"[^\n]"'"								{yylval.symbol = hashInsert(LIT_CHAR,yytext);return LIT_CHAR;}
-\"([^\"\\\n]|\\[\"\\n])+\"				{hashInsert(LIT_STRING,yytext);return LIT_STRING;}
-[a-zA-Z_]{1}[a-zA-Z0-9_]*					{hashInsert(TK_IDENTIFIER,yytext);  return TK_IDENTIFIER;}
-[0-9]+									{hashInsert(LIT_INTEGER,yytext); return LIT_INTEGER; }
-[0-9]+"."[0-9]+							{hashInsert(LIT_REAL,yytext);  return LIT_REAL; }
+\"([^\"\\\n]|\\[\"\\n])+\"				{yylval.symbol = hashInsert(LIT_STRING,yytext);return LIT_STRING;}
+[a-zA-Z_]{1}[a-zA-Z0-9_]*					{yylval.symbol = hashInsert(TK_IDENTIFIER,yytext);  return TK_IDENTIFIER;}
+[0-9]+									{yylval.symbol = hashInsert(LIT_INTEGER,yytext); return LIT_INTEGER; }
+[0-9]+"."[0-9]+							{yylval.symbol = hashInsert(LIT_REAL,yytext);  return LIT_REAL; }
 
 
 

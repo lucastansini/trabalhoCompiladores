@@ -79,10 +79,10 @@ union YYSTYPE
 {
 #line 3 "parser.y" /* yacc.c:1909  */
 
-    #inclde<ast.h>
+
     struct hash_node *symbol;
     struct ast_node *ast;
-    
+
 
 #line 88 "parser.tab.h" /* yacc.c:1909  */
 };

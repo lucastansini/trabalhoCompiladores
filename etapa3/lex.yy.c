@@ -916,22 +916,22 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 37 "scanner.l"
-{hashInsert(LIT_STRING,yytext);return LIT_STRING;}
+{yylval.symbol = hashInsert(LIT_STRING,yytext);return LIT_STRING;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 38 "scanner.l"
-{hashInsert(TK_IDENTIFIER,yytext);  return TK_IDENTIFIER;}
+{yylval.symbol = hashInsert(TK_IDENTIFIER,yytext);  return TK_IDENTIFIER;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 39 "scanner.l"
-{hashInsert(LIT_INTEGER,yytext); return LIT_INTEGER; }
+{yylval.symbol = hashInsert(LIT_INTEGER,yytext); return LIT_INTEGER; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 40 "scanner.l"
-{hashInsert(LIT_REAL,yytext);  return LIT_REAL; }
+{yylval.symbol = hashInsert(LIT_REAL,yytext);  return LIT_REAL; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP

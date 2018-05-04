@@ -1,41 +1,18 @@
-Nonterminals useless in grammar
-
-   vet_dec
-
-
 Terminals unused in grammar
 
-   KW_CHAR
-   KW_INT
-   KW_FLOAT
    TOKEN_ERROR
-   ':'
 
 
-Rules useless in grammar
-
-   82 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
-   83    | KW_INT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   84    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
-   85    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   86    | KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
-   87    | KW_CHAR TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-
-   88 vet_dec: KW_FLOAT vet_dec
-   89        | KW_CHAR vet_dec
-   90        | KW_INT vet_dec
-
-
-State 22 conflicts: 1 shift/reduce
-State 36 conflicts: 3 shift/reduce
-State 63 conflicts: 6 shift/reduce
-State 78 conflicts: 3 shift/reduce
-State 86 conflicts: 13 shift/reduce, 9 reduce/reduce
-State 109 conflicts: 6 shift/reduce
-State 133 conflicts: 7 shift/reduce
-State 140 conflicts: 1 shift/reduce
-State 156 conflicts: 6 shift/reduce
-State 167 conflicts: 6 shift/reduce
+State 37 conflicts: 1 shift/reduce
+State 48 conflicts: 3 shift/reduce
+State 91 conflicts: 6 shift/reduce
+State 99 conflicts: 3 shift/reduce
+State 107 conflicts: 13 shift/reduce, 9 reduce/reduce
+State 147 conflicts: 6 shift/reduce
+State 163 conflicts: 7 shift/reduce
+State 183 conflicts: 1 shift/reduce
+State 210 conflicts: 6 shift/reduce
+State 229 conflicts: 6 shift/reduce
 
 
 Grammar
@@ -52,145 +29,163 @@ Grammar
     6    | KW_WHILE '(' exp ')' lcmd
     7    | KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
     8    | func_dec
-    9    | type TK_IDENTIFIER '=' LIT_REAL ';'
-   10    | type TK_IDENTIFIER '=' LIT_CHAR ';'
-   11    | type TK_IDENTIFIER '=' LIT_INTEGER ';'
-   12    | type '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+    9    | KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';'
+   10    | KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';'
+   11    | KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';'
+   12    | KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   13    | KW_INT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   14    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   15    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   16    | KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   17    | KW_CHAR TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   18    | KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   19    | KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   20    | KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
 
-   13 reset: ',' func_args reset
-   14      | %empty
+   21 reset: ',' func_args reset
+   22      | %empty
 
-   15 block: '{' lcmd '}'
-   16      | %empty
+   23 block: '{' lcmd '}'
+   24      | %empty
 
-   17 lcmd: cmd ';' lcmd
-   18     | %empty
-   19     | cmd ';' cmd lcmd
-   20     | dec
+   25 lcmd: cmd ';' lcmd
+   26     | %empty
+   27     | cmd ';' cmd lcmd
+   28     | dec
 
-   21 cmd: block
-   22    | TK_IDENTIFIER '=' exp
-   23    | '#' TK_IDENTIFIER '=' exp
-   24    | '&' TK_IDENTIFIER '=' exp
-   25    | TK_IDENTIFIER '=' '#' exp
-   26    | TK_IDENTIFIER '=' '&' exp
-   27    | TK_IDENTIFIER '[' exp ']' '=' exp
-   28    | '#' TK_IDENTIFIER '[' exp ']' '=' exp
-   29    | '&' TK_IDENTIFIER '[' exp ']' '=' exp
-   30    | TK_IDENTIFIER '=' '#' exp '[' exp ']'
-   31    | TK_IDENTIFIER '=' '&' exp '[' exp ']'
-   32    | TK_IDENTIFIER '(' l_func_args reset ')'
-   33    | print
-   34    | read
-   35    | KW_RETURN exp
+   29 cmd: block
+   30    | TK_IDENTIFIER '=' exp
+   31    | '#' TK_IDENTIFIER '=' exp
+   32    | '&' TK_IDENTIFIER '=' exp
+   33    | TK_IDENTIFIER '=' '#' exp
+   34    | TK_IDENTIFIER '=' '&' exp
+   35    | TK_IDENTIFIER '[' exp ']' '=' exp
+   36    | '#' TK_IDENTIFIER '[' exp ']' '=' exp
+   37    | '&' TK_IDENTIFIER '[' exp ']' '=' exp
+   38    | TK_IDENTIFIER '=' '#' exp '[' exp ']'
+   39    | TK_IDENTIFIER '=' '&' exp '[' exp ']'
+   40    | TK_IDENTIFIER '(' l_func_args reset ')'
+   41    | print
+   42    | read
+   43    | KW_RETURN exp
 
-   36 type: LIT_INTEGER
-   37     | LIT_REAL
-   38     | LIT_CHAR
+   44 lit: LIT_INTEGER
+   45    | LIT_REAL
+   46    | LIT_CHAR
 
-   39 exp: TK_IDENTIFIER
-   40    | TK_IDENTIFIER '[' exp ']'
-   41    | LIT_CHAR
-   42    | LIT_REAL
-   43    | LIT_INTEGER
-   44    | exp '+' exp
-   45    | exp '-' exp
-   46    | exp '*' exp
-   47    | exp '/' exp
-   48    | exp '<' exp
-   49    | exp '>' exp
-   50    | '!' exp
-   51    | exp OPERATOR_LE exp
-   52    | exp OPERATOR_GE exp
-   53    | exp OPERATOR_EQ exp
-   54    | exp OPERATOR_NE exp
-   55    | exp OPERATOR_AND exp
-   56    | exp OPERATOR_OR exp
-   57    | TK_IDENTIFIER '(' l_func_args reset ')'
-   58    | '(' exp ')'
+   47 vet_dec: KW_FLOAT vet_dec
+   48        | KW_CHAR vet_dec
+   49        | KW_INT vet_dec
+   50        | lit
 
-   59 func_args: LIT_REAL
-   60          | LIT_CHAR
-   61          | LIT_INTEGER
-   62          | TK_IDENTIFIER
-   63          | '#' TK_IDENTIFIER
-   64          | '&' TK_IDENTIFIER
+   51 exp: TK_IDENTIFIER
+   52    | TK_IDENTIFIER '[' exp ']'
+   53    | LIT_CHAR
+   54    | LIT_REAL
+   55    | LIT_INTEGER
+   56    | exp '+' exp
+   57    | exp '-' exp
+   58    | exp '*' exp
+   59    | exp '/' exp
+   60    | exp '<' exp
+   61    | exp '>' exp
+   62    | '!' exp
+   63    | exp OPERATOR_LE exp
+   64    | exp OPERATOR_GE exp
+   65    | exp OPERATOR_EQ exp
+   66    | exp OPERATOR_NE exp
+   67    | exp OPERATOR_AND exp
+   68    | exp OPERATOR_OR exp
+   69    | TK_IDENTIFIER '(' l_func_args reset ')'
+   70    | '(' exp ')'
 
-   65 l_func_args: func_args l_func_args
-   66            | %empty
+   71 func_args: LIT_REAL
+   72          | LIT_CHAR
+   73          | LIT_INTEGER
+   74          | TK_IDENTIFIER
+   75          | '#' TK_IDENTIFIER
+   76          | '&' TK_IDENTIFIER
 
-   67 func_dec: func_header block
+   77 l_func_args: func_args l_func_args
+   78            | %empty
 
-   68 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+   79 func_dec: func_header block
 
-   69 func_par: type TK_IDENTIFIER
+   80 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+   81            | KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
+   82            | KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
-   70 l_func_par: func_par l_func_par
-   71           | %empty
+   83 func_par: KW_INT TK_IDENTIFIER
+   84         | KW_FLOAT TK_IDENTIFIER
+   85         | KW_CHAR TK_IDENTIFIER
 
-   72 reset_func_par: ',' func_par reset_func_par
-   73               | %empty
+   86 l_func_par: func_par l_func_par
+   87           | %empty
 
-   74 print: KW_PRINT lpe
+   88 reset_func_par: ',' func_par reset_func_par
+   89               | %empty
 
-   75 pe: LIT_STRING
-   76   | TK_IDENTIFIER
-   77   | '&' TK_IDENTIFIER
-   78   | '#' TK_IDENTIFIER
+   90 print: KW_PRINT lpe
 
-   79 lpe: pe lpe
-   80    | %empty
+   91 pe: LIT_STRING
+   92   | TK_IDENTIFIER
+   93   | '&' TK_IDENTIFIER
+   94   | '#' TK_IDENTIFIER
 
-   81 read: KW_READ TK_IDENTIFIER
+   95 lpe: pe lpe
+   96    | %empty
+
+   97 read: KW_READ TK_IDENTIFIER
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 50
-'#' (35) 12 23 25 28 30 63 78
-'&' (38) 24 26 29 31 64 77
-'(' (40) 4 5 6 7 32 57 58 68
-')' (41) 4 5 6 7 32 57 58 68
-'*' (42) 46
-'+' (43) 44
-',' (44) 13 72
-'-' (45) 45
-'/' (47) 47
-':' (58)
-';' (59) 9 10 11 12 17 19
-'<' (60) 48
-'=' (61) 7 9 10 11 12 22 23 24 25 26 27 28 29 30 31
-'>' (62) 49
-'[' (91) 27 28 29 30 31 40
-']' (93) 27 28 29 30 31 40
-'{' (123) 15
-'}' (125) 15
+'!' (33) 62
+'#' (35) 18 19 20 31 33 36 38 75 94
+'&' (38) 32 34 37 39 76 93
+'(' (40) 4 5 6 7 40 69 70 80 81 82
+')' (41) 4 5 6 7 40 69 70 80 81 82
+'*' (42) 58
+'+' (43) 56
+',' (44) 21 88
+'-' (45) 57
+'/' (47) 59
+':' (58) 12 14 16
+';' (59) 9 10 11 12 13 14 15 16 17 18 19 20 25 27
+'<' (60) 60
+'=' (61) 7 9 10 11 18 19 20 30 31 32 33 34 35 36 37 38 39
+'>' (62) 61
+'[' (91) 12 13 14 15 16 17 35 36 37 38 39 52
+']' (93) 12 13 14 15 16 17 35 36 37 38 39 52
+'{' (123) 23
+'}' (125) 23
 error (256)
-KW_CHAR (258)
-KW_INT (259)
-KW_FLOAT (260)
+KW_CHAR (258) 10 16 17 19 48 82 85
+KW_INT (259) 11 12 13 20 49 80 83
+KW_FLOAT (260) 9 14 15 18 47 81 84
 KW_IF (261) 4 5
 KW_THEN (262) 4 5
 KW_ELSE (263) 5
 KW_WHILE (264) 6
 KW_FOR (265) 7
-KW_READ (266) 81
-KW_RETURN (267) 35
-KW_PRINT (268) 74
+KW_READ (266) 97
+KW_RETURN (267) 43
+KW_PRINT (268) 90
 KW_TO (269) 7
-OPERATOR_LE (270) 51
-OPERATOR_GE (271) 52
-OPERATOR_EQ (272) 53
-OPERATOR_NE (273) 54
-OPERATOR_AND (274) 55
-OPERATOR_OR (275) 56
-TK_IDENTIFIER (276) 7 9 10 11 12 22 23 24 25 26 27 28 29 30 31 32 39
-    40 57 62 63 64 68 69 76 77 78 81
-LIT_INTEGER (277) 11 12 36 43 61
-LIT_REAL (278) 9 37 42 59
-LIT_CHAR (279) 10 38 41 60
-LIT_STRING (280) 75
+OPERATOR_LE (270) 63
+OPERATOR_GE (271) 64
+OPERATOR_EQ (272) 65
+OPERATOR_NE (273) 66
+OPERATOR_AND (274) 67
+OPERATOR_OR (275) 68
+TK_IDENTIFIER (276) 7 9 10 11 12 13 14 15 16 17 18 19 20 30 31 32 33
+    34 35 36 37 38 39 40 51 52 69 74 75 76 80 81 82 83 84 85 92 93
+    94 97
+LIT_INTEGER (277) 11 18 19 20 44 55 73
+LIT_REAL (278) 9 45 54 71
+LIT_CHAR (279) 10 46 53 72
+LIT_STRING (280) 91
 TOKEN_ERROR (281)
 
 
@@ -203,115 +198,132 @@ program (47)
 ldec (48)
     on left: 2 3, on right: 1 2
 dec (49)
-    on left: 4 5 6 7 8 9 10 11 12, on right: 2 20
+    on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20, on right:
+    2 28
 reset (50)
-    on left: 13 14, on right: 13 32 57
+    on left: 21 22, on right: 21 40 69
 block (51)
-    on left: 15 16, on right: 21 67
+    on left: 23 24, on right: 29 79
 lcmd (52)
-    on left: 17 18 19 20, on right: 4 5 6 7 15 17 19
+    on left: 25 26 27 28, on right: 4 5 6 7 23 25 27
 cmd (53)
-    on left: 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35, on right:
-    17 19
-type (54)
-    on left: 36 37 38, on right: 9 10 11 12 68 69
-exp (55)
-    on left: 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56
-    57 58, on right: 4 5 6 7 22 23 24 25 26 27 28 29 30 31 35 40 44
-    45 46 47 48 49 50 51 52 53 54 55 56 58
-func_args (56)
-    on left: 59 60 61 62 63 64, on right: 13 65
-l_func_args (57)
-    on left: 65 66, on right: 32 57 65
-func_dec (58)
-    on left: 67, on right: 8
-func_header (59)
-    on left: 68, on right: 67
-func_par (60)
-    on left: 69, on right: 70 72
-l_func_par (61)
-    on left: 70 71, on right: 68 70
-reset_func_par (62)
-    on left: 72 73, on right: 68 72
-print (63)
-    on left: 74, on right: 33
-pe (64)
-    on left: 75 76 77 78, on right: 79
-lpe (65)
-    on left: 79 80, on right: 74 79
-read (66)
-    on left: 81, on right: 34
+    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43, on right:
+    25 27
+lit (54)
+    on left: 44 45 46, on right: 50
+vet_dec (55)
+    on left: 47 48 49 50, on right: 12 13 14 15 16 17 47 48 49
+exp (56)
+    on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
+    69 70, on right: 4 5 6 7 12 13 14 15 16 17 30 31 32 33 34 35 36
+    37 38 39 43 52 56 57 58 59 60 61 62 63 64 65 66 67 68 70
+func_args (57)
+    on left: 71 72 73 74 75 76, on right: 21 77
+l_func_args (58)
+    on left: 77 78, on right: 40 69 77
+func_dec (59)
+    on left: 79, on right: 8
+func_header (60)
+    on left: 80 81 82, on right: 79
+func_par (61)
+    on left: 83 84 85, on right: 86 88
+l_func_par (62)
+    on left: 86 87, on right: 80 81 82 86
+reset_func_par (63)
+    on left: 88 89, on right: 80 81 82 88
+print (64)
+    on left: 90, on right: 41
+pe (65)
+    on left: 91 92 93 94, on right: 95
+lpe (66)
+    on left: 95 96, on right: 90 95
+read (67)
+    on left: 97, on right: 42
 
 
 State 0
 
     0 $accept: . program $end
 
-    KW_IF        shift, and go to state 1
-    KW_WHILE     shift, and go to state 2
-    KW_FOR       shift, and go to state 3
-    LIT_INTEGER  shift, and go to state 4
-    LIT_REAL     shift, and go to state 5
-    LIT_CHAR     shift, and go to state 6
+    KW_CHAR   shift, and go to state 1
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_IF     shift, and go to state 4
+    KW_WHILE  shift, and go to state 5
+    KW_FOR    shift, and go to state 6
 
     $default  reduce using rule 3 (ldec)
 
     program      go to state 7
     ldec         go to state 8
     dec          go to state 9
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
+    func_dec     go to state 10
+    func_header  go to state 11
 
 
 State 1
 
-    4 dec: KW_IF . '(' exp ')' KW_THEN lcmd
-    5    | KW_IF . '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
+   10 dec: KW_CHAR . TK_IDENTIFIER '=' LIT_CHAR ';'
+   16    | KW_CHAR . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   17    | KW_CHAR . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   19    | KW_CHAR . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   82 func_header: KW_CHAR . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
-    '('  shift, and go to state 13
+    TK_IDENTIFIER  shift, and go to state 12
+    '#'            shift, and go to state 13
 
 
 State 2
 
-    6 dec: KW_WHILE . '(' exp ')' lcmd
+   11 dec: KW_INT . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   12    | KW_INT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   13    | KW_INT . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   20    | KW_INT . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   80 func_header: KW_INT . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
-    '('  shift, and go to state 14
+    TK_IDENTIFIER  shift, and go to state 14
+    '#'            shift, and go to state 15
 
 
 State 3
 
-    7 dec: KW_FOR . '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
+    9 dec: KW_FLOAT . TK_IDENTIFIER '=' LIT_REAL ';'
+   14    | KW_FLOAT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
+   15    | KW_FLOAT . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
+   18    | KW_FLOAT . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   81 func_header: KW_FLOAT . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
-    '('  shift, and go to state 15
+    TK_IDENTIFIER  shift, and go to state 16
+    '#'            shift, and go to state 17
 
 
 State 4
 
-   36 type: LIT_INTEGER .
+    4 dec: KW_IF . '(' exp ')' KW_THEN lcmd
+    5    | KW_IF . '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
 
-    $default  reduce using rule 36 (type)
+    '('  shift, and go to state 18
 
 
 State 5
 
-   37 type: LIT_REAL .
+    6 dec: KW_WHILE . '(' exp ')' lcmd
 
-    $default  reduce using rule 37 (type)
+    '('  shift, and go to state 19
 
 
 State 6
 
-   38 type: LIT_CHAR .
+    7 dec: KW_FOR . '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
 
-    $default  reduce using rule 38 (type)
+    '('  shift, and go to state 20
 
 
 State 7
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 16
+    $end  shift, and go to state 21
 
 
 State 8
@@ -325,2527 +337,3151 @@ State 9
 
     2 ldec: dec . ldec
 
-    KW_IF        shift, and go to state 1
-    KW_WHILE     shift, and go to state 2
-    KW_FOR       shift, and go to state 3
-    LIT_INTEGER  shift, and go to state 4
-    LIT_REAL     shift, and go to state 5
-    LIT_CHAR     shift, and go to state 6
+    KW_CHAR   shift, and go to state 1
+    KW_INT    shift, and go to state 2
+    KW_FLOAT  shift, and go to state 3
+    KW_IF     shift, and go to state 4
+    KW_WHILE  shift, and go to state 5
+    KW_FOR    shift, and go to state 6
 
     $default  reduce using rule 3 (ldec)
 
-    ldec         go to state 17
+    ldec         go to state 22
     dec          go to state 9
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
+    func_dec     go to state 10
+    func_header  go to state 11
 
 
 State 10
-
-    9 dec: type . TK_IDENTIFIER '=' LIT_REAL ';'
-   10    | type . TK_IDENTIFIER '=' LIT_CHAR ';'
-   11    | type . TK_IDENTIFIER '=' LIT_INTEGER ';'
-   12    | type . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
-   68 func_header: type . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
-
-    TK_IDENTIFIER  shift, and go to state 18
-    '#'            shift, and go to state 19
-
-
-State 11
 
     8 dec: func_dec .
 
     $default  reduce using rule 8 (dec)
 
 
+State 11
+
+   79 func_dec: func_header . block
+
+    '{'  shift, and go to state 23
+
+    $default  reduce using rule 24 (block)
+
+    block  go to state 24
+
+
 State 12
 
-   67 func_dec: func_header . block
+   10 dec: KW_CHAR TK_IDENTIFIER . '=' LIT_CHAR ';'
+   16    | KW_CHAR TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
+   17    | KW_CHAR TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
+   82 func_header: KW_CHAR TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
 
-    '{'  shift, and go to state 20
-
-    $default  reduce using rule 16 (block)
-
-    block  go to state 21
+    '='  shift, and go to state 25
+    '('  shift, and go to state 26
+    '['  shift, and go to state 27
 
 
 State 13
 
-    4 dec: KW_IF '(' . exp ')' KW_THEN lcmd
-    5    | KW_IF '(' . exp ')' KW_THEN lcmd KW_ELSE lcmd
+   19 dec: KW_CHAR '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 28
+    TK_IDENTIFIER  shift, and go to state 28
 
 
 State 14
 
-    6 dec: KW_WHILE '(' . exp ')' lcmd
+   11 dec: KW_INT TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   12    | KW_INT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
+   13    | KW_INT TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
+   80 func_header: KW_INT TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 29
+    '='  shift, and go to state 29
+    '('  shift, and go to state 30
+    '['  shift, and go to state 31
 
 
 State 15
 
-    7 dec: KW_FOR '(' . TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
+   20 dec: KW_INT '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
 
-    TK_IDENTIFIER  shift, and go to state 30
+    TK_IDENTIFIER  shift, and go to state 32
 
 
 State 16
+
+    9 dec: KW_FLOAT TK_IDENTIFIER . '=' LIT_REAL ';'
+   14    | KW_FLOAT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
+   15    | KW_FLOAT TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
+   81 func_header: KW_FLOAT TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
+
+    '='  shift, and go to state 33
+    '('  shift, and go to state 34
+    '['  shift, and go to state 35
+
+
+State 17
+
+   18 dec: KW_FLOAT '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
+
+    TK_IDENTIFIER  shift, and go to state 36
+
+
+State 18
+
+    4 dec: KW_IF '(' . exp ')' KW_THEN lcmd
+    5    | KW_IF '(' . exp ')' KW_THEN lcmd KW_ELSE lcmd
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 43
+
+
+State 19
+
+    6 dec: KW_WHILE '(' . exp ')' lcmd
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 44
+
+
+State 20
+
+    7 dec: KW_FOR '(' . TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
+
+    TK_IDENTIFIER  shift, and go to state 45
+
+
+State 21
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 17
+State 22
 
     2 ldec: dec ldec .
 
     $default  reduce using rule 2 (ldec)
 
 
-State 18
-
-    9 dec: type TK_IDENTIFIER . '=' LIT_REAL ';'
-   10    | type TK_IDENTIFIER . '=' LIT_CHAR ';'
-   11    | type TK_IDENTIFIER . '=' LIT_INTEGER ';'
-   68 func_header: type TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
-
-    '='  shift, and go to state 31
-    '('  shift, and go to state 32
-
-
-State 19
-
-   12 dec: type '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
-
-    TK_IDENTIFIER  shift, and go to state 33
-
-
-State 20
-
-   15 block: '{' . lcmd '}'
-
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
-    TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
-
-    '}'       reduce using rule 18 (lcmd)
-    $default  reduce using rule 16 (block)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 42
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
-
-
-State 21
-
-   67 func_dec: func_header block .
-
-    $default  reduce using rule 67 (func_dec)
-
-
-State 22
-
-   39 exp: TK_IDENTIFIER .
-   40    | TK_IDENTIFIER . '[' exp ']'
-   57    | TK_IDENTIFIER . '(' l_func_args reset ')'
-
-    '('  shift, and go to state 46
-    '['  shift, and go to state 47
-
-    '['       [reduce using rule 39 (exp)]
-    $default  reduce using rule 39 (exp)
-
-
 State 23
 
-   43 exp: LIT_INTEGER .
+   23 block: '{' . lcmd '}'
 
-    $default  reduce using rule 43 (exp)
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    '}'       reduce using rule 26 (lcmd)
+    $default  reduce using rule 24 (block)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 54
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
 
 
 State 24
 
-   42 exp: LIT_REAL .
+   79 func_dec: func_header block .
 
-    $default  reduce using rule 42 (exp)
+    $default  reduce using rule 79 (func_dec)
 
 
 State 25
 
-   41 exp: LIT_CHAR .
+   10 dec: KW_CHAR TK_IDENTIFIER '=' . LIT_CHAR ';'
 
-    $default  reduce using rule 41 (exp)
+    LIT_CHAR  shift, and go to state 58
 
 
 State 26
 
-   50 exp: '!' . exp
+   82 func_header: KW_CHAR TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
+    KW_CHAR   shift, and go to state 59
+    KW_INT    shift, and go to state 60
+    KW_FLOAT  shift, and go to state 61
 
-    exp  go to state 48
+    $default  reduce using rule 87 (l_func_par)
+
+    func_par    go to state 62
+    l_func_par  go to state 63
 
 
 State 27
 
-   58 exp: '(' . exp ')'
+   16 dec: KW_CHAR TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
+   17    | KW_CHAR TK_IDENTIFIER '[' . exp ']' ';' vet_dec ';'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    exp  go to state 49
+    exp  go to state 64
 
 
 State 28
 
-    4 dec: KW_IF '(' exp . ')' KW_THEN lcmd
-    5    | KW_IF '(' exp . ')' KW_THEN lcmd KW_ELSE lcmd
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   19 dec: KW_CHAR '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ')'           shift, and go to state 62
+    '='  shift, and go to state 65
 
 
 State 29
 
-    6 dec: KW_WHILE '(' exp . ')' lcmd
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   11 dec: KW_INT TK_IDENTIFIER '=' . LIT_INTEGER ';'
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ')'           shift, and go to state 63
+    LIT_INTEGER  shift, and go to state 66
 
 
 State 30
 
-    7 dec: KW_FOR '(' TK_IDENTIFIER . '=' exp KW_TO exp ')' lcmd
+   80 func_header: KW_INT TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
-    '='  shift, and go to state 64
+    KW_CHAR   shift, and go to state 59
+    KW_INT    shift, and go to state 60
+    KW_FLOAT  shift, and go to state 61
+
+    $default  reduce using rule 87 (l_func_par)
+
+    func_par    go to state 62
+    l_func_par  go to state 67
 
 
 State 31
 
-    9 dec: type TK_IDENTIFIER '=' . LIT_REAL ';'
-   10    | type TK_IDENTIFIER '=' . LIT_CHAR ';'
-   11    | type TK_IDENTIFIER '=' . LIT_INTEGER ';'
+   12 dec: KW_INT TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
+   13    | KW_INT TK_IDENTIFIER '[' . exp ']' ';' vet_dec ';'
 
-    LIT_INTEGER  shift, and go to state 65
-    LIT_REAL     shift, and go to state 66
-    LIT_CHAR     shift, and go to state 67
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 68
 
 
 State 32
 
-   68 func_header: type TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
+   20 dec: KW_INT '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
 
-    LIT_INTEGER  shift, and go to state 4
-    LIT_REAL     shift, and go to state 5
-    LIT_CHAR     shift, and go to state 6
-
-    $default  reduce using rule 71 (l_func_par)
-
-    type        go to state 68
-    func_par    go to state 69
-    l_func_par  go to state 70
+    '='  shift, and go to state 69
 
 
 State 33
 
-   12 dec: type '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' . LIT_REAL ';'
 
-    '='  shift, and go to state 71
+    LIT_REAL  shift, and go to state 70
 
 
 State 34
 
-   81 read: KW_READ . TK_IDENTIFIER
+   81 func_header: KW_FLOAT TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
-    TK_IDENTIFIER  shift, and go to state 72
+    KW_CHAR   shift, and go to state 59
+    KW_INT    shift, and go to state 60
+    KW_FLOAT  shift, and go to state 61
+
+    $default  reduce using rule 87 (l_func_par)
+
+    func_par    go to state 62
+    l_func_par  go to state 71
 
 
 State 35
 
-   35 cmd: KW_RETURN . exp
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
+   15    | KW_FLOAT TK_IDENTIFIER '[' . exp ']' ';' vet_dec ';'
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    exp  go to state 73
+    exp  go to state 72
 
 
 State 36
 
-   74 print: KW_PRINT . lpe
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
 
-    TK_IDENTIFIER  shift, and go to state 74
-    LIT_STRING     shift, and go to state 75
-    '#'            shift, and go to state 76
-    '&'            shift, and go to state 77
-
-    TK_IDENTIFIER  [reduce using rule 80 (lpe)]
-    '#'            [reduce using rule 80 (lpe)]
-    '&'            [reduce using rule 80 (lpe)]
-    $default       reduce using rule 80 (lpe)
-
-    pe   go to state 78
-    lpe  go to state 79
+    '='  shift, and go to state 73
 
 
 State 37
 
-   22 cmd: TK_IDENTIFIER . '=' exp
-   25    | TK_IDENTIFIER . '=' '#' exp
-   26    | TK_IDENTIFIER . '=' '&' exp
-   27    | TK_IDENTIFIER . '[' exp ']' '=' exp
-   30    | TK_IDENTIFIER . '=' '#' exp '[' exp ']'
-   31    | TK_IDENTIFIER . '=' '&' exp '[' exp ']'
-   32    | TK_IDENTIFIER . '(' l_func_args reset ')'
+   51 exp: TK_IDENTIFIER .
+   52    | TK_IDENTIFIER . '[' exp ']'
+   69    | TK_IDENTIFIER . '(' l_func_args reset ')'
 
-    '='  shift, and go to state 80
-    '('  shift, and go to state 81
-    '['  shift, and go to state 82
+    '('  shift, and go to state 74
+    '['  shift, and go to state 75
+
+    '['       [reduce using rule 51 (exp)]
+    $default  reduce using rule 51 (exp)
 
 
 State 38
 
-   23 cmd: '#' . TK_IDENTIFIER '=' exp
-   28    | '#' . TK_IDENTIFIER '[' exp ']' '=' exp
-
-    TK_IDENTIFIER  shift, and go to state 83
-
-
-State 39
-
-   24 cmd: '&' . TK_IDENTIFIER '=' exp
-   29    | '&' . TK_IDENTIFIER '[' exp ']' '=' exp
-
-    TK_IDENTIFIER  shift, and go to state 84
-
-
-State 40
-
-   20 lcmd: dec .
-
-    $default  reduce using rule 20 (lcmd)
-
-
-State 41
-
-   21 cmd: block .
-
-    $default  reduce using rule 21 (cmd)
-
-
-State 42
-
-   15 block: '{' lcmd . '}'
-
-    '}'  shift, and go to state 85
-
-
-State 43
-
-   17 lcmd: cmd . ';' lcmd
-   19     | cmd . ';' cmd lcmd
-
-    ';'  shift, and go to state 86
-
-
-State 44
-
-   33 cmd: print .
-
-    $default  reduce using rule 33 (cmd)
-
-
-State 45
-
-   34 cmd: read .
-
-    $default  reduce using rule 34 (cmd)
-
-
-State 46
-
-   57 exp: TK_IDENTIFIER '(' . l_func_args reset ')'
-
-    TK_IDENTIFIER  shift, and go to state 87
-    LIT_INTEGER    shift, and go to state 88
-    LIT_REAL       shift, and go to state 89
-    LIT_CHAR       shift, and go to state 90
-    '#'            shift, and go to state 91
-    '&'            shift, and go to state 92
-
-    $default  reduce using rule 66 (l_func_args)
-
-    func_args    go to state 93
-    l_func_args  go to state 94
-
-
-State 47
-
-   40 exp: TK_IDENTIFIER '[' . exp ']'
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 95
-
-
-State 48
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   50    | '!' exp .
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 50 (exp)
-
-
-State 49
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-   58    | '(' exp . ')'
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ')'           shift, and go to state 96
-
-
-State 50
-
-   51 exp: exp OPERATOR_LE . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 97
-
-
-State 51
-
-   52 exp: exp OPERATOR_GE . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 98
-
-
-State 52
-
-   53 exp: exp OPERATOR_EQ . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 99
-
-
-State 53
-
-   54 exp: exp OPERATOR_NE . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 100
-
-
-State 54
-
-   55 exp: exp OPERATOR_AND . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 101
-
-
-State 55
-
-   56 exp: exp OPERATOR_OR . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 102
-
-
-State 56
-
-   48 exp: exp '<' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 103
-
-
-State 57
-
-   49 exp: exp '>' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 104
-
-
-State 58
-
-   44 exp: exp '+' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 105
-
-
-State 59
-
-   45 exp: exp '-' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 106
-
-
-State 60
-
-   46 exp: exp '*' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 107
-
-
-State 61
-
-   47 exp: exp '/' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 108
-
-
-State 62
-
-    4 dec: KW_IF '(' exp ')' . KW_THEN lcmd
-    5    | KW_IF '(' exp ')' . KW_THEN lcmd KW_ELSE lcmd
-
-    KW_THEN  shift, and go to state 109
-
-
-State 63
-
-    6 dec: KW_WHILE '(' exp ')' . lcmd
-
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
-    TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
-
-    KW_IF        [reduce using rule 18 (lcmd)]
-    KW_WHILE     [reduce using rule 18 (lcmd)]
-    KW_FOR       [reduce using rule 18 (lcmd)]
-    LIT_INTEGER  [reduce using rule 18 (lcmd)]
-    LIT_REAL     [reduce using rule 18 (lcmd)]
-    LIT_CHAR     [reduce using rule 18 (lcmd)]
-    ';'          reduce using rule 16 (block)
-    $default     reduce using rule 18 (lcmd)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 110
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
-
-
-State 64
-
-    7 dec: KW_FOR '(' TK_IDENTIFIER '=' . exp KW_TO exp ')' lcmd
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 111
-
-
-State 65
-
-   11 dec: type TK_IDENTIFIER '=' LIT_INTEGER . ';'
-
-    ';'  shift, and go to state 112
-
-
-State 66
-
-    9 dec: type TK_IDENTIFIER '=' LIT_REAL . ';'
-
-    ';'  shift, and go to state 113
-
-
-State 67
-
-   10 dec: type TK_IDENTIFIER '=' LIT_CHAR . ';'
-
-    ';'  shift, and go to state 114
-
-
-State 68
-
-   69 func_par: type . TK_IDENTIFIER
-
-    TK_IDENTIFIER  shift, and go to state 115
-
-
-State 69
-
-   70 l_func_par: func_par . l_func_par
-
-    LIT_INTEGER  shift, and go to state 4
-    LIT_REAL     shift, and go to state 5
-    LIT_CHAR     shift, and go to state 6
-
-    $default  reduce using rule 71 (l_func_par)
-
-    type        go to state 68
-    func_par    go to state 69
-    l_func_par  go to state 116
-
-
-State 70
-
-   68 func_header: type TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
-
-    ','  shift, and go to state 117
-
-    $default  reduce using rule 73 (reset_func_par)
-
-    reset_func_par  go to state 118
-
-
-State 71
-
-   12 dec: type '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
-
-    LIT_INTEGER  shift, and go to state 119
-
-
-State 72
-
-   81 read: KW_READ TK_IDENTIFIER .
-
-    $default  reduce using rule 81 (read)
-
-
-State 73
-
-   35 cmd: KW_RETURN exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 35 (cmd)
-
-
-State 74
-
-   76 pe: TK_IDENTIFIER .
-
-    $default  reduce using rule 76 (pe)
-
-
-State 75
-
-   75 pe: LIT_STRING .
-
-    $default  reduce using rule 75 (pe)
-
-
-State 76
-
-   78 pe: '#' . TK_IDENTIFIER
-
-    TK_IDENTIFIER  shift, and go to state 120
-
-
-State 77
-
-   77 pe: '&' . TK_IDENTIFIER
-
-    TK_IDENTIFIER  shift, and go to state 121
-
-
-State 78
-
-   79 lpe: pe . lpe
-
-    TK_IDENTIFIER  shift, and go to state 74
-    LIT_STRING     shift, and go to state 75
-    '#'            shift, and go to state 76
-    '&'            shift, and go to state 77
-
-    TK_IDENTIFIER  [reduce using rule 80 (lpe)]
-    '#'            [reduce using rule 80 (lpe)]
-    '&'            [reduce using rule 80 (lpe)]
-    $default       reduce using rule 80 (lpe)
-
-    pe   go to state 78
-    lpe  go to state 122
-
-
-State 79
-
-   74 print: KW_PRINT lpe .
-
-    $default  reduce using rule 74 (print)
-
-
-State 80
-
-   22 cmd: TK_IDENTIFIER '=' . exp
-   25    | TK_IDENTIFIER '=' . '#' exp
-   26    | TK_IDENTIFIER '=' . '&' exp
-   30    | TK_IDENTIFIER '=' . '#' exp '[' exp ']'
-   31    | TK_IDENTIFIER '=' . '&' exp '[' exp ']'
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-    '#'            shift, and go to state 123
-    '&'            shift, and go to state 124
-
-    exp  go to state 125
-
-
-State 81
-
-   32 cmd: TK_IDENTIFIER '(' . l_func_args reset ')'
-
-    TK_IDENTIFIER  shift, and go to state 87
-    LIT_INTEGER    shift, and go to state 88
-    LIT_REAL       shift, and go to state 89
-    LIT_CHAR       shift, and go to state 90
-    '#'            shift, and go to state 91
-    '&'            shift, and go to state 92
-
-    $default  reduce using rule 66 (l_func_args)
-
-    func_args    go to state 93
-    l_func_args  go to state 126
-
-
-State 82
-
-   27 cmd: TK_IDENTIFIER '[' . exp ']' '=' exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 127
-
-
-State 83
-
-   23 cmd: '#' TK_IDENTIFIER . '=' exp
-   28    | '#' TK_IDENTIFIER . '[' exp ']' '=' exp
-
-    '='  shift, and go to state 128
-    '['  shift, and go to state 129
-
-
-State 84
-
-   24 cmd: '&' TK_IDENTIFIER . '=' exp
-   29    | '&' TK_IDENTIFIER . '[' exp ']' '=' exp
-
-    '='  shift, and go to state 130
-    '['  shift, and go to state 131
-
-
-State 85
-
-   15 block: '{' lcmd '}' .
-
-    $default  reduce using rule 15 (block)
-
-
-State 86
-
-   17 lcmd: cmd ';' . lcmd
-   19     | cmd ';' . cmd lcmd
-
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
-    TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
-
-    $end           reduce using rule 16 (block)
-    $end           [reduce using rule 18 (lcmd)]
-    KW_IF          [reduce using rule 16 (block)]
-    KW_IF          [reduce using rule 18 (lcmd)]
-    KW_ELSE        reduce using rule 16 (block)
-    KW_ELSE        [reduce using rule 18 (lcmd)]
-    KW_WHILE       [reduce using rule 16 (block)]
-    KW_WHILE       [reduce using rule 18 (lcmd)]
-    KW_FOR         [reduce using rule 16 (block)]
-    KW_FOR         [reduce using rule 18 (lcmd)]
-    KW_READ        [reduce using rule 16 (block)]
-    KW_RETURN      [reduce using rule 16 (block)]
-    KW_PRINT       [reduce using rule 16 (block)]
-    TK_IDENTIFIER  [reduce using rule 16 (block)]
-    LIT_INTEGER    [reduce using rule 16 (block)]
-    LIT_INTEGER    [reduce using rule 18 (lcmd)]
-    LIT_REAL       [reduce using rule 16 (block)]
-    LIT_REAL       [reduce using rule 18 (lcmd)]
-    LIT_CHAR       [reduce using rule 16 (block)]
-    LIT_CHAR       [reduce using rule 18 (lcmd)]
-    '#'            [reduce using rule 16 (block)]
-    '{'            [reduce using rule 16 (block)]
-    '}'            reduce using rule 16 (block)
-    '}'            [reduce using rule 18 (lcmd)]
-    '&'            [reduce using rule 16 (block)]
-    $default       reduce using rule 16 (block)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 132
-    cmd          go to state 133
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
-
-
-State 87
-
-   62 func_args: TK_IDENTIFIER .
-
-    $default  reduce using rule 62 (func_args)
-
-
-State 88
-
-   61 func_args: LIT_INTEGER .
-
-    $default  reduce using rule 61 (func_args)
-
-
-State 89
-
-   59 func_args: LIT_REAL .
-
-    $default  reduce using rule 59 (func_args)
-
-
-State 90
-
-   60 func_args: LIT_CHAR .
-
-    $default  reduce using rule 60 (func_args)
-
-
-State 91
-
-   63 func_args: '#' . TK_IDENTIFIER
-
-    TK_IDENTIFIER  shift, and go to state 134
-
-
-State 92
-
-   64 func_args: '&' . TK_IDENTIFIER
-
-    TK_IDENTIFIER  shift, and go to state 135
-
-
-State 93
-
-   65 l_func_args: func_args . l_func_args
-
-    TK_IDENTIFIER  shift, and go to state 87
-    LIT_INTEGER    shift, and go to state 88
-    LIT_REAL       shift, and go to state 89
-    LIT_CHAR       shift, and go to state 90
-    '#'            shift, and go to state 91
-    '&'            shift, and go to state 92
-
-    $default  reduce using rule 66 (l_func_args)
-
-    func_args    go to state 93
-    l_func_args  go to state 136
-
-
-State 94
-
-   57 exp: TK_IDENTIFIER '(' l_func_args . reset ')'
-
-    ','  shift, and go to state 137
-
-    $default  reduce using rule 14 (reset)
-
-    reset  go to state 138
-
-
-State 95
-
-   40 exp: TK_IDENTIFIER '[' exp . ']'
-   44    | exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 139
-
-
-State 96
-
-   58 exp: '(' exp ')' .
-
-    $default  reduce using rule 58 (exp)
-
-
-State 97
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   51    | exp OPERATOR_LE exp .
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 51 (exp)
-
-
-State 98
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   52    | exp OPERATOR_GE exp .
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 52 (exp)
-
-
-State 99
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   53    | exp OPERATOR_EQ exp .
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 53 (exp)
-
-
-State 100
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   54    | exp OPERATOR_NE exp .
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 54 (exp)
-
-
-State 101
-
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   55    | exp OPERATOR_AND exp .
-   56    | exp . OPERATOR_OR exp
-
-    '+'  shift, and go to state 58
-    '-'  shift, and go to state 59
-    '*'  shift, and go to state 60
-    '/'  shift, and go to state 61
+   55 exp: LIT_INTEGER .
 
     $default  reduce using rule 55 (exp)
 
 
+State 39
+
+   54 exp: LIT_REAL .
+
+    $default  reduce using rule 54 (exp)
+
+
+State 40
+
+   53 exp: LIT_CHAR .
+
+    $default  reduce using rule 53 (exp)
+
+
+State 41
+
+   62 exp: '!' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 76
+
+
+State 42
+
+   70 exp: '(' . exp ')'
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 77
+
+
+State 43
+
+    4 dec: KW_IF '(' exp . ')' KW_THEN lcmd
+    5    | KW_IF '(' exp . ')' KW_THEN lcmd KW_ELSE lcmd
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ')'           shift, and go to state 90
+
+
+State 44
+
+    6 dec: KW_WHILE '(' exp . ')' lcmd
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ')'           shift, and go to state 91
+
+
+State 45
+
+    7 dec: KW_FOR '(' TK_IDENTIFIER . '=' exp KW_TO exp ')' lcmd
+
+    '='  shift, and go to state 92
+
+
+State 46
+
+   97 read: KW_READ . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 93
+
+
+State 47
+
+   43 cmd: KW_RETURN . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 94
+
+
+State 48
+
+   90 print: KW_PRINT . lpe
+
+    TK_IDENTIFIER  shift, and go to state 95
+    LIT_STRING     shift, and go to state 96
+    '#'            shift, and go to state 97
+    '&'            shift, and go to state 98
+
+    TK_IDENTIFIER  [reduce using rule 96 (lpe)]
+    '#'            [reduce using rule 96 (lpe)]
+    '&'            [reduce using rule 96 (lpe)]
+    $default       reduce using rule 96 (lpe)
+
+    pe   go to state 99
+    lpe  go to state 100
+
+
+State 49
+
+   30 cmd: TK_IDENTIFIER . '=' exp
+   33    | TK_IDENTIFIER . '=' '#' exp
+   34    | TK_IDENTIFIER . '=' '&' exp
+   35    | TK_IDENTIFIER . '[' exp ']' '=' exp
+   38    | TK_IDENTIFIER . '=' '#' exp '[' exp ']'
+   39    | TK_IDENTIFIER . '=' '&' exp '[' exp ']'
+   40    | TK_IDENTIFIER . '(' l_func_args reset ')'
+
+    '='  shift, and go to state 101
+    '('  shift, and go to state 102
+    '['  shift, and go to state 103
+
+
+State 50
+
+   31 cmd: '#' . TK_IDENTIFIER '=' exp
+   36    | '#' . TK_IDENTIFIER '[' exp ']' '=' exp
+
+    TK_IDENTIFIER  shift, and go to state 104
+
+
+State 51
+
+   32 cmd: '&' . TK_IDENTIFIER '=' exp
+   37    | '&' . TK_IDENTIFIER '[' exp ']' '=' exp
+
+    TK_IDENTIFIER  shift, and go to state 105
+
+
+State 52
+
+   28 lcmd: dec .
+
+    $default  reduce using rule 28 (lcmd)
+
+
+State 53
+
+   29 cmd: block .
+
+    $default  reduce using rule 29 (cmd)
+
+
+State 54
+
+   23 block: '{' lcmd . '}'
+
+    '}'  shift, and go to state 106
+
+
+State 55
+
+   25 lcmd: cmd . ';' lcmd
+   27     | cmd . ';' cmd lcmd
+
+    ';'  shift, and go to state 107
+
+
+State 56
+
+   41 cmd: print .
+
+    $default  reduce using rule 41 (cmd)
+
+
+State 57
+
+   42 cmd: read .
+
+    $default  reduce using rule 42 (cmd)
+
+
+State 58
+
+   10 dec: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR . ';'
+
+    ';'  shift, and go to state 108
+
+
+State 59
+
+   85 func_par: KW_CHAR . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 109
+
+
+State 60
+
+   83 func_par: KW_INT . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 110
+
+
+State 61
+
+   84 func_par: KW_FLOAT . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 111
+
+
+State 62
+
+   86 l_func_par: func_par . l_func_par
+
+    KW_CHAR   shift, and go to state 59
+    KW_INT    shift, and go to state 60
+    KW_FLOAT  shift, and go to state 61
+
+    $default  reduce using rule 87 (l_func_par)
+
+    func_par    go to state 62
+    l_func_par  go to state 112
+
+
+State 63
+
+   82 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
+
+    ','  shift, and go to state 113
+
+    $default  reduce using rule 89 (reset_func_par)
+
+    reset_func_par  go to state 114
+
+
+State 64
+
+   16 dec: KW_CHAR TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
+   17    | KW_CHAR TK_IDENTIFIER '[' exp . ']' ';' vet_dec ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 115
+
+
+State 65
+
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+
+    LIT_INTEGER  shift, and go to state 116
+
+
+State 66
+
+   11 dec: KW_INT TK_IDENTIFIER '=' LIT_INTEGER . ';'
+
+    ';'  shift, and go to state 117
+
+
+State 67
+
+   80 func_header: KW_INT TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
+
+    ','  shift, and go to state 113
+
+    $default  reduce using rule 89 (reset_func_par)
+
+    reset_func_par  go to state 118
+
+
+State 68
+
+   12 dec: KW_INT TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
+   13    | KW_INT TK_IDENTIFIER '[' exp . ']' ';' vet_dec ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 119
+
+
+State 69
+
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+
+    LIT_INTEGER  shift, and go to state 120
+
+
+State 70
+
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' LIT_REAL . ';'
+
+    ';'  shift, and go to state 121
+
+
+State 71
+
+   81 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
+
+    ','  shift, and go to state 113
+
+    $default  reduce using rule 89 (reset_func_par)
+
+    reset_func_par  go to state 122
+
+
+State 72
+
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
+   15    | KW_FLOAT TK_IDENTIFIER '[' exp . ']' ';' vet_dec ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 123
+
+
+State 73
+
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+
+    LIT_INTEGER  shift, and go to state 124
+
+
+State 74
+
+   69 exp: TK_IDENTIFIER '(' . l_func_args reset ')'
+
+    TK_IDENTIFIER  shift, and go to state 125
+    LIT_INTEGER    shift, and go to state 126
+    LIT_REAL       shift, and go to state 127
+    LIT_CHAR       shift, and go to state 128
+    '#'            shift, and go to state 129
+    '&'            shift, and go to state 130
+
+    $default  reduce using rule 78 (l_func_args)
+
+    func_args    go to state 131
+    l_func_args  go to state 132
+
+
+State 75
+
+   52 exp: TK_IDENTIFIER '[' . exp ']'
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 133
+
+
+State 76
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   62    | '!' exp .
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 62 (exp)
+
+
+State 77
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+   70    | '(' exp . ')'
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ')'           shift, and go to state 134
+
+
+State 78
+
+   63 exp: exp OPERATOR_LE . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 135
+
+
+State 79
+
+   64 exp: exp OPERATOR_GE . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 136
+
+
+State 80
+
+   65 exp: exp OPERATOR_EQ . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 137
+
+
+State 81
+
+   66 exp: exp OPERATOR_NE . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 138
+
+
+State 82
+
+   67 exp: exp OPERATOR_AND . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 139
+
+
+State 83
+
+   68 exp: exp OPERATOR_OR . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 140
+
+
+State 84
+
+   60 exp: exp '<' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 141
+
+
+State 85
+
+   61 exp: exp '>' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 142
+
+
+State 86
+
+   56 exp: exp '+' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 143
+
+
+State 87
+
+   57 exp: exp '-' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 144
+
+
+State 88
+
+   58 exp: exp '*' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 145
+
+
+State 89
+
+   59 exp: exp '/' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 146
+
+
+State 90
+
+    4 dec: KW_IF '(' exp ')' . KW_THEN lcmd
+    5    | KW_IF '(' exp ')' . KW_THEN lcmd KW_ELSE lcmd
+
+    KW_THEN  shift, and go to state 147
+
+
+State 91
+
+    6 dec: KW_WHILE '(' exp ')' . lcmd
+
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    KW_CHAR   [reduce using rule 26 (lcmd)]
+    KW_INT    [reduce using rule 26 (lcmd)]
+    KW_FLOAT  [reduce using rule 26 (lcmd)]
+    KW_IF     [reduce using rule 26 (lcmd)]
+    KW_WHILE  [reduce using rule 26 (lcmd)]
+    KW_FOR    [reduce using rule 26 (lcmd)]
+    ';'       reduce using rule 24 (block)
+    $default  reduce using rule 26 (lcmd)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 148
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
+
+
+State 92
+
+    7 dec: KW_FOR '(' TK_IDENTIFIER '=' . exp KW_TO exp ')' lcmd
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 149
+
+
+State 93
+
+   97 read: KW_READ TK_IDENTIFIER .
+
+    $default  reduce using rule 97 (read)
+
+
+State 94
+
+   43 cmd: KW_RETURN exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 43 (cmd)
+
+
+State 95
+
+   92 pe: TK_IDENTIFIER .
+
+    $default  reduce using rule 92 (pe)
+
+
+State 96
+
+   91 pe: LIT_STRING .
+
+    $default  reduce using rule 91 (pe)
+
+
+State 97
+
+   94 pe: '#' . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 150
+
+
+State 98
+
+   93 pe: '&' . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 151
+
+
+State 99
+
+   95 lpe: pe . lpe
+
+    TK_IDENTIFIER  shift, and go to state 95
+    LIT_STRING     shift, and go to state 96
+    '#'            shift, and go to state 97
+    '&'            shift, and go to state 98
+
+    TK_IDENTIFIER  [reduce using rule 96 (lpe)]
+    '#'            [reduce using rule 96 (lpe)]
+    '&'            [reduce using rule 96 (lpe)]
+    $default       reduce using rule 96 (lpe)
+
+    pe   go to state 99
+    lpe  go to state 152
+
+
+State 100
+
+   90 print: KW_PRINT lpe .
+
+    $default  reduce using rule 90 (print)
+
+
+State 101
+
+   30 cmd: TK_IDENTIFIER '=' . exp
+   33    | TK_IDENTIFIER '=' . '#' exp
+   34    | TK_IDENTIFIER '=' . '&' exp
+   38    | TK_IDENTIFIER '=' . '#' exp '[' exp ']'
+   39    | TK_IDENTIFIER '=' . '&' exp '[' exp ']'
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+    '#'            shift, and go to state 153
+    '&'            shift, and go to state 154
+
+    exp  go to state 155
+
+
 State 102
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-   56    | exp OPERATOR_OR exp .
+   40 cmd: TK_IDENTIFIER '(' . l_func_args reset ')'
 
-    '+'  shift, and go to state 58
-    '-'  shift, and go to state 59
-    '*'  shift, and go to state 60
-    '/'  shift, and go to state 61
+    TK_IDENTIFIER  shift, and go to state 125
+    LIT_INTEGER    shift, and go to state 126
+    LIT_REAL       shift, and go to state 127
+    LIT_CHAR       shift, and go to state 128
+    '#'            shift, and go to state 129
+    '&'            shift, and go to state 130
 
-    $default  reduce using rule 56 (exp)
+    $default  reduce using rule 78 (l_func_args)
+
+    func_args    go to state 131
+    l_func_args  go to state 156
 
 
 State 103
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   48    | exp '<' exp .
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   35 cmd: TK_IDENTIFIER '[' . exp ']' '=' exp
 
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    $default  reduce using rule 48 (exp)
+    exp  go to state 157
 
 
 State 104
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   49    | exp '>' exp .
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   31 cmd: '#' TK_IDENTIFIER . '=' exp
+   36    | '#' TK_IDENTIFIER . '[' exp ']' '=' exp
 
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 49 (exp)
+    '='  shift, and go to state 158
+    '['  shift, and go to state 159
 
 
 State 105
 
-   44 exp: exp . '+' exp
-   44    | exp '+' exp .
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   32 cmd: '&' TK_IDENTIFIER . '=' exp
+   37    | '&' TK_IDENTIFIER . '[' exp ']' '=' exp
 
-    '*'  shift, and go to state 60
-    '/'  shift, and go to state 61
-
-    $default  reduce using rule 44 (exp)
+    '='  shift, and go to state 160
+    '['  shift, and go to state 161
 
 
 State 106
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   45    | exp '-' exp .
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   23 block: '{' lcmd '}' .
 
-    '*'  shift, and go to state 60
-    '/'  shift, and go to state 61
-
-    $default  reduce using rule 45 (exp)
+    $default  reduce using rule 23 (block)
 
 
 State 107
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   46    | exp '*' exp .
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   25 lcmd: cmd ';' . lcmd
+   27     | cmd ';' . cmd lcmd
 
-    '/'  shift, and go to state 61
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
 
-    $default  reduce using rule 46 (exp)
+    $end           reduce using rule 24 (block)
+    $end           [reduce using rule 26 (lcmd)]
+    KW_CHAR        [reduce using rule 24 (block)]
+    KW_CHAR        [reduce using rule 26 (lcmd)]
+    KW_INT         [reduce using rule 24 (block)]
+    KW_INT         [reduce using rule 26 (lcmd)]
+    KW_FLOAT       [reduce using rule 24 (block)]
+    KW_FLOAT       [reduce using rule 26 (lcmd)]
+    KW_IF          [reduce using rule 24 (block)]
+    KW_IF          [reduce using rule 26 (lcmd)]
+    KW_ELSE        reduce using rule 24 (block)
+    KW_ELSE        [reduce using rule 26 (lcmd)]
+    KW_WHILE       [reduce using rule 24 (block)]
+    KW_WHILE       [reduce using rule 26 (lcmd)]
+    KW_FOR         [reduce using rule 24 (block)]
+    KW_FOR         [reduce using rule 26 (lcmd)]
+    KW_READ        [reduce using rule 24 (block)]
+    KW_RETURN      [reduce using rule 24 (block)]
+    KW_PRINT       [reduce using rule 24 (block)]
+    TK_IDENTIFIER  [reduce using rule 24 (block)]
+    '#'            [reduce using rule 24 (block)]
+    '{'            [reduce using rule 24 (block)]
+    '}'            reduce using rule 24 (block)
+    '}'            [reduce using rule 26 (lcmd)]
+    '&'            [reduce using rule 24 (block)]
+    $default       reduce using rule 24 (block)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 162
+    cmd          go to state 163
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
 
 
 State 108
 
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   47    | exp '/' exp .
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   10 dec: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';' .
 
-    $default  reduce using rule 47 (exp)
+    $default  reduce using rule 10 (dec)
 
 
 State 109
 
-    4 dec: KW_IF '(' exp ')' KW_THEN . lcmd
-    5    | KW_IF '(' exp ')' KW_THEN . lcmd KW_ELSE lcmd
+   85 func_par: KW_CHAR TK_IDENTIFIER .
 
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
-    TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
-
-    KW_IF        [reduce using rule 18 (lcmd)]
-    KW_WHILE     [reduce using rule 18 (lcmd)]
-    KW_FOR       [reduce using rule 18 (lcmd)]
-    LIT_INTEGER  [reduce using rule 18 (lcmd)]
-    LIT_REAL     [reduce using rule 18 (lcmd)]
-    LIT_CHAR     [reduce using rule 18 (lcmd)]
-    ';'          reduce using rule 16 (block)
-    $default     reduce using rule 18 (lcmd)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 140
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
+    $default  reduce using rule 85 (func_par)
 
 
 State 110
+
+   83 func_par: KW_INT TK_IDENTIFIER .
+
+    $default  reduce using rule 83 (func_par)
+
+
+State 111
+
+   84 func_par: KW_FLOAT TK_IDENTIFIER .
+
+    $default  reduce using rule 84 (func_par)
+
+
+State 112
+
+   86 l_func_par: func_par l_func_par .
+
+    $default  reduce using rule 86 (l_func_par)
+
+
+State 113
+
+   88 reset_func_par: ',' . func_par reset_func_par
+
+    KW_CHAR   shift, and go to state 59
+    KW_INT    shift, and go to state 60
+    KW_FLOAT  shift, and go to state 61
+
+    func_par  go to state 164
+
+
+State 114
+
+   82 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
+
+    ')'  shift, and go to state 165
+
+
+State 115
+
+   16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
+   17    | KW_CHAR TK_IDENTIFIER '[' exp ']' . ';' vet_dec ';'
+
+    ';'  shift, and go to state 166
+    ':'  shift, and go to state 167
+
+
+State 116
+
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+
+    ';'  shift, and go to state 168
+
+
+State 117
+
+   11 dec: KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';' .
+
+    $default  reduce using rule 11 (dec)
+
+
+State 118
+
+   80 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
+
+    ')'  shift, and go to state 169
+
+
+State 119
+
+   12 dec: KW_INT TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
+   13    | KW_INT TK_IDENTIFIER '[' exp ']' . ';' vet_dec ';'
+
+    ';'  shift, and go to state 170
+    ':'  shift, and go to state 171
+
+
+State 120
+
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+
+    ';'  shift, and go to state 172
+
+
+State 121
+
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';' .
+
+    $default  reduce using rule 9 (dec)
+
+
+State 122
+
+   81 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
+
+    ')'  shift, and go to state 173
+
+
+State 123
+
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
+   15    | KW_FLOAT TK_IDENTIFIER '[' exp ']' . ';' vet_dec ';'
+
+    ';'  shift, and go to state 174
+    ':'  shift, and go to state 175
+
+
+State 124
+
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+
+    ';'  shift, and go to state 176
+
+
+State 125
+
+   74 func_args: TK_IDENTIFIER .
+
+    $default  reduce using rule 74 (func_args)
+
+
+State 126
+
+   73 func_args: LIT_INTEGER .
+
+    $default  reduce using rule 73 (func_args)
+
+
+State 127
+
+   71 func_args: LIT_REAL .
+
+    $default  reduce using rule 71 (func_args)
+
+
+State 128
+
+   72 func_args: LIT_CHAR .
+
+    $default  reduce using rule 72 (func_args)
+
+
+State 129
+
+   75 func_args: '#' . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 177
+
+
+State 130
+
+   76 func_args: '&' . TK_IDENTIFIER
+
+    TK_IDENTIFIER  shift, and go to state 178
+
+
+State 131
+
+   77 l_func_args: func_args . l_func_args
+
+    TK_IDENTIFIER  shift, and go to state 125
+    LIT_INTEGER    shift, and go to state 126
+    LIT_REAL       shift, and go to state 127
+    LIT_CHAR       shift, and go to state 128
+    '#'            shift, and go to state 129
+    '&'            shift, and go to state 130
+
+    $default  reduce using rule 78 (l_func_args)
+
+    func_args    go to state 131
+    l_func_args  go to state 179
+
+
+State 132
+
+   69 exp: TK_IDENTIFIER '(' l_func_args . reset ')'
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 22 (reset)
+
+    reset  go to state 181
+
+
+State 133
+
+   52 exp: TK_IDENTIFIER '[' exp . ']'
+   56    | exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 182
+
+
+State 134
+
+   70 exp: '(' exp ')' .
+
+    $default  reduce using rule 70 (exp)
+
+
+State 135
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   63    | exp OPERATOR_LE exp .
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 63 (exp)
+
+
+State 136
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   64    | exp OPERATOR_GE exp .
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 64 (exp)
+
+
+State 137
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   65    | exp OPERATOR_EQ exp .
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 65 (exp)
+
+
+State 138
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   66    | exp OPERATOR_NE exp .
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 66 (exp)
+
+
+State 139
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   67    | exp OPERATOR_AND exp .
+   68    | exp . OPERATOR_OR exp
+
+    '+'  shift, and go to state 86
+    '-'  shift, and go to state 87
+    '*'  shift, and go to state 88
+    '/'  shift, and go to state 89
+
+    $default  reduce using rule 67 (exp)
+
+
+State 140
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+   68    | exp OPERATOR_OR exp .
+
+    '+'  shift, and go to state 86
+    '-'  shift, and go to state 87
+    '*'  shift, and go to state 88
+    '/'  shift, and go to state 89
+
+    $default  reduce using rule 68 (exp)
+
+
+State 141
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   60    | exp '<' exp .
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 60 (exp)
+
+
+State 142
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   61    | exp '>' exp .
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 61 (exp)
+
+
+State 143
+
+   56 exp: exp . '+' exp
+   56    | exp '+' exp .
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    '*'  shift, and go to state 88
+    '/'  shift, and go to state 89
+
+    $default  reduce using rule 56 (exp)
+
+
+State 144
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   57    | exp '-' exp .
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    '*'  shift, and go to state 88
+    '/'  shift, and go to state 89
+
+    $default  reduce using rule 57 (exp)
+
+
+State 145
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   58    | exp '*' exp .
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    '/'  shift, and go to state 89
+
+    $default  reduce using rule 58 (exp)
+
+
+State 146
+
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   59    | exp '/' exp .
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    $default  reduce using rule 59 (exp)
+
+
+State 147
+
+    4 dec: KW_IF '(' exp ')' KW_THEN . lcmd
+    5    | KW_IF '(' exp ')' KW_THEN . lcmd KW_ELSE lcmd
+
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    KW_CHAR   [reduce using rule 26 (lcmd)]
+    KW_INT    [reduce using rule 26 (lcmd)]
+    KW_FLOAT  [reduce using rule 26 (lcmd)]
+    KW_IF     [reduce using rule 26 (lcmd)]
+    KW_WHILE  [reduce using rule 26 (lcmd)]
+    KW_FOR    [reduce using rule 26 (lcmd)]
+    ';'       reduce using rule 24 (block)
+    $default  reduce using rule 26 (lcmd)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 183
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
+
+
+State 148
 
     6 dec: KW_WHILE '(' exp ')' lcmd .
 
     $default  reduce using rule 6 (dec)
 
 
-State 111
+State 149
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp . KW_TO exp ')' lcmd
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    KW_TO         shift, and go to state 141
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
+    KW_TO         shift, and go to state 184
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
 
 
-State 112
+State 150
 
-   11 dec: type TK_IDENTIFIER '=' LIT_INTEGER ';' .
+   94 pe: '#' TK_IDENTIFIER .
 
-    $default  reduce using rule 11 (dec)
+    $default  reduce using rule 94 (pe)
 
 
-State 113
+State 151
 
-    9 dec: type TK_IDENTIFIER '=' LIT_REAL ';' .
+   93 pe: '&' TK_IDENTIFIER .
 
-    $default  reduce using rule 9 (dec)
+    $default  reduce using rule 93 (pe)
 
 
-State 114
+State 152
 
-   10 dec: type TK_IDENTIFIER '=' LIT_CHAR ';' .
+   95 lpe: pe lpe .
 
-    $default  reduce using rule 10 (dec)
+    $default  reduce using rule 95 (lpe)
 
 
-State 115
+State 153
 
-   69 func_par: type TK_IDENTIFIER .
+   33 cmd: TK_IDENTIFIER '=' '#' . exp
+   38    | TK_IDENTIFIER '=' '#' . exp '[' exp ']'
 
-    $default  reduce using rule 69 (func_par)
-
-
-State 116
-
-   70 l_func_par: func_par l_func_par .
-
-    $default  reduce using rule 70 (l_func_par)
-
-
-State 117
-
-   72 reset_func_par: ',' . func_par reset_func_par
-
-    LIT_INTEGER  shift, and go to state 4
-    LIT_REAL     shift, and go to state 5
-    LIT_CHAR     shift, and go to state 6
-
-    type      go to state 68
-    func_par  go to state 142
-
-
-State 118
-
-   68 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
-
-    ')'  shift, and go to state 143
-
-
-State 119
-
-   12 dec: type '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
-
-    ';'  shift, and go to state 144
-
-
-State 120
-
-   78 pe: '#' TK_IDENTIFIER .
-
-    $default  reduce using rule 78 (pe)
-
-
-State 121
-
-   77 pe: '&' TK_IDENTIFIER .
-
-    $default  reduce using rule 77 (pe)
-
-
-State 122
-
-   79 lpe: pe lpe .
-
-    $default  reduce using rule 79 (lpe)
-
-
-State 123
-
-   25 cmd: TK_IDENTIFIER '=' '#' . exp
-   30    | TK_IDENTIFIER '=' '#' . exp '[' exp ']'
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 145
-
-
-State 124
-
-   26 cmd: TK_IDENTIFIER '=' '&' . exp
-   31    | TK_IDENTIFIER '=' '&' . exp '[' exp ']'
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 146
-
-
-State 125
-
-   22 cmd: TK_IDENTIFIER '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 22 (cmd)
-
-
-State 126
-
-   32 cmd: TK_IDENTIFIER '(' l_func_args . reset ')'
-
-    ','  shift, and go to state 137
-
-    $default  reduce using rule 14 (reset)
-
-    reset  go to state 147
-
-
-State 127
-
-   27 cmd: TK_IDENTIFIER '[' exp . ']' '=' exp
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 148
-
-
-State 128
-
-   23 cmd: '#' TK_IDENTIFIER '=' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 149
-
-
-State 129
-
-   28 cmd: '#' TK_IDENTIFIER '[' . exp ']' '=' exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 150
-
-
-State 130
-
-   24 cmd: '&' TK_IDENTIFIER '=' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 151
-
-
-State 131
-
-   29 cmd: '&' TK_IDENTIFIER '[' . exp ']' '=' exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 152
-
-
-State 132
-
-   17 lcmd: cmd ';' lcmd .
-
-    $default  reduce using rule 17 (lcmd)
-
-
-State 133
-
-   17 lcmd: cmd . ';' lcmd
-   19     | cmd . ';' cmd lcmd
-   19     | cmd ';' cmd . lcmd
-
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
     TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    ';'            shift, and go to state 86
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    KW_IF        [reduce using rule 18 (lcmd)]
-    KW_WHILE     [reduce using rule 18 (lcmd)]
-    KW_FOR       [reduce using rule 18 (lcmd)]
-    LIT_INTEGER  [reduce using rule 18 (lcmd)]
-    LIT_REAL     [reduce using rule 18 (lcmd)]
-    LIT_CHAR     [reduce using rule 18 (lcmd)]
-    ';'          [reduce using rule 16 (block)]
-    $default     reduce using rule 18 (lcmd)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 153
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
+    exp  go to state 185
 
 
-State 134
+State 154
 
-   63 func_args: '#' TK_IDENTIFIER .
+   34 cmd: TK_IDENTIFIER '=' '&' . exp
+   39    | TK_IDENTIFIER '=' '&' . exp '[' exp ']'
 
-    $default  reduce using rule 63 (func_args)
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-
-State 135
-
-   64 func_args: '&' TK_IDENTIFIER .
-
-    $default  reduce using rule 64 (func_args)
-
-
-State 136
-
-   65 l_func_args: func_args l_func_args .
-
-    $default  reduce using rule 65 (l_func_args)
+    exp  go to state 186
 
 
-State 137
+State 155
 
-   13 reset: ',' . func_args reset
+   30 cmd: TK_IDENTIFIER '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    TK_IDENTIFIER  shift, and go to state 87
-    LIT_INTEGER    shift, and go to state 88
-    LIT_REAL       shift, and go to state 89
-    LIT_CHAR       shift, and go to state 90
-    '#'            shift, and go to state 91
-    '&'            shift, and go to state 92
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
 
-    func_args  go to state 154
-
-
-State 138
-
-   57 exp: TK_IDENTIFIER '(' l_func_args reset . ')'
-
-    ')'  shift, and go to state 155
-
-
-State 139
-
-   40 exp: TK_IDENTIFIER '[' exp ']' .
-
-    $default  reduce using rule 40 (exp)
+    $default  reduce using rule 30 (cmd)
 
 
-State 140
+State 156
+
+   40 cmd: TK_IDENTIFIER '(' l_func_args . reset ')'
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 22 (reset)
+
+    reset  go to state 187
+
+
+State 157
+
+   35 cmd: TK_IDENTIFIER '[' exp . ']' '=' exp
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 188
+
+
+State 158
+
+   31 cmd: '#' TK_IDENTIFIER '=' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 189
+
+
+State 159
+
+   36 cmd: '#' TK_IDENTIFIER '[' . exp ']' '=' exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 190
+
+
+State 160
+
+   32 cmd: '&' TK_IDENTIFIER '=' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 191
+
+
+State 161
+
+   37 cmd: '&' TK_IDENTIFIER '[' . exp ']' '=' exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 192
+
+
+State 162
+
+   25 lcmd: cmd ';' lcmd .
+
+    $default  reduce using rule 25 (lcmd)
+
+
+State 163
+
+   25 lcmd: cmd . ';' lcmd
+   27     | cmd . ';' cmd lcmd
+   27     | cmd ';' cmd . lcmd
+
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    ';'            shift, and go to state 107
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    KW_CHAR   [reduce using rule 26 (lcmd)]
+    KW_INT    [reduce using rule 26 (lcmd)]
+    KW_FLOAT  [reduce using rule 26 (lcmd)]
+    KW_IF     [reduce using rule 26 (lcmd)]
+    KW_WHILE  [reduce using rule 26 (lcmd)]
+    KW_FOR    [reduce using rule 26 (lcmd)]
+    ';'       [reduce using rule 24 (block)]
+    $default  reduce using rule 26 (lcmd)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 193
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
+
+
+State 164
+
+   88 reset_func_par: ',' func_par . reset_func_par
+
+    ','  shift, and go to state 113
+
+    $default  reduce using rule 89 (reset_func_par)
+
+    reset_func_par  go to state 194
+
+
+State 165
+
+   82 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+
+    $default  reduce using rule 82 (func_header)
+
+
+State 166
+
+   17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 202
+
+
+State 167
+
+   16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 203
+
+
+State 168
+
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+
+    $default  reduce using rule 19 (dec)
+
+
+State 169
+
+   80 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+
+    $default  reduce using rule 80 (func_header)
+
+
+State 170
+
+   13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 204
+
+
+State 171
+
+   12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 205
+
+
+State 172
+
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+
+    $default  reduce using rule 20 (dec)
+
+
+State 173
+
+   81 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+
+    $default  reduce using rule 81 (func_header)
+
+
+State 174
+
+   15 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 206
+
+
+State 175
+
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 207
+
+
+State 176
+
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+
+    $default  reduce using rule 18 (dec)
+
+
+State 177
+
+   75 func_args: '#' TK_IDENTIFIER .
+
+    $default  reduce using rule 75 (func_args)
+
+
+State 178
+
+   76 func_args: '&' TK_IDENTIFIER .
+
+    $default  reduce using rule 76 (func_args)
+
+
+State 179
+
+   77 l_func_args: func_args l_func_args .
+
+    $default  reduce using rule 77 (l_func_args)
+
+
+State 180
+
+   21 reset: ',' . func_args reset
+
+    TK_IDENTIFIER  shift, and go to state 125
+    LIT_INTEGER    shift, and go to state 126
+    LIT_REAL       shift, and go to state 127
+    LIT_CHAR       shift, and go to state 128
+    '#'            shift, and go to state 129
+    '&'            shift, and go to state 130
+
+    func_args  go to state 208
+
+
+State 181
+
+   69 exp: TK_IDENTIFIER '(' l_func_args reset . ')'
+
+    ')'  shift, and go to state 209
+
+
+State 182
+
+   52 exp: TK_IDENTIFIER '[' exp ']' .
+
+    $default  reduce using rule 52 (exp)
+
+
+State 183
 
     4 dec: KW_IF '(' exp ')' KW_THEN lcmd .
     5    | KW_IF '(' exp ')' KW_THEN lcmd . KW_ELSE lcmd
 
-    KW_ELSE  shift, and go to state 156
+    KW_ELSE  shift, and go to state 210
 
     KW_ELSE   [reduce using rule 4 (dec)]
     $default  reduce using rule 4 (dec)
 
 
-State 141
+State 184
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO . exp ')' lcmd
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 157
-
-
-State 142
-
-   72 reset_func_par: ',' func_par . reset_func_par
-
-    ','  shift, and go to state 117
-
-    $default  reduce using rule 73 (reset_func_par)
-
-    reset_func_par  go to state 158
-
-
-State 143
-
-   68 func_header: type TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
-
-    $default  reduce using rule 68 (func_header)
-
-
-State 144
-
-   12 dec: type '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
-
-    $default  reduce using rule 12 (dec)
-
-
-State 145
-
-   25 cmd: TK_IDENTIFIER '=' '#' exp .
-   30    | TK_IDENTIFIER '=' '#' exp . '[' exp ']'
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    '['           shift, and go to state 159
-
-    $default  reduce using rule 25 (cmd)
-
-
-State 146
-
-   26 cmd: TK_IDENTIFIER '=' '&' exp .
-   31    | TK_IDENTIFIER '=' '&' exp . '[' exp ']'
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    '['           shift, and go to state 160
-
-    $default  reduce using rule 26 (cmd)
-
-
-State 147
-
-   32 cmd: TK_IDENTIFIER '(' l_func_args reset . ')'
-
-    ')'  shift, and go to state 161
-
-
-State 148
-
-   27 cmd: TK_IDENTIFIER '[' exp ']' . '=' exp
-
-    '='  shift, and go to state 162
-
-
-State 149
-
-   23 cmd: '#' TK_IDENTIFIER '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 23 (cmd)
-
-
-State 150
-
-   28 cmd: '#' TK_IDENTIFIER '[' exp . ']' '=' exp
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 163
-
-
-State 151
-
-   24 cmd: '&' TK_IDENTIFIER '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 24 (cmd)
-
-
-State 152
-
-   29 cmd: '&' TK_IDENTIFIER '[' exp . ']' '=' exp
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 164
-
-
-State 153
-
-   19 lcmd: cmd ';' cmd lcmd .
-
-    $default  reduce using rule 19 (lcmd)
-
-
-State 154
-
-   13 reset: ',' func_args . reset
-
-    ','  shift, and go to state 137
-
-    $default  reduce using rule 14 (reset)
-
-    reset  go to state 165
-
-
-State 155
-
-   57 exp: TK_IDENTIFIER '(' l_func_args reset ')' .
-
-    $default  reduce using rule 57 (exp)
-
-
-State 156
-
-    5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE . lcmd
-
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
     TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    KW_IF        [reduce using rule 18 (lcmd)]
-    KW_WHILE     [reduce using rule 18 (lcmd)]
-    KW_FOR       [reduce using rule 18 (lcmd)]
-    LIT_INTEGER  [reduce using rule 18 (lcmd)]
-    LIT_REAL     [reduce using rule 18 (lcmd)]
-    LIT_CHAR     [reduce using rule 18 (lcmd)]
-    ';'          reduce using rule 16 (block)
-    $default     reduce using rule 18 (lcmd)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 166
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
+    exp  go to state 211
 
 
-State 157
+State 185
 
-    7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp . ')' lcmd
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   33 cmd: TK_IDENTIFIER '=' '#' exp .
+   38    | TK_IDENTIFIER '=' '#' exp . '[' exp ']'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ')'           shift, and go to state 167
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    '['           shift, and go to state 212
 
-
-State 158
-
-   72 reset_func_par: ',' func_par reset_func_par .
-
-    $default  reduce using rule 72 (reset_func_par)
+    $default  reduce using rule 33 (cmd)
 
 
-State 159
+State 186
 
-   30 cmd: TK_IDENTIFIER '=' '#' exp '[' . exp ']'
+   34 cmd: TK_IDENTIFIER '=' '&' exp .
+   39    | TK_IDENTIFIER '=' '&' exp . '[' exp ']'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    '['           shift, and go to state 213
 
-    exp  go to state 168
-
-
-State 160
-
-   31 cmd: TK_IDENTIFIER '=' '&' exp '[' . exp ']'
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 169
+    $default  reduce using rule 34 (cmd)
 
 
-State 161
+State 187
 
-   32 cmd: TK_IDENTIFIER '(' l_func_args reset ')' .
+   40 cmd: TK_IDENTIFIER '(' l_func_args reset . ')'
+
+    ')'  shift, and go to state 214
+
+
+State 188
+
+   35 cmd: TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  shift, and go to state 215
+
+
+State 189
+
+   31 cmd: '#' TK_IDENTIFIER '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 31 (cmd)
+
+
+State 190
+
+   36 cmd: '#' TK_IDENTIFIER '[' exp . ']' '=' exp
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 216
+
+
+State 191
+
+   32 cmd: '&' TK_IDENTIFIER '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
 
     $default  reduce using rule 32 (cmd)
 
 
-State 162
+State 192
 
-   27 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
+   37 cmd: '&' TK_IDENTIFIER '[' exp . ']' '=' exp
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 170
-
-
-State 163
-
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
-
-    '='  shift, and go to state 171
-
-
-State 164
-
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
-
-    '='  shift, and go to state 172
-
-
-State 165
-
-   13 reset: ',' func_args reset .
-
-    $default  reduce using rule 13 (reset)
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 217
 
 
-State 166
+State 193
+
+   27 lcmd: cmd ';' cmd lcmd .
+
+    $default  reduce using rule 27 (lcmd)
+
+
+State 194
+
+   88 reset_func_par: ',' func_par reset_func_par .
+
+    $default  reduce using rule 88 (reset_func_par)
+
+
+State 195
+
+   48 vet_dec: KW_CHAR . vet_dec
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 218
+
+
+State 196
+
+   49 vet_dec: KW_INT . vet_dec
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 219
+
+
+State 197
+
+   47 vet_dec: KW_FLOAT . vet_dec
+
+    KW_CHAR      shift, and go to state 195
+    KW_INT       shift, and go to state 196
+    KW_FLOAT     shift, and go to state 197
+    LIT_INTEGER  shift, and go to state 198
+    LIT_REAL     shift, and go to state 199
+    LIT_CHAR     shift, and go to state 200
+
+    lit      go to state 201
+    vet_dec  go to state 220
+
+
+State 198
+
+   44 lit: LIT_INTEGER .
+
+    $default  reduce using rule 44 (lit)
+
+
+State 199
+
+   45 lit: LIT_REAL .
+
+    $default  reduce using rule 45 (lit)
+
+
+State 200
+
+   46 lit: LIT_CHAR .
+
+    $default  reduce using rule 46 (lit)
+
+
+State 201
+
+   50 vet_dec: lit .
+
+    $default  reduce using rule 50 (vet_dec)
+
+
+State 202
+
+   17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' vet_dec . ';'
+
+    ';'  shift, and go to state 221
+
+
+State 203
+
+   16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
+
+    ';'  shift, and go to state 222
+
+
+State 204
+
+   13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' vet_dec . ';'
+
+    ';'  shift, and go to state 223
+
+
+State 205
+
+   12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
+
+    ';'  shift, and go to state 224
+
+
+State 206
+
+   15 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' vet_dec . ';'
+
+    ';'  shift, and go to state 225
+
+
+State 207
+
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
+
+    ';'  shift, and go to state 226
+
+
+State 208
+
+   21 reset: ',' func_args . reset
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 22 (reset)
+
+    reset  go to state 227
+
+
+State 209
+
+   69 exp: TK_IDENTIFIER '(' l_func_args reset ')' .
+
+    $default  reduce using rule 69 (exp)
+
+
+State 210
+
+    5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE . lcmd
+
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    KW_CHAR   [reduce using rule 26 (lcmd)]
+    KW_INT    [reduce using rule 26 (lcmd)]
+    KW_FLOAT  [reduce using rule 26 (lcmd)]
+    KW_IF     [reduce using rule 26 (lcmd)]
+    KW_WHILE  [reduce using rule 26 (lcmd)]
+    KW_FOR    [reduce using rule 26 (lcmd)]
+    ';'       reduce using rule 24 (block)
+    $default  reduce using rule 26 (lcmd)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 228
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
+
+
+State 211
+
+    7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp . ')' lcmd
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ')'           shift, and go to state 229
+
+
+State 212
+
+   38 cmd: TK_IDENTIFIER '=' '#' exp '[' . exp ']'
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 230
+
+
+State 213
+
+   39 cmd: TK_IDENTIFIER '=' '&' exp '[' . exp ']'
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 231
+
+
+State 214
+
+   40 cmd: TK_IDENTIFIER '(' l_func_args reset ')' .
+
+    $default  reduce using rule 40 (cmd)
+
+
+State 215
+
+   35 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
+
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 232
+
+
+State 216
+
+   36 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  shift, and go to state 233
+
+
+State 217
+
+   37 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
+
+    '='  shift, and go to state 234
+
+
+State 218
+
+   48 vet_dec: KW_CHAR vet_dec .
+
+    $default  reduce using rule 48 (vet_dec)
+
+
+State 219
+
+   49 vet_dec: KW_INT vet_dec .
+
+    $default  reduce using rule 49 (vet_dec)
+
+
+State 220
+
+   47 vet_dec: KW_FLOAT vet_dec .
+
+    $default  reduce using rule 47 (vet_dec)
+
+
+State 221
+
+   17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' vet_dec ';' .
+
+    $default  reduce using rule 17 (dec)
+
+
+State 222
+
+   16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
+
+    $default  reduce using rule 16 (dec)
+
+
+State 223
+
+   13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';' .
+
+    $default  reduce using rule 13 (dec)
+
+
+State 224
+
+   12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
+
+    $default  reduce using rule 12 (dec)
+
+
+State 225
+
+   15 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';' .
+
+    $default  reduce using rule 15 (dec)
+
+
+State 226
+
+   14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
+
+    $default  reduce using rule 14 (dec)
+
+
+State 227
+
+   21 reset: ',' func_args reset .
+
+    $default  reduce using rule 21 (reset)
+
+
+State 228
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd .
 
     $default  reduce using rule 5 (dec)
 
 
-State 167
+State 229
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' . lcmd
 
-    KW_IF          shift, and go to state 1
-    KW_WHILE       shift, and go to state 2
-    KW_FOR         shift, and go to state 3
-    KW_READ        shift, and go to state 34
-    KW_RETURN      shift, and go to state 35
-    KW_PRINT       shift, and go to state 36
+    KW_CHAR        shift, and go to state 1
+    KW_INT         shift, and go to state 2
+    KW_FLOAT       shift, and go to state 3
+    KW_IF          shift, and go to state 4
+    KW_WHILE       shift, and go to state 5
+    KW_FOR         shift, and go to state 6
+    KW_READ        shift, and go to state 46
+    KW_RETURN      shift, and go to state 47
+    KW_PRINT       shift, and go to state 48
+    TK_IDENTIFIER  shift, and go to state 49
+    '#'            shift, and go to state 50
+    '{'            shift, and go to state 23
+    '&'            shift, and go to state 51
+
+    KW_CHAR   [reduce using rule 26 (lcmd)]
+    KW_INT    [reduce using rule 26 (lcmd)]
+    KW_FLOAT  [reduce using rule 26 (lcmd)]
+    KW_IF     [reduce using rule 26 (lcmd)]
+    KW_WHILE  [reduce using rule 26 (lcmd)]
+    KW_FOR    [reduce using rule 26 (lcmd)]
+    ';'       reduce using rule 24 (block)
+    $default  reduce using rule 26 (lcmd)
+
+    dec          go to state 52
+    block        go to state 53
+    lcmd         go to state 235
+    cmd          go to state 55
+    func_dec     go to state 10
+    func_header  go to state 11
+    print        go to state 56
+    read         go to state 57
+
+
+State 230
+
+   38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp . ']'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 236
+
+
+State 231
+
+   39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp . ']'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ']'           shift, and go to state 237
+
+
+State 232
+
+   35 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 35 (cmd)
+
+
+State 233
+
+   36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
+
     TK_IDENTIFIER  shift, and go to state 37
-    LIT_INTEGER    shift, and go to state 4
-    LIT_REAL       shift, and go to state 5
-    LIT_CHAR       shift, and go to state 6
-    '#'            shift, and go to state 38
-    '{'            shift, and go to state 20
-    '&'            shift, and go to state 39
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
 
-    KW_IF        [reduce using rule 18 (lcmd)]
-    KW_WHILE     [reduce using rule 18 (lcmd)]
-    KW_FOR       [reduce using rule 18 (lcmd)]
-    LIT_INTEGER  [reduce using rule 18 (lcmd)]
-    LIT_REAL     [reduce using rule 18 (lcmd)]
-    LIT_CHAR     [reduce using rule 18 (lcmd)]
-    ';'          reduce using rule 16 (block)
-    $default     reduce using rule 18 (lcmd)
-
-    dec          go to state 40
-    block        go to state 41
-    lcmd         go to state 173
-    cmd          go to state 43
-    type         go to state 10
-    func_dec     go to state 11
-    func_header  go to state 12
-    print        go to state 44
-    read         go to state 45
+    exp  go to state 238
 
 
-State 168
+State 234
 
-   30 cmd: TK_IDENTIFIER '=' '#' exp '[' exp . ']'
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 174
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 239
 
 
-State 169
-
-   31 cmd: TK_IDENTIFIER '=' '&' exp '[' exp . ']'
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-    ']'           shift, and go to state 175
-
-
-State 170
-
-   27 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
-
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 27 (cmd)
-
-
-State 171
-
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 176
-
-
-State 172
-
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
-
-    TK_IDENTIFIER  shift, and go to state 22
-    LIT_INTEGER    shift, and go to state 23
-    LIT_REAL       shift, and go to state 24
-    LIT_CHAR       shift, and go to state 25
-    '!'            shift, and go to state 26
-    '('            shift, and go to state 27
-
-    exp  go to state 177
-
-
-State 173
+State 235
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd .
 
     $default  reduce using rule 7 (dec)
 
 
-State 174
+State 236
 
-   30 cmd: TK_IDENTIFIER '=' '#' exp '[' exp ']' .
+   38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp ']' .
 
-    $default  reduce using rule 30 (cmd)
-
-
-State 175
-
-   31 cmd: TK_IDENTIFIER '=' '&' exp '[' exp ']' .
-
-    $default  reduce using rule 31 (cmd)
+    $default  reduce using rule 38 (cmd)
 
 
-State 176
+State 237
 
-   28 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp ']' .
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
-
-    $default  reduce using rule 28 (cmd)
+    $default  reduce using rule 39 (cmd)
 
 
-State 177
+State 238
 
-   29 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
-   44 exp: exp . '+' exp
-   45    | exp . '-' exp
-   46    | exp . '*' exp
-   47    | exp . '/' exp
-   48    | exp . '<' exp
-   49    | exp . '>' exp
-   51    | exp . OPERATOR_LE exp
-   52    | exp . OPERATOR_GE exp
-   53    | exp . OPERATOR_EQ exp
-   54    | exp . OPERATOR_NE exp
-   55    | exp . OPERATOR_AND exp
-   56    | exp . OPERATOR_OR exp
+   36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    OPERATOR_LE   shift, and go to state 50
-    OPERATOR_GE   shift, and go to state 51
-    OPERATOR_EQ   shift, and go to state 52
-    OPERATOR_NE   shift, and go to state 53
-    OPERATOR_AND  shift, and go to state 54
-    OPERATOR_OR   shift, and go to state 55
-    '<'           shift, and go to state 56
-    '>'           shift, and go to state 57
-    '+'           shift, and go to state 58
-    '-'           shift, and go to state 59
-    '*'           shift, and go to state 60
-    '/'           shift, and go to state 61
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
 
-    $default  reduce using rule 29 (cmd)
+    $default  reduce using rule 36 (cmd)
+
+
+State 239
+
+   37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
+
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+
+    $default  reduce using rule 37 (cmd)
