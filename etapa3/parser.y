@@ -198,9 +198,9 @@ l_func_args:func_args l_func_args {$$ = astCreate(AST_FUNC_ARGL_LIST, 0, $1, $2,
 func_dec:func_header block {$$ = astCreate(AST_FUNC_BLOCK, 0, $1, 0, 0, 0); }
     ;
 
-func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_INT, 0, $4, $5, 0, 0); }
-|KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_FLOAT, 0, $4, $5, 0, 0); }
-|KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_CHAR, 0, $4, $5, 0, 0); }
+func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_INT, $2, $4, $5, 0, 0); }
+|KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_FLOAT, $2, $4, $5, 0, 0); }
+|KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_CHAR, $2, $4, $5, 0, 0); }
 ;
 
 func_par: KW_INT TK_IDENTIFIER {$$ = astCreate(AST_FUNC_PAR_INT, $2,0,  0, 0, 0); }

@@ -1,4 +1,4 @@
-Terminals unused in grammar
+Terminals which are not used
 
    TOKEN_ERROR
 
@@ -22,7 +22,7 @@ Grammar
     1 program: ldec
 
     2 ldec: dec ldec
-    3     | %empty
+    3     | /* empty */
 
     4 dec: KW_IF '(' exp ')' KW_THEN lcmd
     5    | KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
@@ -43,13 +43,13 @@ Grammar
    20    | KW_INT '#' TK_IDENTIFIER '=' exp ';'
 
    21 reset: ',' func_args reset
-   22      | %empty
+   22      | /* empty */
 
    23 block: '{' lcmd '}'
-   24      | %empty
+   24      | /* empty */
 
    25 lcmd: cmd ';' lcmd
-   26     | %empty
+   26     | /* empty */
    27     | cmd ';' cmd lcmd
    28     | dec
 
@@ -105,7 +105,11 @@ Grammar
    74          | '&' TK_IDENTIFIER
 
    75 l_func_args: func_args l_func_args
+<<<<<<< Updated upstream
    76            | %empty
+=======
+   76            | /* empty */
+>>>>>>> Stashed changes
 
    77 func_dec: func_header block
 
@@ -118,10 +122,17 @@ Grammar
    83         | KW_CHAR TK_IDENTIFIER
 
    84 l_func_par: func_par l_func_par
+<<<<<<< Updated upstream
    85           | %empty
 
    86 reset_func_par: ',' func_par reset_func_par
    87               | %empty
+=======
+   85           | /* empty */
+
+   86 reset_func_par: ',' func_par reset_func_par
+   87               | /* empty */
+>>>>>>> Stashed changes
 
    88 print: KW_PRINT lpe
 
@@ -131,7 +142,11 @@ Grammar
    92   | '#' TK_IDENTIFIER
 
    93 lpe: pe lpe
+<<<<<<< Updated upstream
    94    | %empty
+=======
+   94    | /* empty */
+>>>>>>> Stashed changes
 
    95 read: KW_READ TK_IDENTIFIER
 
@@ -196,8 +211,8 @@ program (47)
 ldec (48)
     on left: 2 3, on right: 1 2
 dec (49)
-    on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20, on right:
-    2 28
+    on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20,
+    on right: 2 28
 reset (50)
     on left: 21 22, on right: 21 40 67
 block (51)
@@ -205,8 +220,8 @@ block (51)
 lcmd (52)
     on left: 25 26 27 28, on right: 4 5 6 7 23 25 27
 cmd (53)
-    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43, on right:
-    25 27
+    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43,
+    on right: 25 27
 lit (54)
     on left: 44 45 46, on right: 47 48
 vet_dec (55)
@@ -240,7 +255,7 @@ read (67)
     on left: 95, on right: 42
 
 
-State 0
+state 0
 
     0 $accept: . program $end
 
@@ -260,7 +275,7 @@ State 0
     func_header  go to state 11
 
 
-State 1
+state 1
 
    10 dec: KW_CHAR . TK_IDENTIFIER '=' exp ';'
    16    | KW_CHAR . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
@@ -272,7 +287,7 @@ State 1
     '#'            shift, and go to state 13
 
 
-State 2
+state 2
 
    11 dec: KW_INT . TK_IDENTIFIER '=' exp ';'
    12    | KW_INT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
@@ -284,7 +299,7 @@ State 2
     '#'            shift, and go to state 15
 
 
-State 3
+state 3
 
     9 dec: KW_FLOAT . TK_IDENTIFIER '=' exp ';'
    14    | KW_FLOAT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
@@ -296,7 +311,7 @@ State 3
     '#'            shift, and go to state 17
 
 
-State 4
+state 4
 
     4 dec: KW_IF . '(' exp ')' KW_THEN lcmd
     5    | KW_IF . '(' exp ')' KW_THEN lcmd KW_ELSE lcmd
@@ -304,35 +319,35 @@ State 4
     '('  shift, and go to state 18
 
 
-State 5
+state 5
 
     6 dec: KW_WHILE . '(' exp ')' lcmd
 
     '('  shift, and go to state 19
 
 
-State 6
+state 6
 
     7 dec: KW_FOR . '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
 
     '('  shift, and go to state 20
 
 
-State 7
+state 7
 
     0 $accept: program . $end
 
     $end  shift, and go to state 21
 
 
-State 8
+state 8
 
     1 program: ldec .
 
     $default  reduce using rule 1 (program)
 
 
-State 9
+state 9
 
     2 ldec: dec . ldec
 
@@ -351,14 +366,14 @@ State 9
     func_header  go to state 11
 
 
-State 10
+state 10
 
     8 dec: func_dec .
 
     $default  reduce using rule 8 (dec)
 
 
-State 11
+state 11
 
    77 func_dec: func_header . block
 
@@ -369,7 +384,7 @@ State 11
     block  go to state 24
 
 
-State 12
+state 12
 
    10 dec: KW_CHAR TK_IDENTIFIER . '=' exp ';'
    16    | KW_CHAR TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
@@ -381,14 +396,14 @@ State 12
     '['  shift, and go to state 27
 
 
-State 13
+state 13
 
    19 dec: KW_CHAR '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 28
 
 
-State 14
+state 14
 
    11 dec: KW_INT TK_IDENTIFIER . '=' exp ';'
    12    | KW_INT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
@@ -400,14 +415,14 @@ State 14
     '['  shift, and go to state 31
 
 
-State 15
+state 15
 
    20 dec: KW_INT '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 32
 
 
-State 16
+state 16
 
     9 dec: KW_FLOAT TK_IDENTIFIER . '=' exp ';'
    14    | KW_FLOAT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
@@ -419,14 +434,14 @@ State 16
     '['  shift, and go to state 35
 
 
-State 17
+state 17
 
    18 dec: KW_FLOAT '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 36
 
 
-State 18
+state 18
 
     4 dec: KW_IF '(' . exp ')' KW_THEN lcmd
     5    | KW_IF '(' . exp ')' KW_THEN lcmd KW_ELSE lcmd
@@ -441,7 +456,7 @@ State 18
     exp  go to state 43
 
 
-State 19
+state 19
 
     6 dec: KW_WHILE '(' . exp ')' lcmd
 
@@ -455,28 +470,28 @@ State 19
     exp  go to state 44
 
 
-State 20
+state 20
 
     7 dec: KW_FOR '(' . TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
 
     TK_IDENTIFIER  shift, and go to state 45
 
 
-State 21
+state 21
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 22
+state 22
 
     2 ldec: dec ldec .
 
     $default  reduce using rule 2 (ldec)
 
 
-State 23
+state 23
 
    23 block: '{' . lcmd '}'
 
@@ -507,14 +522,14 @@ State 23
     read         go to state 57
 
 
-State 24
+state 24
 
    77 func_dec: func_header block .
 
     $default  reduce using rule 77 (func_dec)
 
 
-State 25
+state 25
 
    10 dec: KW_CHAR TK_IDENTIFIER '=' . exp ';'
 
@@ -528,7 +543,7 @@ State 25
     exp  go to state 58
 
 
-State 26
+state 26
 
    80 func_header: KW_CHAR TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
@@ -542,7 +557,7 @@ State 26
     l_func_par  go to state 63
 
 
-State 27
+state 27
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
    17    | KW_CHAR TK_IDENTIFIER '[' . exp ']' ';'
@@ -557,14 +572,14 @@ State 27
     exp  go to state 64
 
 
-State 28
+state 28
 
    19 dec: KW_CHAR '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 65
 
 
-State 29
+state 29
 
    11 dec: KW_INT TK_IDENTIFIER '=' . exp ';'
 
@@ -578,7 +593,7 @@ State 29
     exp  go to state 66
 
 
-State 30
+state 30
 
    78 func_header: KW_INT TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
@@ -592,7 +607,7 @@ State 30
     l_func_par  go to state 67
 
 
-State 31
+state 31
 
    12 dec: KW_INT TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
    13    | KW_INT TK_IDENTIFIER '[' . exp ']' ';'
@@ -607,14 +622,14 @@ State 31
     exp  go to state 68
 
 
-State 32
+state 32
 
    20 dec: KW_INT '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 69
 
 
-State 33
+state 33
 
     9 dec: KW_FLOAT TK_IDENTIFIER '=' . exp ';'
 
@@ -628,7 +643,7 @@ State 33
     exp  go to state 70
 
 
-State 34
+state 34
 
    79 func_header: KW_FLOAT TK_IDENTIFIER '(' . l_func_par reset_func_par ')'
 
@@ -642,7 +657,7 @@ State 34
     l_func_par  go to state 71
 
 
-State 35
+state 35
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' . exp ']' ':' vet_dec ';'
    15    | KW_FLOAT TK_IDENTIFIER '[' . exp ']' ';'
@@ -657,14 +672,14 @@ State 35
     exp  go to state 72
 
 
-State 36
+state 36
 
    18 dec: KW_FLOAT '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 73
 
 
-State 37
+state 37
 
    49 exp: TK_IDENTIFIER .
    50    | TK_IDENTIFIER . '[' exp ']'
@@ -677,28 +692,28 @@ State 37
     $default  reduce using rule 49 (exp)
 
 
-State 38
+state 38
 
    53 exp: LIT_INTEGER .
 
     $default  reduce using rule 53 (exp)
 
 
-State 39
+state 39
 
    52 exp: LIT_REAL .
 
     $default  reduce using rule 52 (exp)
 
 
-State 40
+state 40
 
    51 exp: LIT_CHAR .
 
     $default  reduce using rule 51 (exp)
 
 
-State 41
+state 41
 
    60 exp: '!' . exp
 
@@ -712,7 +727,7 @@ State 41
     exp  go to state 76
 
 
-State 42
+state 42
 
    68 exp: '(' . exp ')'
 
@@ -726,7 +741,7 @@ State 42
     exp  go to state 77
 
 
-State 43
+state 43
 
     4 dec: KW_IF '(' exp . ')' KW_THEN lcmd
     5    | KW_IF '(' exp . ')' KW_THEN lcmd KW_ELSE lcmd
@@ -758,7 +773,7 @@ State 43
     ')'           shift, and go to state 90
 
 
-State 44
+state 44
 
     6 dec: KW_WHILE '(' exp . ')' lcmd
    54 exp: exp . '+' exp
@@ -789,21 +804,21 @@ State 44
     ')'           shift, and go to state 91
 
 
-State 45
+state 45
 
     7 dec: KW_FOR '(' TK_IDENTIFIER . '=' exp KW_TO exp ')' lcmd
 
     '='  shift, and go to state 92
 
 
-State 46
+state 46
 
    95 read: KW_READ . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 93
 
 
-State 47
+state 47
 
    43 cmd: KW_RETURN . exp
 
@@ -817,7 +832,7 @@ State 47
     exp  go to state 94
 
 
-State 48
+state 48
 
    88 print: KW_PRINT . lpe
 
@@ -835,7 +850,7 @@ State 48
     lpe  go to state 100
 
 
-State 49
+state 49
 
    30 cmd: TK_IDENTIFIER . '=' exp
    33    | TK_IDENTIFIER . '=' '#' exp
@@ -850,7 +865,7 @@ State 49
     '['  shift, and go to state 103
 
 
-State 50
+state 50
 
    31 cmd: '#' . TK_IDENTIFIER '=' exp
    36    | '#' . TK_IDENTIFIER '[' exp ']' '=' exp
@@ -858,7 +873,7 @@ State 50
     TK_IDENTIFIER  shift, and go to state 104
 
 
-State 51
+state 51
 
    32 cmd: '&' . TK_IDENTIFIER '=' exp
    37    | '&' . TK_IDENTIFIER '[' exp ']' '=' exp
@@ -866,28 +881,28 @@ State 51
     TK_IDENTIFIER  shift, and go to state 105
 
 
-State 52
+state 52
 
    28 lcmd: dec .
 
     $default  reduce using rule 28 (lcmd)
 
 
-State 53
+state 53
 
    29 cmd: block .
 
     $default  reduce using rule 29 (cmd)
 
 
-State 54
+state 54
 
    23 block: '{' lcmd . '}'
 
     '}'  shift, and go to state 106
 
 
-State 55
+state 55
 
    25 lcmd: cmd . ';' lcmd
    27     | cmd . ';' cmd lcmd
@@ -895,21 +910,21 @@ State 55
     ';'  shift, and go to state 107
 
 
-State 56
+state 56
 
    41 cmd: print .
 
     $default  reduce using rule 41 (cmd)
 
 
-State 57
+state 57
 
    42 cmd: read .
 
     $default  reduce using rule 42 (cmd)
 
 
-State 58
+state 58
 
    10 dec: KW_CHAR TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -940,28 +955,28 @@ State 58
     ';'           shift, and go to state 108
 
 
-State 59
+state 59
 
    83 func_par: KW_CHAR . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 109
 
 
-State 60
+state 60
 
    81 func_par: KW_INT . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 110
 
 
-State 61
+state 61
 
    82 func_par: KW_FLOAT . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 111
 
 
-State 62
+state 62
 
    84 l_func_par: func_par . l_func_par
 
@@ -975,7 +990,7 @@ State 62
     l_func_par  go to state 112
 
 
-State 63
+state 63
 
    80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
 
@@ -986,7 +1001,7 @@ State 63
     reset_func_par  go to state 114
 
 
-State 64
+state 64
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
    17    | KW_CHAR TK_IDENTIFIER '[' exp . ']' ';'
@@ -1018,7 +1033,7 @@ State 64
     ']'           shift, and go to state 115
 
 
-State 65
+state 65
 
    19 dec: KW_CHAR '#' TK_IDENTIFIER '=' . exp ';'
 
@@ -1032,7 +1047,7 @@ State 65
     exp  go to state 116
 
 
-State 66
+state 66
 
    11 dec: KW_INT TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -1063,7 +1078,7 @@ State 66
     ';'           shift, and go to state 117
 
 
-State 67
+state 67
 
    78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
 
@@ -1074,7 +1089,7 @@ State 67
     reset_func_par  go to state 118
 
 
-State 68
+state 68
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
    13    | KW_INT TK_IDENTIFIER '[' exp . ']' ';'
@@ -1106,7 +1121,7 @@ State 68
     ']'           shift, and go to state 119
 
 
-State 69
+state 69
 
    20 dec: KW_INT '#' TK_IDENTIFIER '=' . exp ';'
 
@@ -1120,7 +1135,7 @@ State 69
     exp  go to state 120
 
 
-State 70
+state 70
 
     9 dec: KW_FLOAT TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -1151,7 +1166,7 @@ State 70
     ';'           shift, and go to state 121
 
 
-State 71
+state 71
 
    79 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par . reset_func_par ')'
 
@@ -1162,7 +1177,7 @@ State 71
     reset_func_par  go to state 122
 
 
-State 72
+state 72
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp . ']' ':' vet_dec ';'
    15    | KW_FLOAT TK_IDENTIFIER '[' exp . ']' ';'
@@ -1194,7 +1209,7 @@ State 72
     ']'           shift, and go to state 123
 
 
-State 73
+state 73
 
    18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' . exp ';'
 
@@ -1208,7 +1223,7 @@ State 73
     exp  go to state 124
 
 
-State 74
+state 74
 
    67 exp: TK_IDENTIFIER '(' . l_func_args reset ')'
 
@@ -1225,7 +1240,7 @@ State 74
     l_func_args  go to state 132
 
 
-State 75
+state 75
 
    50 exp: TK_IDENTIFIER '[' . exp ']'
 
@@ -1239,7 +1254,7 @@ State 75
     exp  go to state 133
 
 
-State 76
+state 76
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -1265,7 +1280,7 @@ State 76
     $default  reduce using rule 60 (exp)
 
 
-State 77
+state 77
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -1296,7 +1311,7 @@ State 77
     ')'           shift, and go to state 134
 
 
-State 78
+state 78
 
    61 exp: exp OPERATOR_LE . exp
 
@@ -1310,7 +1325,7 @@ State 78
     exp  go to state 135
 
 
-State 79
+state 79
 
    62 exp: exp OPERATOR_GE . exp
 
@@ -1324,7 +1339,7 @@ State 79
     exp  go to state 136
 
 
-State 80
+state 80
 
    63 exp: exp OPERATOR_EQ . exp
 
@@ -1338,7 +1353,7 @@ State 80
     exp  go to state 137
 
 
-State 81
+state 81
 
    64 exp: exp OPERATOR_NE . exp
 
@@ -1352,7 +1367,7 @@ State 81
     exp  go to state 138
 
 
-State 82
+state 82
 
    65 exp: exp OPERATOR_AND . exp
 
@@ -1366,7 +1381,7 @@ State 82
     exp  go to state 139
 
 
-State 83
+state 83
 
    66 exp: exp OPERATOR_OR . exp
 
@@ -1380,7 +1395,7 @@ State 83
     exp  go to state 140
 
 
-State 84
+state 84
 
    58 exp: exp '<' . exp
 
@@ -1394,7 +1409,7 @@ State 84
     exp  go to state 141
 
 
-State 85
+state 85
 
    59 exp: exp '>' . exp
 
@@ -1408,7 +1423,7 @@ State 85
     exp  go to state 142
 
 
-State 86
+state 86
 
    54 exp: exp '+' . exp
 
@@ -1422,7 +1437,7 @@ State 86
     exp  go to state 143
 
 
-State 87
+state 87
 
    55 exp: exp '-' . exp
 
@@ -1436,7 +1451,7 @@ State 87
     exp  go to state 144
 
 
-State 88
+state 88
 
    56 exp: exp '*' . exp
 
@@ -1450,7 +1465,7 @@ State 88
     exp  go to state 145
 
 
-State 89
+state 89
 
    57 exp: exp '/' . exp
 
@@ -1464,7 +1479,7 @@ State 89
     exp  go to state 146
 
 
-State 90
+state 90
 
     4 dec: KW_IF '(' exp ')' . KW_THEN lcmd
     5    | KW_IF '(' exp ')' . KW_THEN lcmd KW_ELSE lcmd
@@ -1472,7 +1487,7 @@ State 90
     KW_THEN  shift, and go to state 147
 
 
-State 91
+state 91
 
     6 dec: KW_WHILE '(' exp ')' . lcmd
 
@@ -1509,7 +1524,7 @@ State 91
     read         go to state 57
 
 
-State 92
+state 92
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' . exp KW_TO exp ')' lcmd
 
@@ -1523,14 +1538,14 @@ State 92
     exp  go to state 149
 
 
-State 93
+state 93
 
    95 read: KW_READ TK_IDENTIFIER .
 
     $default  reduce using rule 95 (read)
 
 
-State 94
+state 94
 
    43 cmd: KW_RETURN exp .
    54 exp: exp . '+' exp
@@ -1562,35 +1577,35 @@ State 94
     $default  reduce using rule 43 (cmd)
 
 
-State 95
+state 95
 
    90 pe: TK_IDENTIFIER .
 
     $default  reduce using rule 90 (pe)
 
 
-State 96
+state 96
 
    89 pe: LIT_STRING .
 
     $default  reduce using rule 89 (pe)
 
 
-State 97
+state 97
 
    92 pe: '#' . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 150
 
 
-State 98
+state 98
 
    91 pe: '&' . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 151
 
 
-State 99
+state 99
 
    93 lpe: pe . lpe
 
@@ -1608,14 +1623,14 @@ State 99
     lpe  go to state 152
 
 
-State 100
+state 100
 
    88 print: KW_PRINT lpe .
 
     $default  reduce using rule 88 (print)
 
 
-State 101
+state 101
 
    30 cmd: TK_IDENTIFIER '=' . exp
    33    | TK_IDENTIFIER '=' . '#' exp
@@ -1635,7 +1650,7 @@ State 101
     exp  go to state 155
 
 
-State 102
+state 102
 
    40 cmd: TK_IDENTIFIER '(' . l_func_args reset ')'
 
@@ -1652,7 +1667,7 @@ State 102
     l_func_args  go to state 156
 
 
-State 103
+state 103
 
    35 cmd: TK_IDENTIFIER '[' . exp ']' '=' exp
 
@@ -1666,7 +1681,7 @@ State 103
     exp  go to state 157
 
 
-State 104
+state 104
 
    31 cmd: '#' TK_IDENTIFIER . '=' exp
    36    | '#' TK_IDENTIFIER . '[' exp ']' '=' exp
@@ -1675,7 +1690,7 @@ State 104
     '['  shift, and go to state 159
 
 
-State 105
+state 105
 
    32 cmd: '&' TK_IDENTIFIER . '=' exp
    37    | '&' TK_IDENTIFIER . '[' exp ']' '=' exp
@@ -1684,14 +1699,14 @@ State 105
     '['  shift, and go to state 161
 
 
-State 106
+state 106
 
    23 block: '{' lcmd '}' .
 
     $default  reduce using rule 23 (block)
 
 
-State 107
+state 107
 
    25 lcmd: cmd ';' . lcmd
    27     | cmd ';' . cmd lcmd
@@ -1747,42 +1762,42 @@ State 107
     read         go to state 57
 
 
-State 108
+state 108
 
    10 dec: KW_CHAR TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 10 (dec)
 
 
-State 109
+state 109
 
    83 func_par: KW_CHAR TK_IDENTIFIER .
 
     $default  reduce using rule 83 (func_par)
 
 
-State 110
+state 110
 
    81 func_par: KW_INT TK_IDENTIFIER .
 
     $default  reduce using rule 81 (func_par)
 
 
-State 111
+state 111
 
    82 func_par: KW_FLOAT TK_IDENTIFIER .
 
     $default  reduce using rule 82 (func_par)
 
 
-State 112
+state 112
 
    84 l_func_par: func_par l_func_par .
 
     $default  reduce using rule 84 (l_func_par)
 
 
-State 113
+state 113
 
    86 reset_func_par: ',' . func_par reset_func_par
 
@@ -1793,14 +1808,14 @@ State 113
     func_par  go to state 164
 
 
-State 114
+state 114
 
    80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
 
     ')'  shift, and go to state 165
 
 
-State 115
+state 115
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
    17    | KW_CHAR TK_IDENTIFIER '[' exp ']' . ';'
@@ -1809,7 +1824,7 @@ State 115
     ':'  shift, and go to state 167
 
 
-State 116
+state 116
 
    19 dec: KW_CHAR '#' TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -1840,21 +1855,21 @@ State 116
     ';'           shift, and go to state 168
 
 
-State 117
+state 117
 
    11 dec: KW_INT TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 11 (dec)
 
 
-State 118
+state 118
 
    78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
 
     ')'  shift, and go to state 169
 
 
-State 119
+state 119
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
    13    | KW_INT TK_IDENTIFIER '[' exp ']' . ';'
@@ -1863,7 +1878,7 @@ State 119
     ':'  shift, and go to state 171
 
 
-State 120
+state 120
 
    20 dec: KW_INT '#' TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -1894,21 +1909,21 @@ State 120
     ';'           shift, and go to state 172
 
 
-State 121
+state 121
 
     9 dec: KW_FLOAT TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 9 (dec)
 
 
-State 122
+state 122
 
    79 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par . ')'
 
     ')'  shift, and go to state 173
 
 
-State 123
+state 123
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' . ':' vet_dec ';'
    15    | KW_FLOAT TK_IDENTIFIER '[' exp ']' . ';'
@@ -1917,7 +1932,7 @@ State 123
     ':'  shift, and go to state 175
 
 
-State 124
+state 124
 
    18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' exp . ';'
    54 exp: exp . '+' exp
@@ -1948,49 +1963,49 @@ State 124
     ';'           shift, and go to state 176
 
 
-State 125
+state 125
 
    72 func_args: TK_IDENTIFIER .
 
     $default  reduce using rule 72 (func_args)
 
 
-State 126
+state 126
 
    71 func_args: LIT_INTEGER .
 
     $default  reduce using rule 71 (func_args)
 
 
-State 127
+state 127
 
    69 func_args: LIT_REAL .
 
     $default  reduce using rule 69 (func_args)
 
 
-State 128
+state 128
 
    70 func_args: LIT_CHAR .
 
     $default  reduce using rule 70 (func_args)
 
 
-State 129
+state 129
 
    73 func_args: '#' . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 177
 
 
-State 130
+state 130
 
    74 func_args: '&' . TK_IDENTIFIER
 
     TK_IDENTIFIER  shift, and go to state 178
 
 
-State 131
+state 131
 
    75 l_func_args: func_args . l_func_args
 
@@ -2007,7 +2022,7 @@ State 131
     l_func_args  go to state 179
 
 
-State 132
+state 132
 
    67 exp: TK_IDENTIFIER '(' l_func_args . reset ')'
 
@@ -2018,7 +2033,7 @@ State 132
     reset  go to state 181
 
 
-State 133
+state 133
 
    50 exp: TK_IDENTIFIER '[' exp . ']'
    54    | exp . '+' exp
@@ -2049,14 +2064,14 @@ State 133
     ']'           shift, and go to state 182
 
 
-State 134
+state 134
 
    68 exp: '(' exp ')' .
 
     $default  reduce using rule 68 (exp)
 
 
-State 135
+state 135
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2082,7 +2097,7 @@ State 135
     $default  reduce using rule 61 (exp)
 
 
-State 136
+state 136
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2108,7 +2123,7 @@ State 136
     $default  reduce using rule 62 (exp)
 
 
-State 137
+state 137
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2134,7 +2149,7 @@ State 137
     $default  reduce using rule 63 (exp)
 
 
-State 138
+state 138
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2160,7 +2175,7 @@ State 138
     $default  reduce using rule 64 (exp)
 
 
-State 139
+state 139
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2184,7 +2199,7 @@ State 139
     $default  reduce using rule 65 (exp)
 
 
-State 140
+state 140
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2208,7 +2223,7 @@ State 140
     $default  reduce using rule 66 (exp)
 
 
-State 141
+state 141
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2234,7 +2249,7 @@ State 141
     $default  reduce using rule 58 (exp)
 
 
-State 142
+state 142
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2260,7 +2275,7 @@ State 142
     $default  reduce using rule 59 (exp)
 
 
-State 143
+state 143
 
    54 exp: exp . '+' exp
    54    | exp '+' exp .
@@ -2282,7 +2297,7 @@ State 143
     $default  reduce using rule 54 (exp)
 
 
-State 144
+state 144
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2304,7 +2319,7 @@ State 144
     $default  reduce using rule 55 (exp)
 
 
-State 145
+state 145
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2325,7 +2340,7 @@ State 145
     $default  reduce using rule 56 (exp)
 
 
-State 146
+state 146
 
    54 exp: exp . '+' exp
    55    | exp . '-' exp
@@ -2344,7 +2359,7 @@ State 146
     $default  reduce using rule 57 (exp)
 
 
-State 147
+state 147
 
     4 dec: KW_IF '(' exp ')' KW_THEN . lcmd
     5    | KW_IF '(' exp ')' KW_THEN . lcmd KW_ELSE lcmd
@@ -2382,14 +2397,14 @@ State 147
     read         go to state 57
 
 
-State 148
+state 148
 
     6 dec: KW_WHILE '(' exp ')' lcmd .
 
     $default  reduce using rule 6 (dec)
 
 
-State 149
+state 149
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp . KW_TO exp ')' lcmd
    54 exp: exp . '+' exp
@@ -2420,28 +2435,28 @@ State 149
     '/'           shift, and go to state 89
 
 
-State 150
+state 150
 
    92 pe: '#' TK_IDENTIFIER .
 
     $default  reduce using rule 92 (pe)
 
 
-State 151
+state 151
 
    91 pe: '&' TK_IDENTIFIER .
 
     $default  reduce using rule 91 (pe)
 
 
-State 152
+state 152
 
    93 lpe: pe lpe .
 
     $default  reduce using rule 93 (lpe)
 
 
-State 153
+state 153
 
    33 cmd: TK_IDENTIFIER '=' '#' . exp
    38    | TK_IDENTIFIER '=' '#' . exp '[' exp ']'
@@ -2456,7 +2471,7 @@ State 153
     exp  go to state 185
 
 
-State 154
+state 154
 
    34 cmd: TK_IDENTIFIER '=' '&' . exp
    39    | TK_IDENTIFIER '=' '&' . exp '[' exp ']'
@@ -2471,7 +2486,7 @@ State 154
     exp  go to state 186
 
 
-State 155
+state 155
 
    30 cmd: TK_IDENTIFIER '=' exp .
    54 exp: exp . '+' exp
@@ -2503,7 +2518,7 @@ State 155
     $default  reduce using rule 30 (cmd)
 
 
-State 156
+state 156
 
    40 cmd: TK_IDENTIFIER '(' l_func_args . reset ')'
 
@@ -2514,7 +2529,7 @@ State 156
     reset  go to state 187
 
 
-State 157
+state 157
 
    35 cmd: TK_IDENTIFIER '[' exp . ']' '=' exp
    54 exp: exp . '+' exp
@@ -2545,7 +2560,7 @@ State 157
     ']'           shift, and go to state 188
 
 
-State 158
+state 158
 
    31 cmd: '#' TK_IDENTIFIER '=' . exp
 
@@ -2559,7 +2574,7 @@ State 158
     exp  go to state 189
 
 
-State 159
+state 159
 
    36 cmd: '#' TK_IDENTIFIER '[' . exp ']' '=' exp
 
@@ -2573,7 +2588,7 @@ State 159
     exp  go to state 190
 
 
-State 160
+state 160
 
    32 cmd: '&' TK_IDENTIFIER '=' . exp
 
@@ -2587,7 +2602,7 @@ State 160
     exp  go to state 191
 
 
-State 161
+state 161
 
    37 cmd: '&' TK_IDENTIFIER '[' . exp ']' '=' exp
 
@@ -2601,14 +2616,14 @@ State 161
     exp  go to state 192
 
 
-State 162
+state 162
 
    25 lcmd: cmd ';' lcmd .
 
     $default  reduce using rule 25 (lcmd)
 
 
-State 163
+state 163
 
    25 lcmd: cmd . ';' lcmd
    27     | cmd . ';' cmd lcmd
@@ -2648,7 +2663,7 @@ State 163
     read         go to state 57
 
 
-State 164
+state 164
 
    86 reset_func_par: ',' func_par . reset_func_par
 
@@ -2659,21 +2674,34 @@ State 164
     reset_func_par  go to state 194
 
 
+<<<<<<< Updated upstream
 State 165
 
    80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
     $default  reduce using rule 80 (func_header)
+=======
+state 165
+
+   80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+>>>>>>> Stashed changes
+
+    $default  reduce using rule 80 (func_header)
 
 
-State 166
+<<<<<<< Updated upstream
+   17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' .
+
+=======
+state 166
 
    17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' .
 
+>>>>>>> Stashed changes
     $default  reduce using rule 17 (dec)
 
 
-State 167
+state 167
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
 
@@ -2685,28 +2713,41 @@ State 167
     vet_dec  go to state 199
 
 
-State 168
+state 168
 
    19 dec: KW_CHAR '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 19 (dec)
 
 
+<<<<<<< Updated upstream
 State 169
 
    78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
     $default  reduce using rule 78 (func_header)
+=======
+state 169
+
+   78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+>>>>>>> Stashed changes
+
+    $default  reduce using rule 78 (func_header)
 
 
-State 170
+<<<<<<< Updated upstream
+   13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' .
+
+=======
+state 170
 
    13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' .
 
+>>>>>>> Stashed changes
     $default  reduce using rule 13 (dec)
 
 
-State 171
+state 171
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
 
@@ -2718,28 +2759,39 @@ State 171
     vet_dec  go to state 200
 
 
-State 172
+state 172
 
    20 dec: KW_INT '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 20 (dec)
 
 
+<<<<<<< Updated upstream
 State 173
 
    79 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
     $default  reduce using rule 79 (func_header)
+=======
+state 173
+
+   79 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+>>>>>>> Stashed changes
+
+    $default  reduce using rule 79 (func_header)
 
 
-State 174
+<<<<<<< Updated upstream
+=======
+state 174
 
+>>>>>>> Stashed changes
    15 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' .
 
     $default  reduce using rule 15 (dec)
 
 
-State 175
+state 175
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' . vet_dec ';'
 
@@ -2751,35 +2803,35 @@ State 175
     vet_dec  go to state 201
 
 
-State 176
+state 176
 
    18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 18 (dec)
 
 
-State 177
+state 177
 
    73 func_args: '#' TK_IDENTIFIER .
 
     $default  reduce using rule 73 (func_args)
 
 
-State 178
+state 178
 
    74 func_args: '&' TK_IDENTIFIER .
 
     $default  reduce using rule 74 (func_args)
 
 
-State 179
+state 179
 
    75 l_func_args: func_args l_func_args .
 
     $default  reduce using rule 75 (l_func_args)
 
 
-State 180
+state 180
 
    21 reset: ',' . func_args reset
 
@@ -2793,21 +2845,21 @@ State 180
     func_args  go to state 202
 
 
-State 181
+state 181
 
    67 exp: TK_IDENTIFIER '(' l_func_args reset . ')'
 
     ')'  shift, and go to state 203
 
 
-State 182
+state 182
 
    50 exp: TK_IDENTIFIER '[' exp ']' .
 
     $default  reduce using rule 50 (exp)
 
 
-State 183
+state 183
 
     4 dec: KW_IF '(' exp ')' KW_THEN lcmd .
     5    | KW_IF '(' exp ')' KW_THEN lcmd . KW_ELSE lcmd
@@ -2818,7 +2870,7 @@ State 183
     $default  reduce using rule 4 (dec)
 
 
-State 184
+state 184
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO . exp ')' lcmd
 
@@ -2832,7 +2884,7 @@ State 184
     exp  go to state 205
 
 
-State 185
+state 185
 
    33 cmd: TK_IDENTIFIER '=' '#' exp .
    38    | TK_IDENTIFIER '=' '#' exp . '[' exp ']'
@@ -2866,7 +2918,7 @@ State 185
     $default  reduce using rule 33 (cmd)
 
 
-State 186
+state 186
 
    34 cmd: TK_IDENTIFIER '=' '&' exp .
    39    | TK_IDENTIFIER '=' '&' exp . '[' exp ']'
@@ -2900,21 +2952,21 @@ State 186
     $default  reduce using rule 34 (cmd)
 
 
-State 187
+state 187
 
    40 cmd: TK_IDENTIFIER '(' l_func_args reset . ')'
 
     ')'  shift, and go to state 208
 
 
-State 188
+state 188
 
    35 cmd: TK_IDENTIFIER '[' exp ']' . '=' exp
 
     '='  shift, and go to state 209
 
 
-State 189
+state 189
 
    31 cmd: '#' TK_IDENTIFIER '=' exp .
    54 exp: exp . '+' exp
@@ -2946,7 +2998,7 @@ State 189
     $default  reduce using rule 31 (cmd)
 
 
-State 190
+state 190
 
    36 cmd: '#' TK_IDENTIFIER '[' exp . ']' '=' exp
    54 exp: exp . '+' exp
@@ -2977,7 +3029,7 @@ State 190
     ']'           shift, and go to state 210
 
 
-State 191
+state 191
 
    32 cmd: '&' TK_IDENTIFIER '=' exp .
    54 exp: exp . '+' exp
@@ -3009,7 +3061,7 @@ State 191
     $default  reduce using rule 32 (cmd)
 
 
-State 192
+state 192
 
    37 cmd: '&' TK_IDENTIFIER '[' exp . ']' '=' exp
    54 exp: exp . '+' exp
@@ -3040,41 +3092,58 @@ State 192
     ']'           shift, and go to state 211
 
 
-State 193
+state 193
 
    27 lcmd: cmd ';' cmd lcmd .
 
     $default  reduce using rule 27 (lcmd)
 
 
+<<<<<<< Updated upstream
 State 194
+=======
+state 194
+>>>>>>> Stashed changes
 
    86 reset_func_par: ',' func_par reset_func_par .
 
     $default  reduce using rule 86 (reset_func_par)
 
 
+<<<<<<< Updated upstream
 State 195
+=======
+state 195
+>>>>>>> Stashed changes
 
    44 lit: LIT_INTEGER .
 
     $default  reduce using rule 44 (lit)
 
 
+<<<<<<< Updated upstream
 State 196
+=======
+state 196
+>>>>>>> Stashed changes
 
    45 lit: LIT_REAL .
 
     $default  reduce using rule 45 (lit)
 
 
+<<<<<<< Updated upstream
 State 197
+=======
+state 197
+>>>>>>> Stashed changes
 
    46 lit: LIT_CHAR .
 
     $default  reduce using rule 46 (lit)
 
 
+<<<<<<< Updated upstream
 State 198
 
    47 vet_dec: lit . vet_dec
@@ -3086,32 +3155,63 @@ State 198
 
     $default  reduce using rule 48 (vet_dec)
 
+=======
+state 198
+
+   47 vet_dec: lit . vet_dec
+   48        | lit .
+
+    LIT_INTEGER  shift, and go to state 195
+    LIT_REAL     shift, and go to state 196
+    LIT_CHAR     shift, and go to state 197
+
+    $default  reduce using rule 48 (vet_dec)
+
+>>>>>>> Stashed changes
     lit      go to state 198
     vet_dec  go to state 212
 
 
+<<<<<<< Updated upstream
 State 199
+=======
+state 199
+>>>>>>> Stashed changes
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 213
 
 
+<<<<<<< Updated upstream
 State 200
+=======
+state 200
+>>>>>>> Stashed changes
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 214
+<<<<<<< Updated upstream
 
 
 State 201
+=======
+
+
+state 201
+>>>>>>> Stashed changes
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 215
 
 
+<<<<<<< Updated upstream
 State 202
+=======
+state 202
+>>>>>>> Stashed changes
 
    21 reset: ',' func_args . reset
 
@@ -3122,14 +3222,22 @@ State 202
     reset  go to state 216
 
 
+<<<<<<< Updated upstream
 State 203
+=======
+state 203
+>>>>>>> Stashed changes
 
    67 exp: TK_IDENTIFIER '(' l_func_args reset ')' .
 
     $default  reduce using rule 67 (exp)
 
 
+<<<<<<< Updated upstream
 State 204
+=======
+state 204
+>>>>>>> Stashed changes
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE . lcmd
 
@@ -3166,7 +3274,11 @@ State 204
     read         go to state 57
 
 
+<<<<<<< Updated upstream
 State 205
+=======
+state 205
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp . ')' lcmd
    54 exp: exp . '+' exp
@@ -3197,7 +3309,11 @@ State 205
     ')'           shift, and go to state 218
 
 
+<<<<<<< Updated upstream
 State 206
+=======
+state 206
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' . exp ']'
 
@@ -3211,7 +3327,11 @@ State 206
     exp  go to state 219
 
 
+<<<<<<< Updated upstream
 State 207
+=======
+state 207
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' . exp ']'
 
@@ -3225,14 +3345,22 @@ State 207
     exp  go to state 220
 
 
+<<<<<<< Updated upstream
 State 208
+=======
+state 208
+>>>>>>> Stashed changes
 
    40 cmd: TK_IDENTIFIER '(' l_func_args reset ')' .
 
     $default  reduce using rule 40 (cmd)
 
 
+<<<<<<< Updated upstream
 State 209
+=======
+state 209
+>>>>>>> Stashed changes
 
    35 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3246,63 +3374,101 @@ State 209
     exp  go to state 221
 
 
+<<<<<<< Updated upstream
 State 210
+=======
+state 210
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
 
     '='  shift, and go to state 222
 
 
+<<<<<<< Updated upstream
 State 211
+=======
+state 211
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
 
     '='  shift, and go to state 223
+<<<<<<< Updated upstream
 
 
 State 212
+=======
+
+
+state 212
+>>>>>>> Stashed changes
 
    47 vet_dec: lit vet_dec .
 
     $default  reduce using rule 47 (vet_dec)
 
 
+<<<<<<< Updated upstream
 State 213
+=======
+state 213
+>>>>>>> Stashed changes
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 16 (dec)
 
 
+<<<<<<< Updated upstream
 State 214
+=======
+state 214
+>>>>>>> Stashed changes
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 12 (dec)
 
 
+<<<<<<< Updated upstream
 State 215
+=======
+state 215
+>>>>>>> Stashed changes
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 14 (dec)
 
 
+<<<<<<< Updated upstream
 State 216
+=======
+state 216
+>>>>>>> Stashed changes
 
    21 reset: ',' func_args reset .
 
     $default  reduce using rule 21 (reset)
 
 
+<<<<<<< Updated upstream
 State 217
+=======
+state 217
+>>>>>>> Stashed changes
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd .
 
     $default  reduce using rule 5 (dec)
 
 
+<<<<<<< Updated upstream
 State 218
+=======
+state 218
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' . lcmd
 
@@ -3339,7 +3505,11 @@ State 218
     read         go to state 57
 
 
+<<<<<<< Updated upstream
 State 219
+=======
+state 219
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp . ']'
    54 exp: exp . '+' exp
@@ -3370,7 +3540,11 @@ State 219
     ']'           shift, and go to state 225
 
 
+<<<<<<< Updated upstream
 State 220
+=======
+state 220
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp . ']'
    54 exp: exp . '+' exp
@@ -3401,7 +3575,11 @@ State 220
     ']'           shift, and go to state 226
 
 
+<<<<<<< Updated upstream
 State 221
+=======
+state 221
+>>>>>>> Stashed changes
 
    35 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp
@@ -3433,7 +3611,11 @@ State 221
     $default  reduce using rule 35 (cmd)
 
 
+<<<<<<< Updated upstream
 State 222
+=======
+state 222
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3447,7 +3629,11 @@ State 222
     exp  go to state 227
 
 
+<<<<<<< Updated upstream
 State 223
+=======
+state 223
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3461,28 +3647,44 @@ State 223
     exp  go to state 228
 
 
+<<<<<<< Updated upstream
 State 224
+=======
+state 224
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd .
 
     $default  reduce using rule 7 (dec)
 
 
+<<<<<<< Updated upstream
 State 225
+=======
+state 225
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp ']' .
 
     $default  reduce using rule 38 (cmd)
 
 
+<<<<<<< Updated upstream
 State 226
+=======
+state 226
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp ']' .
 
     $default  reduce using rule 39 (cmd)
 
 
+<<<<<<< Updated upstream
 State 227
+=======
+state 227
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp
@@ -3514,7 +3716,11 @@ State 227
     $default  reduce using rule 36 (cmd)
 
 
+<<<<<<< Updated upstream
 State 228
+=======
+state 228
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp

@@ -30,10 +30,12 @@ AST* astCreate(int Type, HASH*Symbol , AST *Son0 , AST *Son1 , AST *Son2, AST *S
 void astPrint(AST *node, int level, FILE* fileTree){
 
   int i = 0;
-  printf("oi");
+    if (node){
+            printf("nivel = %d\n",level);
+    }
 
   if(!node){
-     printf("oi");
+     printf("nivel = %d\n",level);
     return;
   }
   for(i; i<level; i++)
@@ -91,7 +93,9 @@ void astPrint(AST *node, int level, FILE* fileTree){
     case AST_FUNC_BLOCK: fprintf(stderr, "AST_FUNC_BLOCK,\n");      break;
     case AST_FUNC_HEADER: fprintf(stderr, "AST_FUNC_HEADER,\n");      break;
     case AST_FUNC_PAR_LIST: fprintf(stderr, "AST_FUNC_PAR_LIST,\n");      break;
-    case AST_FUNC_PAR: fprintf(stderr, "AST_FUNC_PAR,\n");      break;
+    case AST_FUNC_PAR: fprintf(stderr, "AST_FUNC_PAR,\n");
+          
+          break;
     case AST_PRINT_LIST: fprintf(stderr, "AST_PRINT_LIST,\n");
           fprintf(fileTree,"print");
           astPrint(node->son[0],level,fileTree);
@@ -118,13 +122,13 @@ void astPrint(AST *node, int level, FILE* fileTree){
       case AST_FUNC_HEADER_CHAR: fprintf(stderr, "AST_FUNC_HEADER_CHAR,\n");
           fprintf(fileTree,"int %s (",node->symbol->yytext);
           astPrint(node->son[0],level,fileTree);
-          astPrint(node->son[0],level,fileTree);
+          astPrint(node->son[1],level,fileTree);
           fprintf(fileTree,")");
           break;
       case AST_FUNC_HEADER_INT: fprintf(stderr, "AST_FUNC_HEADER_INT,\n");
           fprintf(fileTree,"int %s (",node->symbol->yytext);
           astPrint(node->son[0],level,fileTree);
-          astPrint(node->son[0],level,fileTree);
+          astPrint(node->son[1],level,fileTree);
           fprintf(fileTree,")");
           break;
           //KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')'
