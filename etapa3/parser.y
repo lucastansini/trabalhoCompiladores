@@ -1,4 +1,12 @@
 
+%{
+extern int getLineNumber();
+#include<stdio.h>
+#include <stdlib.h>
+#include "ast.h"
+    %}
+
+
 //Declarações para pegar o yylval.symbol
 %union{
 
@@ -8,13 +16,7 @@
 }
 
 
-%{
-extern int getLineNumber();
-#include<stdio.h>
-#include <stdlib.h>
-#include "AST.h"
 
-    %}
 
 
 %type <ast> dec
@@ -160,7 +162,7 @@ vet_dec: KW_FLOAT vet_dec
 
     ;
 
-exp:TK_IDENTIFIER { $$ = astCreate(AST_VAR,$1, 0,  0, 0, 0); }
+exp:TK_IDENTIFIER { $$ = astCreate(AST_VARIABLE,$1, 0,  0, 0, 0); }
     |TK_IDENTIFIER'['exp']' { $$ = astCreate(READ_VEC, $1, $3, 0, 0, 0); }
     |LIT_CHAR { $$ = astCreate(SYMBOL, $1,0,  0, 0, 0); }
     |LIT_REAL { $$ = astCreate(SYMBOL,$1, 0,  0, 0, 0); }
@@ -221,7 +223,7 @@ print:KW_PRINT lpe {$$ = astCreate(AST_PRINT_LIST, 0, 0, $2, 0, 0); }
 pe:LIT_STRING { $$ = astCreate(AST_VAR_PRINT, $1,0,  0, 0, 0); }
 |TK_IDENTIFIER { $$ = astCreate(AST_VAR_PRINT,$1, 0,  0, 0, 0); }
 |'&'TK_IDENTIFIER { $$ = astCreate(AST_VAR_END, $2,0,  0, 0, 0); }
-|'#'TK_IDENTIFIER { $$ = astCreate(AST_VAR_PTR,$2, 0,  0, 0, 0); }
+|'#'TK_IDENTIFIER { $$ = astCreate(AST_VAR_PTR, $2, 0,  0, 0, 0); }
 ;
 
 

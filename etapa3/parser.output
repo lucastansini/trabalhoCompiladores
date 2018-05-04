@@ -29,18 +29,18 @@ Grammar
     6    | KW_WHILE '(' exp ')' lcmd
     7    | KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd
     8    | func_dec
-    9    | KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';'
-   10    | KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';'
-   11    | KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';'
+    9    | KW_FLOAT TK_IDENTIFIER '=' exp ';'
+   10    | KW_CHAR TK_IDENTIFIER '=' exp ';'
+   11    | KW_INT TK_IDENTIFIER '=' exp ';'
    12    | KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    13    | KW_INT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
    14    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    15    | KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
    16    | KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    17    | KW_CHAR TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   18    | KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
-   19    | KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
-   20    | KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   18    | KW_FLOAT '#' TK_IDENTIFIER '=' exp ';'
+   19    | KW_CHAR '#' TK_IDENTIFIER '=' exp ';'
+   20    | KW_INT '#' TK_IDENTIFIER '=' exp ';'
 
    21 reset: ',' func_args reset
    22      | %empty
@@ -182,9 +182,9 @@ OPERATOR_OR (275) 68
 TK_IDENTIFIER (276) 7 9 10 11 12 13 14 15 16 17 18 19 20 30 31 32 33
     34 35 36 37 38 39 40 51 52 69 74 75 76 80 81 82 83 84 85 92 93
     94 97
-LIT_INTEGER (277) 11 18 19 20 44 55 73
-LIT_REAL (278) 9 45 54 71
-LIT_CHAR (279) 10 46 53 72
+LIT_INTEGER (277) 44 55 73
+LIT_REAL (278) 45 54 71
+LIT_CHAR (279) 46 53 72
 LIT_STRING (280) 91
 TOKEN_ERROR (281)
 
@@ -215,8 +215,9 @@ vet_dec (55)
     on left: 47 48 49 50, on right: 12 13 14 15 16 17 47 48 49
 exp (56)
     on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
-    69 70, on right: 4 5 6 7 12 13 14 15 16 17 30 31 32 33 34 35 36
-    37 38 39 43 52 56 57 58 59 60 61 62 63 64 65 66 67 68 70
+    69 70, on right: 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 30
+    31 32 33 34 35 36 37 38 39 43 52 56 57 58 59 60 61 62 63 64 65
+    66 67 68 70
 func_args (57)
     on left: 71 72 73 74 75 76, on right: 21 77
 l_func_args (58)
@@ -263,10 +264,10 @@ State 0
 
 State 1
 
-   10 dec: KW_CHAR . TK_IDENTIFIER '=' LIT_CHAR ';'
+   10 dec: KW_CHAR . TK_IDENTIFIER '=' exp ';'
    16    | KW_CHAR . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    17    | KW_CHAR . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   19    | KW_CHAR . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   19    | KW_CHAR . '#' TK_IDENTIFIER '=' exp ';'
    82 func_header: KW_CHAR . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
     TK_IDENTIFIER  shift, and go to state 12
@@ -275,10 +276,10 @@ State 1
 
 State 2
 
-   11 dec: KW_INT . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   11 dec: KW_INT . TK_IDENTIFIER '=' exp ';'
    12    | KW_INT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    13    | KW_INT . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   20    | KW_INT . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   20    | KW_INT . '#' TK_IDENTIFIER '=' exp ';'
    80 func_header: KW_INT . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
     TK_IDENTIFIER  shift, and go to state 14
@@ -287,10 +288,10 @@ State 2
 
 State 3
 
-    9 dec: KW_FLOAT . TK_IDENTIFIER '=' LIT_REAL ';'
+    9 dec: KW_FLOAT . TK_IDENTIFIER '=' exp ';'
    14    | KW_FLOAT . TK_IDENTIFIER '[' exp ']' ':' vet_dec ';'
    15    | KW_FLOAT . TK_IDENTIFIER '[' exp ']' ';' vet_dec ';'
-   18    | KW_FLOAT . '#' TK_IDENTIFIER '=' LIT_INTEGER ';'
+   18    | KW_FLOAT . '#' TK_IDENTIFIER '=' exp ';'
    81 func_header: KW_FLOAT . TK_IDENTIFIER '(' l_func_par reset_func_par ')'
 
     TK_IDENTIFIER  shift, and go to state 16
@@ -372,7 +373,7 @@ State 11
 
 State 12
 
-   10 dec: KW_CHAR TK_IDENTIFIER . '=' LIT_CHAR ';'
+   10 dec: KW_CHAR TK_IDENTIFIER . '=' exp ';'
    16    | KW_CHAR TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
    17    | KW_CHAR TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
    82 func_header: KW_CHAR TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
@@ -384,14 +385,14 @@ State 12
 
 State 13
 
-   19 dec: KW_CHAR '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   19 dec: KW_CHAR '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 28
 
 
 State 14
 
-   11 dec: KW_INT TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   11 dec: KW_INT TK_IDENTIFIER . '=' exp ';'
    12    | KW_INT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
    13    | KW_INT TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
    80 func_header: KW_INT TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
@@ -403,14 +404,14 @@ State 14
 
 State 15
 
-   20 dec: KW_INT '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   20 dec: KW_INT '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 32
 
 
 State 16
 
-    9 dec: KW_FLOAT TK_IDENTIFIER . '=' LIT_REAL ';'
+    9 dec: KW_FLOAT TK_IDENTIFIER . '=' exp ';'
    14    | KW_FLOAT TK_IDENTIFIER . '[' exp ']' ':' vet_dec ';'
    15    | KW_FLOAT TK_IDENTIFIER . '[' exp ']' ';' vet_dec ';'
    81 func_header: KW_FLOAT TK_IDENTIFIER . '(' l_func_par reset_func_par ')'
@@ -422,7 +423,7 @@ State 16
 
 State 17
 
-   18 dec: KW_FLOAT '#' . TK_IDENTIFIER '=' LIT_INTEGER ';'
+   18 dec: KW_FLOAT '#' . TK_IDENTIFIER '=' exp ';'
 
     TK_IDENTIFIER  shift, and go to state 36
 
@@ -517,9 +518,16 @@ State 24
 
 State 25
 
-   10 dec: KW_CHAR TK_IDENTIFIER '=' . LIT_CHAR ';'
+   10 dec: KW_CHAR TK_IDENTIFIER '=' . exp ';'
 
-    LIT_CHAR  shift, and go to state 58
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 58
 
 
 State 26
@@ -553,16 +561,23 @@ State 27
 
 State 28
 
-   19 dec: KW_CHAR '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   19 dec: KW_CHAR '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 65
 
 
 State 29
 
-   11 dec: KW_INT TK_IDENTIFIER '=' . LIT_INTEGER ';'
+   11 dec: KW_INT TK_IDENTIFIER '=' . exp ';'
 
-    LIT_INTEGER  shift, and go to state 66
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 66
 
 
 State 30
@@ -596,16 +611,23 @@ State 31
 
 State 32
 
-   20 dec: KW_INT '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   20 dec: KW_INT '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 69
 
 
 State 33
 
-    9 dec: KW_FLOAT TK_IDENTIFIER '=' . LIT_REAL ';'
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' . exp ';'
 
-    LIT_REAL  shift, and go to state 70
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 70
 
 
 State 34
@@ -639,7 +661,7 @@ State 35
 
 State 36
 
-   18 dec: KW_FLOAT '#' TK_IDENTIFIER . '=' LIT_INTEGER ';'
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER . '=' exp ';'
 
     '='  shift, and go to state 73
 
@@ -891,9 +913,33 @@ State 57
 
 State 58
 
-   10 dec: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR . ';'
+   10 dec: KW_CHAR TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 108
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 108
 
 
 State 59
@@ -976,16 +1022,47 @@ State 64
 
 State 65
 
-   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' . exp ';'
 
-    LIT_INTEGER  shift, and go to state 116
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 116
 
 
 State 66
 
-   11 dec: KW_INT TK_IDENTIFIER '=' LIT_INTEGER . ';'
+   11 dec: KW_INT TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 117
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 117
 
 
 State 67
@@ -1033,16 +1110,47 @@ State 68
 
 State 69
 
-   20 dec: KW_INT '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' . exp ';'
 
-    LIT_INTEGER  shift, and go to state 120
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 120
 
 
 State 70
 
-    9 dec: KW_FLOAT TK_IDENTIFIER '=' LIT_REAL . ';'
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 121
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 121
 
 
 State 71
@@ -1090,9 +1198,16 @@ State 72
 
 State 73
 
-   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' . LIT_INTEGER ';'
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' . exp ';'
 
-    LIT_INTEGER  shift, and go to state 124
+    TK_IDENTIFIER  shift, and go to state 37
+    LIT_INTEGER    shift, and go to state 38
+    LIT_REAL       shift, and go to state 39
+    LIT_CHAR       shift, and go to state 40
+    '!'            shift, and go to state 41
+    '('            shift, and go to state 42
+
+    exp  go to state 124
 
 
 State 74
@@ -1636,7 +1751,7 @@ State 107
 
 State 108
 
-   10 dec: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR ';' .
+   10 dec: KW_CHAR TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 10 (dec)
 
@@ -1698,14 +1813,38 @@ State 115
 
 State 116
 
-   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 168
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 168
 
 
 State 117
 
-   11 dec: KW_INT TK_IDENTIFIER '=' LIT_INTEGER ';' .
+   11 dec: KW_INT TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 11 (dec)
 
@@ -1728,14 +1867,38 @@ State 119
 
 State 120
 
-   20 dec: KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 172
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 172
 
 
 State 121
 
-    9 dec: KW_FLOAT TK_IDENTIFIER '=' LIT_REAL ';' .
+    9 dec: KW_FLOAT TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 9 (dec)
 
@@ -1758,9 +1921,33 @@ State 123
 
 State 124
 
-   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER . ';'
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' exp . ';'
+   56 exp: exp . '+' exp
+   57    | exp . '-' exp
+   58    | exp . '*' exp
+   59    | exp . '/' exp
+   60    | exp . '<' exp
+   61    | exp . '>' exp
+   63    | exp . OPERATOR_LE exp
+   64    | exp . OPERATOR_GE exp
+   65    | exp . OPERATOR_EQ exp
+   66    | exp . OPERATOR_NE exp
+   67    | exp . OPERATOR_AND exp
+   68    | exp . OPERATOR_OR exp
 
-    ';'  shift, and go to state 176
+    OPERATOR_LE   shift, and go to state 78
+    OPERATOR_GE   shift, and go to state 79
+    OPERATOR_EQ   shift, and go to state 80
+    OPERATOR_NE   shift, and go to state 81
+    OPERATOR_AND  shift, and go to state 82
+    OPERATOR_OR   shift, and go to state 83
+    '<'           shift, and go to state 84
+    '>'           shift, and go to state 85
+    '+'           shift, and go to state 86
+    '-'           shift, and go to state 87
+    '*'           shift, and go to state 88
+    '/'           shift, and go to state 89
+    ';'           shift, and go to state 176
 
 
 State 125
@@ -2513,7 +2700,7 @@ State 167
 
 State 168
 
-   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+   19 dec: KW_CHAR '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 19 (dec)
 
@@ -2557,7 +2744,7 @@ State 171
 
 State 172
 
-   20 dec: KW_INT '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+   20 dec: KW_INT '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 20 (dec)
 
@@ -2601,7 +2788,7 @@ State 175
 
 State 176
 
-   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' LIT_INTEGER ';' .
+   18 dec: KW_FLOAT '#' TK_IDENTIFIER '=' exp ';' .
 
     $default  reduce using rule 18 (dec)
 
