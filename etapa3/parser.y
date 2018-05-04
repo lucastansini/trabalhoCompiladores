@@ -114,7 +114,6 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
 |KW_INT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_INT,$3,$5,0,0,0);}
 ;
 
-
 reset: ',' func_args reset  {(AST_FUNC_RESET, 0, $2, $3, 0, 0); }
     |{$$ = 0;}
     ;
