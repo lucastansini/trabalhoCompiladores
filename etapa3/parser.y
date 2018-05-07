@@ -5,6 +5,7 @@ extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
 AST *ast_Geral;
+extern FILE *saida;
     %}
 
 
@@ -40,7 +41,7 @@ AST *ast_Geral;
 %type <ast> pe
 %type <ast> func_par
 %type <ast> lit
-
+%type <ast> vet_dec
 
 
 
@@ -80,14 +81,14 @@ AST *ast_Geral;
 %left '*'
 %left '/'
 
-//%nonassoc '(' ')'  //ver aqui se precisa.
+%nonassoc '(' ')'  //ver aqui se precisa.
 
 
 
 
 
 %%
-program: ldec {ast_Geral = $1;}
+program: ldec {astPrint($1,0,saida);}
     ;
 
 ldec:dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
@@ -102,11 +103,11 @@ dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 
 |KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_FLOAT,$2,$4,0,0,0);}
 |KW_CHAR TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_CHAR,$2,$4,0,0,0);}
 |KW_INT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_INT,$2,$4,0,0,0);}
-|KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,0,0,0);}
+|KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,$7,0,0);}
 |KW_INT TK_IDENTIFIER'['exp']' ';'  {$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
-|KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,0,0,0);}
+|KW_FLOAT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_FLOAT,$2,$4,$7,0,0);}
 |KW_FLOAT TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,$2,$4,0,0,0);}
-|KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,0,0,0);}
+|KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,$7,0,0);}
 |KW_CHAR TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,$2,$4,0,0,0);}
 
 |KW_FLOAT '#' TK_IDENTIFIER '=' exp ';'{$$ = astCreate(AST_VARIABLE_PTR_FLOAT,$3,$5,0,0,0);}
@@ -123,15 +124,15 @@ block: '{' lcmd '}' { $$ = astCreate(AST_BLOCK, 0, $2, 0, 0, 0); }
 
 
 lcmd: cmd  ';'lcmd { $$ = astCreate(AST_LCMD, 0, $1, $3, 0, 0);}
-|{$$ = 0;}
-| cmd ';'cmd lcmd { $$ = astCreate(AST_LCMD, 0, $1, $3, $4, 0);}
+    | cmd ';' cmd lcmd { $$ = astCreate(AST_LCMD2, 0, $1, $3,$4, 0);}
     |dec {$$ = $1;}
+| {$$ =0}
 ;
 
 
 
 
-cmd:block
+cmd:block {$$ = $1}
     | TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,$1,$3, 0,0,0);}
     | '#'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_PTR_ATRIBUTION,$2, $4,0,0,0);}
     | '&'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_END_ATRIBUTION,$2, $4,0,0,0);}
@@ -153,11 +154,10 @@ lit:LIT_INTEGER {$$ =astCreate(AST_INT, $1,0,  0, 0, 0); }
     |LIT_CHAR  {$$ =astCreate(AST_CHAR, $1,0,  0, 0, 0); }
     ;
 
-vet_dec: lit vet_dec
-|lit
+vet_dec: lit vet_dec {$$ =astCreate(AST_VET_LIST, 0,$1,  $2, 0, 0); }
+|lit {$$ = $1}
 ;
 
-    ;
 
 exp:TK_IDENTIFIER { $$ = astCreate(AST_VARIABLE,$1, 0,  0, 0, 0); }
     |TK_IDENTIFIER'['exp']' { $$ = astCreate(READ_VEC, $1, $3, 0, 0, 0); }
@@ -193,7 +193,7 @@ l_func_args:func_args l_func_args {$$ = astCreate(AST_FUNC_ARGL_LIST, 0, $1, $2,
     |{$$ = 0;}
     ;
 
-func_dec:func_header block {$$ = astCreate(AST_FUNC_BLOCK, 0, $1, 0, 0, 0); }
+func_dec:func_header block {$$ = astCreate(AST_FUNC_BLOCK, 0, $1, $2, 0, 0); }
     ;
 
 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' {$$ = astCreate(AST_FUNC_HEADER_INT, $2, $4, $5, 0, 0); }
@@ -213,7 +213,7 @@ reset_func_par: ',' func_par reset_func_par {$$ = astCreate(AST_FUNC_PAR, 0, $2,
     ;
 
 
-print:KW_PRINT lpe {$$ = astCreate(AST_PRINT_LIST, 0, 0, $2, 0, 0); }
+print:KW_PRINT lpe {$$ = astCreate(AST_PRINT_LIST, 0, $2,0 , 0, 0); }
 ;
 
 

@@ -3,13 +3,13 @@
 extern FILE * yyin;
 extern int yydebug;
 extern AST* ast_Geral;
-
+FILE * saida;
 int main(int argc, char **argv)
 {
 
 
 
-   FILE *saida = fopen("saida.txt","w+");
+    saida = fopen("saida.txt","w+");
     int token;
     FILE    *fd;
 
@@ -32,8 +32,6 @@ int main(int argc, char **argv)
 
 //astPrint();
 
-
-    astPrint(ast_Geral,0,saida);
 
 
 
