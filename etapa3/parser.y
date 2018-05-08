@@ -126,13 +126,13 @@ block: '{' lcmd '}' { $$ = astCreate(AST_BLOCK, 0, $2, 0, 0, 0); }
 lcmd: cmd  ';'lcmd { $$ = astCreate(AST_LCMD, 0, $1, $3, 0, 0);}
     | cmd ';' cmd lcmd { $$ = astCreate(AST_LCMD2, 0, $1, $3,$4, 0);}
     |dec {$$ = $1;}
-| {$$ =0}
+| {$$ =0;}
 ;
 
 
 
 
-cmd:block {$$ = $1}
+cmd:block {$$ = $1;}
     | TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,$1,$3, 0,0,0);}
     | '#'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_PTR_ATRIBUTION,$2, $4,0,0,0);}
     | '&'TK_IDENTIFIER '='exp {$$ = astCreate(AST_TO_END_ATRIBUTION,$2, $4,0,0,0);}
@@ -155,7 +155,7 @@ lit:LIT_INTEGER {$$ =astCreate(AST_INT, $1,0,  0, 0, 0); }
     ;
 
 vet_dec: lit vet_dec {$$ =astCreate(AST_VET_LIST, 0,$1,  $2, 0, 0); }
-|lit {$$ = $1}
+|lit {$$ = $1;}
 ;
 
 
