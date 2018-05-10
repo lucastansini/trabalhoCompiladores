@@ -88,7 +88,7 @@ extern FILE *saida;
 
 
 %%
-program: ldec {astPrint($1,0,saida);}
+program: ldec {astToFile(0,$1,saida); }
     ;
 
 ldec:dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
@@ -97,7 +97,7 @@ ldec:dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}
 
 dec:KW_IF '(' exp ')' KW_THEN lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 0); }
 |KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd { $$ = astCreate(AST_IF_THEN_ELSE, 0, $3, $6, $8, 0); }
-|KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_IF_THEN, 0, $3, $5, 0, 0); }
+|KW_WHILE '(' exp ')' lcmd  { $$ = astCreate(AST_WHILE, 0, $3, $5, 0, 0); }
 |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
 |func_dec {$$ = $1;}
 |KW_FLOAT TK_IDENTIFIER '=' exp ';' {$$ = astCreate(AST_VARIABLE_DEC_FLOAT,$2,$4,0,0,0);}

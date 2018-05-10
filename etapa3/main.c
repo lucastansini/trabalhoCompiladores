@@ -9,11 +9,11 @@ int main(int argc, char **argv)
 
 
 
-    saida = fopen("saida.txt","w+");
+    saida = fopen(argv[2],"w+");
     int token;
     FILE    *fd;
 
-    if (argc == 2)
+    if (argc == 3)
     {
         if (!(fd = fopen(argv[1], "r")))
         {

@@ -87,6 +87,7 @@
 #define AST_VARIABLE_DEC_CHAR 75
 #define AST_LCMD2 76
 #define AST_VET_LIST 77
+#define AST_WHILE 78
 
 typedef struct ast_node{
     int type;
@@ -97,7 +98,7 @@ typedef struct ast_node{
 
 AST* astCreate(int type, HASH*symbol , AST *son0 , AST *son1 , AST *son2, AST *son3);
 
-void astPrint(AST *node, int level, FILE *fileTree);
+void astToFile(int level,AST*node, FILE *fileTree);
 
 
 
