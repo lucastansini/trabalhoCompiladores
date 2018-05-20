@@ -5,4 +5,4 @@ parser.tab.h
 parser.tab.o
 parser.tab.c
 parser.output
-
+*.txt

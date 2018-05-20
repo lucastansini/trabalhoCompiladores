@@ -24,8 +24,10 @@ int main(int argc, char **argv)
             yyin = fd;
 
     }
-    else
+    else{
         printf("Usage: a.out filename\n");
+	return 0;	
+	}
 
 
     hashInit();
