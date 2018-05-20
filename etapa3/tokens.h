@@ -7,6 +7,7 @@
  * valor ascii de caracteres isolados.
  */
 
+
 #define KW_CHAR       256
 #define KW_INT        257
 #define KW_FLOAT      259

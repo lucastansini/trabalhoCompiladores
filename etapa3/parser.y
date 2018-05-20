@@ -1,6 +1,7 @@
 
 %{
 #include "ast.c"
+#include "semantic.c"
 extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
@@ -88,7 +89,10 @@ extern FILE *saida;
 
 
 %%
-program: ldec {astToFile(0,$1,saida); }
+program: ldec {astToFile(0,$1,saida);
+               setDeclarations($1);
+               checkUndeclared();
+              }
     ;
 
 ldec:dec ldec {$$ = astCreate(AST_DEC,0,$1,$2,0,0);}

@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     int token;
     FILE    *fd;
 
+    //Colocar 'argc==3' para rodar etapa3.
     if (argc == 3)
     {
         if (!(fd = fopen(argv[1], "r")))
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
         printf("Usage: a.out filename\n");
 
 
+    hashInit();
     yyparse();
 
 

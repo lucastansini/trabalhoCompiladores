@@ -1,4 +1,5 @@
 #include "hash.h"
+#include "semanticsymbols.h"
 
 HASH* table[HASH_SIZE];
 
@@ -7,9 +8,23 @@ HASH* table[HASH_SIZE];
 /*Inicialização da hash table com zero em todas posições*/
 void hashInit(void){
   int i = 0;
-
   for(i = 0 ; i<HASH_SIZE ; i++){
     table[i] = 0;
+  }
+}
+
+
+void checkUndeclared(void){
+  HASH* aux;
+
+  int i = 0;
+  for(i = 0 ; i<HASH_SIZE; i++){
+    for(aux = table[i]; aux ; aux=aux->next){
+      if(aux->type == SYMBOL_IDENTIFIER){
+        fprintf(stderr,"Symbol %s is undeclared!\n",aux->yytext);
+        exit(4);
+      }
+    }
   }
 }
 
@@ -23,11 +38,28 @@ int hashAddress(char *text){
   return address-1;
 }
 
+//Acha se já tem na HASH
+HASH* alreadyInHash(char *text){
+  int endereco = hashAddress(text);
+  HASH* aux;
+  //percorrer toda hash até achar
+  for(aux = table[endereco] ; aux ; aux = aux->next){
+    if(!strcmp(text,aux->yytext)){
+      return aux;
+    }
+  }
+  return 0;
+}
+
 /*Inserção de um elemento na HASH*/
 HASH* hashInsert(int type, char *text){
 
   int address;
   HASH* newNode = 0;
+
+  if(newNode = alreadyInHash(text)){
+    return newNode;
+  }
 
   newNode = (HASH*) calloc(1,sizeof(HASH));
   address = hashAddress(text);

@@ -396,7 +396,7 @@ void astToFile(int level,AST *node, FILE* fileTree){
       case AST_VAR_PTR: fprintf(stderr, "AST_VAR_PTR,\n");
             fprintf(fileTree,"#%s",node->symbol->yytext);
             break;
-        case AST_VARIABLE_DEC_INT:fprintf(stderr, "AST_VAR_INT,\n");
+        case AST_VARIABLE_DEC_INT:fprintf(stderr, "AST_VARIABLE_DEC_INT,\n");
             fprintf(fileTree,"int %s = ",node->symbol->yytext);
             astToFile(level+1,node->son[0],fileTree);
             fprintf(fileTree,";\n");
