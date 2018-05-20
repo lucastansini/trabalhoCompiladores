@@ -1,0 +1,8 @@
+lex.yy.o
+lex.yy.c
+etapa4
+parser.tab.h
+parser.tab.o
+parser.tab.c
+parser.output
+

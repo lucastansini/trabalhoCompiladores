@@ -1,5 +1,5 @@
 etapa2: parser.tab.c lex.yy.c
-	gcc -o etapa3 lex.yy.c parser.tab.c
+	gcc -o etapa4 lex.yy.c parser.tab.c
 
 parser.tab.c: parser.y
 	bison -d -v parser.y
@@ -8,4 +8,4 @@ lex.yy.c: scanner.l
 	lex scanner.l
 
 clean:
-	rm lex.yy.c parser.tab.c parser.tab.h y.output etapa3
+	rm lex.yy.c parser.tab.c parser.tab.h y.output etapa4
