@@ -51,7 +51,11 @@ Grammar
    25 lcmd: cmd ';' lcmd
    26     | cmd ';' cmd lcmd
    27     | dec
+<<<<<<< Updated upstream
    28     | %empty
+=======
+   28     | /* empty */
+>>>>>>> Stashed changes
 
    29 cmd: block
    30    | TK_IDENTIFIER '=' exp
@@ -105,7 +109,11 @@ Grammar
    74          | '&' TK_IDENTIFIER
 
    75 l_func_args: func_args l_func_args
+<<<<<<< Updated upstream
    76            | %empty
+=======
+   76            | /* empty */
+>>>>>>> Stashed changes
 
    77 func_dec: func_header block
 
@@ -118,10 +126,17 @@ Grammar
    83         | KW_CHAR TK_IDENTIFIER
 
    84 l_func_par: func_par l_func_par
+<<<<<<< Updated upstream
    85           | %empty
 
    86 reset_func_par: ',' func_par reset_func_par
    87               | %empty
+=======
+   85           | /* empty */
+
+   86 reset_func_par: ',' func_par reset_func_par
+   87               | /* empty */
+>>>>>>> Stashed changes
 
    88 print: KW_PRINT lpe
 
@@ -131,7 +146,11 @@ Grammar
    92   | '#' TK_IDENTIFIER
 
    93 lpe: pe lpe
+<<<<<<< Updated upstream
    94    | %empty
+=======
+   94    | /* empty */
+>>>>>>> Stashed changes
 
    95 read: KW_READ TK_IDENTIFIER
 
@@ -196,8 +215,13 @@ program (47)
 ldec (48)
     on left: 2 3, on right: 1 2
 dec (49)
+<<<<<<< Updated upstream
     on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20, on right:
     2 27
+=======
+    on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20,
+    on right: 2 27
+>>>>>>> Stashed changes
 reset (50)
     on left: 21 22, on right: 21 40 67
 block (51)
@@ -205,8 +229,13 @@ block (51)
 lcmd (52)
     on left: 25 26 27 28, on right: 4 5 6 7 23 25 26
 cmd (53)
+<<<<<<< Updated upstream
     on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43, on right:
     25 26
+=======
+    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43,
+    on right: 25 26
+>>>>>>> Stashed changes
 lit (54)
     on left: 44 45 46, on right: 47 48
 vet_dec (55)
@@ -2659,6 +2688,7 @@ State 164
     reset_func_par  go to state 194
 
 
+<<<<<<< Updated upstream
 State 165
 
    80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
@@ -2667,6 +2697,16 @@ State 165
 
 
 State 166
+=======
+state 165
+
+   80 func_header: KW_CHAR TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+
+    $default  reduce using rule 80 (func_header)
+
+
+state 166
+>>>>>>> Stashed changes
 
    17 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ';' .
 
@@ -2692,15 +2732,27 @@ State 168
     $default  reduce using rule 19 (dec)
 
 
+<<<<<<< Updated upstream
 State 169
 
    78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
     $default  reduce using rule 78 (func_header)
 
+=======
+state 169
+
+   78 func_header: KW_INT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
+>>>>>>> Stashed changes
 
 State 170
 
+<<<<<<< Updated upstream
+=======
+
+state 170
+
+>>>>>>> Stashed changes
    13 dec: KW_INT TK_IDENTIFIER '[' exp ']' ';' .
 
     $default  reduce using rule 13 (dec)
@@ -2725,14 +2777,22 @@ State 172
     $default  reduce using rule 20 (dec)
 
 
+<<<<<<< Updated upstream
 State 173
+=======
+state 173
+>>>>>>> Stashed changes
 
    79 func_header: KW_FLOAT TK_IDENTIFIER '(' l_func_par reset_func_par ')' .
 
     $default  reduce using rule 79 (func_header)
 
 
+<<<<<<< Updated upstream
 State 174
+=======
+state 174
+>>>>>>> Stashed changes
 
    15 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ';' .
 
@@ -3047,35 +3107,55 @@ State 193
     $default  reduce using rule 26 (lcmd)
 
 
+<<<<<<< Updated upstream
 State 194
+=======
+state 194
+>>>>>>> Stashed changes
 
    86 reset_func_par: ',' func_par reset_func_par .
 
     $default  reduce using rule 86 (reset_func_par)
 
 
+<<<<<<< Updated upstream
 State 195
+=======
+state 195
+>>>>>>> Stashed changes
 
    44 lit: LIT_INTEGER .
 
     $default  reduce using rule 44 (lit)
 
 
+<<<<<<< Updated upstream
 State 196
+=======
+state 196
+>>>>>>> Stashed changes
 
    45 lit: LIT_REAL .
 
     $default  reduce using rule 45 (lit)
 
 
+<<<<<<< Updated upstream
 State 197
+=======
+state 197
+>>>>>>> Stashed changes
 
    46 lit: LIT_CHAR .
 
     $default  reduce using rule 46 (lit)
 
 
+<<<<<<< Updated upstream
 State 198
+=======
+state 198
+>>>>>>> Stashed changes
 
    47 vet_dec: lit . vet_dec
    48        | lit .
@@ -3090,28 +3170,44 @@ State 198
     vet_dec  go to state 212
 
 
+<<<<<<< Updated upstream
 State 199
+=======
+state 199
+>>>>>>> Stashed changes
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 213
 
 
+<<<<<<< Updated upstream
 State 200
+=======
+state 200
+>>>>>>> Stashed changes
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 214
 
 
+<<<<<<< Updated upstream
 State 201
+=======
+state 201
+>>>>>>> Stashed changes
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec . ';'
 
     ';'  shift, and go to state 215
 
 
+<<<<<<< Updated upstream
 State 202
+=======
+state 202
+>>>>>>> Stashed changes
 
    21 reset: ',' func_args . reset
 
@@ -3122,14 +3218,22 @@ State 202
     reset  go to state 216
 
 
+<<<<<<< Updated upstream
 State 203
+=======
+state 203
+>>>>>>> Stashed changes
 
    67 exp: TK_IDENTIFIER '(' l_func_args reset ')' .
 
     $default  reduce using rule 67 (exp)
 
 
+<<<<<<< Updated upstream
 State 204
+=======
+state 204
+>>>>>>> Stashed changes
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE . lcmd
 
@@ -3166,7 +3270,11 @@ State 204
     read         go to state 57
 
 
+<<<<<<< Updated upstream
 State 205
+=======
+state 205
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp . ')' lcmd
    54 exp: exp . '+' exp
@@ -3197,7 +3305,11 @@ State 205
     ')'           shift, and go to state 218
 
 
+<<<<<<< Updated upstream
 State 206
+=======
+state 206
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' . exp ']'
 
@@ -3211,7 +3323,11 @@ State 206
     exp  go to state 219
 
 
+<<<<<<< Updated upstream
 State 207
+=======
+state 207
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' . exp ']'
 
@@ -3225,14 +3341,22 @@ State 207
     exp  go to state 220
 
 
+<<<<<<< Updated upstream
 State 208
+=======
+state 208
+>>>>>>> Stashed changes
 
    40 cmd: TK_IDENTIFIER '(' l_func_args reset ')' .
 
     $default  reduce using rule 40 (cmd)
 
 
+<<<<<<< Updated upstream
 State 209
+=======
+state 209
+>>>>>>> Stashed changes
 
    35 cmd: TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3246,63 +3370,99 @@ State 209
     exp  go to state 221
 
 
+<<<<<<< Updated upstream
 State 210
+=======
+state 210
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' . '=' exp
 
     '='  shift, and go to state 222
 
 
+<<<<<<< Updated upstream
 State 211
+=======
+state 211
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' . '=' exp
 
     '='  shift, and go to state 223
 
 
+<<<<<<< Updated upstream
 State 212
+=======
+state 212
+>>>>>>> Stashed changes
 
    47 vet_dec: lit vet_dec .
 
     $default  reduce using rule 47 (vet_dec)
 
 
+<<<<<<< Updated upstream
 State 213
+=======
+state 213
+>>>>>>> Stashed changes
 
    16 dec: KW_CHAR TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 16 (dec)
 
 
+<<<<<<< Updated upstream
 State 214
+=======
+state 214
+>>>>>>> Stashed changes
 
    12 dec: KW_INT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 12 (dec)
 
 
+<<<<<<< Updated upstream
 State 215
+=======
+state 215
+>>>>>>> Stashed changes
 
    14 dec: KW_FLOAT TK_IDENTIFIER '[' exp ']' ':' vet_dec ';' .
 
     $default  reduce using rule 14 (dec)
 
 
+<<<<<<< Updated upstream
 State 216
+=======
+state 216
+>>>>>>> Stashed changes
 
    21 reset: ',' func_args reset .
 
     $default  reduce using rule 21 (reset)
 
 
+<<<<<<< Updated upstream
 State 217
+=======
+state 217
+>>>>>>> Stashed changes
 
     5 dec: KW_IF '(' exp ')' KW_THEN lcmd KW_ELSE lcmd .
 
     $default  reduce using rule 5 (dec)
 
 
+<<<<<<< Updated upstream
 State 218
+=======
+state 218
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' . lcmd
 
@@ -3339,7 +3499,11 @@ State 218
     read         go to state 57
 
 
+<<<<<<< Updated upstream
 State 219
+=======
+state 219
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp . ']'
    54 exp: exp . '+' exp
@@ -3370,7 +3534,11 @@ State 219
     ']'           shift, and go to state 225
 
 
+<<<<<<< Updated upstream
 State 220
+=======
+state 220
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp . ']'
    54 exp: exp . '+' exp
@@ -3401,7 +3569,11 @@ State 220
     ']'           shift, and go to state 226
 
 
+<<<<<<< Updated upstream
 State 221
+=======
+state 221
+>>>>>>> Stashed changes
 
    35 cmd: TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp
@@ -3433,7 +3605,11 @@ State 221
     $default  reduce using rule 35 (cmd)
 
 
+<<<<<<< Updated upstream
 State 222
+=======
+state 222
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3447,7 +3623,11 @@ State 222
     exp  go to state 227
 
 
+<<<<<<< Updated upstream
 State 223
+=======
+state 223
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' . exp
 
@@ -3461,28 +3641,44 @@ State 223
     exp  go to state 228
 
 
+<<<<<<< Updated upstream
 State 224
+=======
+state 224
+>>>>>>> Stashed changes
 
     7 dec: KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' lcmd .
 
     $default  reduce using rule 7 (dec)
 
 
+<<<<<<< Updated upstream
 State 225
+=======
+state 225
+>>>>>>> Stashed changes
 
    38 cmd: TK_IDENTIFIER '=' '#' exp '[' exp ']' .
 
     $default  reduce using rule 38 (cmd)
 
 
+<<<<<<< Updated upstream
 State 226
+=======
+state 226
+>>>>>>> Stashed changes
 
    39 cmd: TK_IDENTIFIER '=' '&' exp '[' exp ']' .
 
     $default  reduce using rule 39 (cmd)
 
 
+<<<<<<< Updated upstream
 State 227
+=======
+state 227
+>>>>>>> Stashed changes
 
    36 cmd: '#' TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp
@@ -3514,7 +3710,11 @@ State 227
     $default  reduce using rule 36 (cmd)
 
 
+<<<<<<< Updated upstream
 State 228
+=======
+state 228
+>>>>>>> Stashed changes
 
    37 cmd: '&' TK_IDENTIFIER '[' exp ']' '=' exp .
    54 exp: exp . '+' exp
