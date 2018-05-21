@@ -92,6 +92,7 @@ extern FILE *saida;
 program: ldec {astToFile(0,$1,saida);
                setDeclarations($1);
                checkUndeclared();
+               checkSemantic($1);
               }
     ;
 
