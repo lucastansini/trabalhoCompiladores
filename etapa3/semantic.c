@@ -7,7 +7,6 @@
 
 
 void checkSemantic(AST* node){
-
   int i;
   AST *node_vec_list = NULL;
 
@@ -21,19 +20,37 @@ void checkSemantic(AST* node){
 
   switch(node->type){
     //|KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,$7,0,0);}
-    case AST_VARIABLE_VEC_1_INT:
-      node_vec_list = node->son[1];
-      printf("type:%d\n",node_vec_list->son[0]->symbol->type);
-      while(node_vec_list->son[1]){
-        if(node_vec_list->son[0]->symbol->type != SYMBOL_INTEGER){
-          fprintf(stderr,"error:\n");
-        }
-        printf("debug\n");
-        node_vec_list = node_vec_list->son[0];
-      }
+   /* case AST_VARIABLE_VEC_1_INT:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
+    break;
+    case AST_VARIABLE_VEC_2_INT:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
+    break;
+    case AST_VARIABLE_VEC_1_FLOAT:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
+    break;
+    case AST_VARIABLE_VEC_2_FLOAT:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
+    break;
+    case AST_VARIABLE_VEC_1_CHAR:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
+    break;
+    case AST_VARIABLE_VEC_2_CHAR:
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT);
+        fprintf(stderr, "Vector size must be an integer\n");
+      
     break;
     case AST_VARIABLE_DEC_INT:
-          printf("Type = %d\n", node->son[0]->symbol->type);
       if(node->son[0]->symbol->type != SYMBOL_LIT_INT){
         fprintf(stderr, "Variable and operand type doesn't match\n");
       } 
@@ -43,7 +60,7 @@ void checkSemantic(AST* node){
       if(node->son[0]->symbol->type != SYMBOL_LIT_REAL){
         fprintf(stderr, "Variable and operand type doesn't match\n");
       } 
-    break;
+    break;*/
   }
 
 
