@@ -22,13 +22,13 @@ void setDeclarations(AST *node){
     }else{
       if(DEBUG)
         printf("Symbol:%s\n",node->symbol->yytext);
-      node->symbol->type = SYMBOL_LIT_INT;
+      node->symbol->type = SYMBOL_INTEGER;
       if(DEBUG)
         printf("DEPOIS:%d\n",node->symbol->type);
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
     }
   }
 
@@ -44,9 +44,9 @@ void setDeclarations(AST *node){
       if(DEBUG)
         printf("DEPOIS:%d\n",node->symbol->type);
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
     }
   }
 
@@ -57,9 +57,9 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_INTEGER;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
     }
   }
 
@@ -69,9 +69,9 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_REAL;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
     }
   }
 
@@ -81,11 +81,11 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_CHAR;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
       if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType ==  DATATYPE_CHAR;
+        node->symbol->dataType =  DATATYPE_CHAR;
     }
   }
 
@@ -95,11 +95,11 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_CHAR;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
       if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType ==  DATATYPE_CHAR;
+        node->symbol->dataType =  DATATYPE_CHAR;
     }
   }
 
@@ -109,11 +109,11 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_INT_PTR;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
       if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType ==  DATATYPE_CHAR;
+        node->symbol->dataType =  DATATYPE_CHAR;
     }
   }
 
@@ -123,11 +123,11 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_CHAR_PTR;
       if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
+        node->symbol->dataType = DATATYPE_INT;
       if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
+        node->symbol->dataType =  DATATYPE_FLOAT;
       if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType ==  DATATYPE_CHAR;
+        node->symbol->dataType =  DATATYPE_CHAR;
     }
   }
 
@@ -176,6 +176,40 @@ void setDeclarations(AST *node){
 
 
 }
-// void checkOperands(AST *node);
+void checkOperands(AST *node){
+    int i;
+    if(!node) return;
+    for(i =0;i<MAX_SONS;i++){
+        checkOperands(node->son[i]);
+    }
+    if(node->type == AST_ADD ||
+       node->type == AST_SUB ||
+       node->type == AST_MULT ||
+       node->type == AST_DIV)
+        if(node->son[0]->type == AST_ADD ||
+           node->son[0]->type == AST_SUB ||
+           node->son[0]->type == AST_MULT ||
+           node ->son[0]->type == AST_DIV||
+           (node->son[0]->type == SYMBOL &&
+            node ->son[0]->symbol == SYMBOL_INTEGER   ||
+            node->son[0]->symbol == SYMBOL_REAL ||
+              node ->son[0]->symbol ==  SYMBOL_LIT_REAL ||
+              node ->son[0]->symbol == SYMBOL_LIT_INT )
+            && node->son[1]->type == AST_ADD ||
+            node ->son[1]->type == AST_SUB ||
+            node ->son[1]->type == AST_MULT ||
+            node ->son[1]->type == AST_DIV ||
+            (node->son[1]->type == SYMBOL &&
+            node ->son[1]->symbol == SYMBOL_INTEGER   ||
+             node->son[1]->symbol == SYMBOL_REAL ||
+            node ->son[1]->symbol ==  SYMBOL_LIT_REAL ||
+             node ->son[1]->symbol == SYMBOL_LIT_INT )){}
+            
+    else fprintf(stderr, "Semantic Error: Invalid operand\n",node->symbol->yytext);
+    
+    
+   
+
+}
 
 //void checkUndeclared(void);

@@ -7,7 +7,6 @@
 #define DATATYPE_FLOAT 1001
 #define DATATYPE_CHAR 1002
 
-#define SYMBOL_LIT_INT 500
 
 typedef struct hash_node{
   int type;

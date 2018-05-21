@@ -12,6 +12,7 @@
 #define SYMBOL_FUNC_INT 7
 #define SYMBOL_FUNC_FLOAT 8
 #define SYMBOL_FUNC_CHAR 9
-
+#define SYMBOL_LIT_REAL 10
+#define SYMBOL_LIT_INT 11
 
 #endif
