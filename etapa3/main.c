@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     }
     else{
         printf("Usage: a.out filename\n");
-	return 0;	
+	   return 0;	
 	}
 
 

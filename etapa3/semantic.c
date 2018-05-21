@@ -31,7 +31,18 @@ void checkSemantic(AST* node){
         printf("debug\n");
         node_vec_list = node_vec_list->son[0];
       }
+    break;
+    case AST_VARIABLE_DEC_INT:
+          printf("Type = %d\n", node->son[0]->symbol->type);
+      if(node->son[0]->symbol->type != SYMBOL_LIT_INT){
+        fprintf(stderr, "Variable and operand type doesn't match\n");
+      } 
+    break;
+    case AST_VARIABLE_DEC_FLOAT:
 
+      if(node->son[0]->symbol->type != SYMBOL_LIT_REAL){
+        fprintf(stderr, "Variable and operand type doesn't match\n");
+      } 
     break;
   }
 
@@ -209,6 +220,26 @@ void setDeclarations(AST *node){
       fprintf(stderr,"Semantic error: Symbol %s already declared.\n", node->symbol->yytext);
     }else{
       node->symbol->type = SYMBOL_FUNC_FLOAT;
+    }
+  }
+  if(node->type == AST_INT || node->type == AST_CHAR){
+    node->symbol->type = SYMBOL_LIT_INT;
+  }
+  if(node->type == AST_FLOAT){
+    node->symbol->type = SYMBOL_LIT_REAL;
+  }
+  if(node->type == AST_FUNC_PAR_INT || node->type == AST_FUNC_PAR_CHAR){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s already declared.\n", node->symbol->yytext);
+    }else{
+      node->symbol->type = SYMBOL_FUNC_PAR_INT;
+    }
+  }
+  if(node->type == AST_FUNC_PAR_FLOAT){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s already declared.\n", node->symbol->yytext);
+    }else{
+      node->symbol->type = SYMBOL_FUNC_PAR_FLOAT;
     }
   }
   //Percorrer todos filhos e declarar.
