@@ -3,6 +3,7 @@
 
 HASH* table[HASH_SIZE];
 
+int semanticError = 0;
 
 
 /*Inicialização da hash table com zero em todas posições*/
@@ -21,11 +22,12 @@ void checkUndeclared(void){
   for(i = 0 ; i<HASH_SIZE; i++){
     for(aux = table[i]; aux ; aux=aux->next){
       if(aux->type == SYMBOL_IDENTIFIER){
-        fprintf(stderr,"Symbol %s is undeclared!\n",aux->yytext);
-        exit(4);
+        fprintf(stderr,"Symbol %s is undeclared at line %d.\n",aux->yytext, getLineNumber());
+        semanticError = 1;
       }
     }
   }
+
 }
 
 /*Cálculo do endereço do elemento hash*/
@@ -68,6 +70,11 @@ HASH* hashInsert(int type, char *text){
   strcpy(newNode->yytext,text);
   newNode->next = table[address];
   table[address] = newNode;
+  //Se for declaração de variável
+  if(newNode->type == SYMBOL_IDENTIFIER){
+    newNode->lineNumber = getLineNumber();
+    //printf("LINE OF THE SYMBOL %s and type %d is %d\n",newNode->yytext,newNode->type,newNode->lineNumber);
+  }
   return newNode;
 
 }
@@ -81,7 +88,7 @@ void hashPrint(){
   for(i = 0 ; i<HASH_SIZE; i++){
     for(print_node = table[i]; print_node ; print_node=print_node->next){
       switch(print_node->type){
-          case TK_IDENTIFIER:
+          case SYMBOL_IDENTIFIER:
               printf("HashTable[%d] contains %s and is TK_IDENTIFIER\n",i,print_node->yytext);
               break;
           case LIT_CHAR:

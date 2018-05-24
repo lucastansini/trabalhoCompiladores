@@ -14,3 +14,9 @@ etapa1/parser\.tab\.c
 etapa1/parser\.output
 
 etapa1/
+
+etapa3/parser\.tab\.h
+
+etapa3/parser\.tab\.c
+
+*.txt

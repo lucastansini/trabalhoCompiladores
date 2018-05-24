@@ -12,6 +12,7 @@ typedef struct hash_node{
   int type;
   int dataType;
   char *yytext;
+  int lineNumber;
   struct hash_node *next;
 } HASH;
 

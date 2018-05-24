@@ -7,6 +7,7 @@ extern int getLineNumber();
 #include <stdlib.h>
 AST *ast_Geral;
 extern FILE *saida;
+extern semanticError;
     %}
 
 
@@ -90,9 +91,13 @@ extern FILE *saida;
 
 %%
 program: ldec {astToFile(0,$1,saida);
+               //hashPrint();
                setDeclarations($1);
-               checkUndeclared();
                checkSemantic($1);
+               checkUndeclared();
+               if(semanticError){
+                 exit(4);
+               }
               }
     ;
 
