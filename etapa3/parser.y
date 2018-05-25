@@ -90,12 +90,15 @@ extern semanticError;
 
 
 %%
-program: ldec {astToFile(0,$1,saida);
+program: ldec {
+               astToFile(0,$1,saida);
                //hashPrint();
                setDeclarations($1);
                checkSemantic($1);
+               checkOperands($1);
                checkUndeclared();
                if(semanticError){
+                 printf("Exit 4 due to semantic error!\n");
                  exit(4);
                }
               }
