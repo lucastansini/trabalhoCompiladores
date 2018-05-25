@@ -134,6 +134,28 @@ void setDeclarations(AST *node){
   }
 
 
+  //Se for declaração de variavel INT
+  if(node->type == AST_VARIABLE_DEC_FLOAT){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_REAL;
+      if(node->son[0]->type == SYMBOL){
+        if(node->son[0]->symbol->type == SYMBOL_INTEGER)
+          node->symbol->dataType = DATATYPE_INT;
+        if(node->son[0]->symbol->type == SYMBOL_REAL)
+          node->symbol->dataType = DATATYPE_FLOAT;
+        if(node->son[0]->symbol->type == SYMBOL_CHAR)
+          node->symbol->dataType = DATATYPE_CHAR;
+      }
+      if(node->son[0]->type ==  AST_VARIABLE){
+        node->symbol->dataType = node->son[0]->symbol->dataType;
+      }
+      //printf("SYMBOL %s HAS TYPE '%d' AND DATATYPE '%d'\n",node->symbol->yytext,node->type,node->symbol->dataType);
+    }
+  }
+
 
   if(node->type == SYMBOL){
     switch(node->symbol->type){
@@ -393,6 +415,21 @@ void checkOperands(AST *node){
             break;
           case DATATYPE_FLOAT:
             fprintf(stderr, "float.\n");
+            break;
+        }
+        exit(4);
+      }
+    }
+
+    if(node->type == AST_VARIABLE_DEC_FLOAT){
+      if(node->son[0]->symbol->dataType != DATATYPE_FLOAT){
+        fprintf(stderr,"Symbol %s has invalid type operand. Expected type float and was ",node->symbol->yytext);
+        switch(node->son[0]->symbol->dataType){
+          case DATATYPE_INT:
+            fprintf(stderr, "int.\n");
+            break;
+          case DATATYPE_CHAR:
+            fprintf(stderr, "char.\n");
             break;
         }
         exit(4);
