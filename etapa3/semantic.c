@@ -216,20 +216,6 @@ void setDeclarations(AST *node){
     }
   }
 
-  if(node->type == AST_VARIABLE_DEC_CHAR){
-    if(node->symbol->type != SYMBOL_IDENTIFIER){
-      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
-      semanticError = 1;
-    }else{
-      node->symbol->type = SYMBOL_CHAR;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType = DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType =  DATATYPE_FLOAT;
-      if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType =  DATATYPE_CHAR;
-    }
-  }
 
   if(node->type == AST_VARIABLE_VEC_1_CHAR || node->type == AST_VARIABLE_VEC_2_CHAR){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
