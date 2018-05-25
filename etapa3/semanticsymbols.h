@@ -17,5 +17,6 @@
 #define SYMBOL_FUNC_PAR_INT 12
 #define SYMBOL_FUNC_PAR_FLOAT 13
 #define SYMBOL_SCALAR 14
+#define SYMBOL_VET_INT 15
 
 #endif
