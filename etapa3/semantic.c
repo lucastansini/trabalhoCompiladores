@@ -91,10 +91,14 @@ void setDeclarations(AST *node){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
+
       node->symbol->type = SYMBOL_INTEGER;
       //printf("\nSON0  TYPE = %d\n",node->son[0]->type);
       //printf("\nSON0 SYMBOL YYTEXT = %s\n",node->son[0]->symbol->yytext);
       //printf("\nSON0 SYMBOL TYPE = %d\n",node->son[0]->symbol->type);
+
+      //lidar com AST_PARENTHESES;
+
       if(node->son[0]->type == SYMBOL){
         if(node->son[0]->symbol->type == SYMBOL_INTEGER)
           node->symbol->dataType = DATATYPE_INT;
@@ -112,6 +116,13 @@ void setDeclarations(AST *node){
       //printf("SYMBOL %s HAS TYPE '%d' AND DATATYPE '%d'\n",node->symbol->yytext,node->type,node->symbol->dataType);
     }
   }
+
+  if(node->type == AST_PARENTHESES){
+  //  printf("OSN0%d\n",node->son[0]->type);
+    setDeclarations(node->son[0]);
+    return;
+  }
+
 
   //Se for declaração de variavel INT
   if(node->type == AST_VARIABLE_DEC_CHAR){
@@ -261,6 +272,28 @@ void setDeclarations(AST *node){
   }
 
 
+  if(node->type == AST_FUNC_HEADER_INT ){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_FUNC_INT;
+      node->symbol->dataType = DATATYPE_INT;
+    }
+  }
+
+
+  if(node->type == AST_FUNC_HEADER_CHAR ){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_FUNC_CHAR;
+      node->symbol->dataType = DATATYPE_CHAR;
+    }
+  }
+
+
   //TODO todo código comentado precisa ser refatorado para testes de declaração
   //TODO VERIFICAR AS ATRIBUIÇÕES COM ADD, SUB, MULT, ETC.
 /*
@@ -309,23 +342,6 @@ void setDeclarations(AST *node){
     }
   }
 
-  if(node->type == AST_FUNC_HEADER_INT ){
-    if(node->symbol->type != SYMBOL_IDENTIFIER){
-      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
-      semanticError = 1;
-    }else{
-      node->symbol->type = SYMBOL_FUNC_INT;
-    }
-  }
-
-  if(node->type == AST_FUNC_HEADER_CHAR ){
-    if(node->symbol->type != SYMBOL_IDENTIFIER){
-      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
-      semanticError = 1;
-    }else{
-      node->symbol->type = SYMBOL_FUNC_CHAR;
-    }
-  }
 
   if(node->type == AST_FUNC_HEADER_FLOAT ){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
@@ -446,10 +462,19 @@ int validVectorIndex(AST* node,AST * currentNode){
 void checkOperands(AST *node){
 
     int i;
-    if(!node) return;
+    if(!node){
+      return;
+    }
     for(i =0;i<MAX_SONS;i++){
         checkOperands(node->son[i]);
     }
+
+    if(node->type == AST_PARENTHESES){
+      checkOperands(node->son[0]);
+      return;
+
+    }
+
 
     if(node->type == AST_VARIABLE_DEC_INT){
       //printf("NODE SYMBOL DATATYPE %d /// NODE SON0 SYMBOL DATATYPE %d\n",node->symbol->dataType,node->son[0]->symbol->dataType);
@@ -498,6 +523,110 @@ void checkOperands(AST *node){
     }
 
 
+
+
+}
+
+void checkAttributions(AST* node){
+
+  if (!node){
+    return;
+  }
+  int i;
+
+  // if(node->type == AST_PARENTHESES){
+  //   printf("PARENTESIS!\n");
+  //   exit(4);
+  // }
+
+
+  if(node->type == AST_ATRIBUTION){
+    //printf("AST_ATT DATATYPE = %d\n",node->symbol->dataType);
+    //printf("AST_SON0 DATATYPE = %d\n",node->son[0]->symbol->dataType);
+    if(node->son[0]->type == AST_PARENTHESES){
+      checkAttParenthesis(node->son[0],node);
+      return;
+    }
+    if(node->symbol->dataType != node->son[0]->symbol->dataType){
+      fprintf(stderr,"Symbol %s recieved attribution of type ",node->symbol->yytext);
+      switch(node->son[0]->symbol->dataType){
+        case DATATYPE_INT:
+          fprintf(stderr,"int");
+        break;
+        case DATATYPE_CHAR:
+          fprintf(stderr,"char");
+        break;
+        case DATATYPE_FLOAT:
+          fprintf(stderr,"float");
+        break;
+      }
+      fprintf(stderr,". Expected ");
+      switch(node->symbol->dataType){
+        case DATATYPE_INT:
+          fprintf(stderr,"int.");
+        break;
+        case DATATYPE_CHAR:
+          fprintf(stderr,"char.");
+        break;
+        case DATATYPE_FLOAT:
+          fprintf(stderr,"float.");
+        break;
+      }
+      fprintf(stderr,"\n");
+      exit(4);
+    }
+  }
+
+
+  for(i=0; i< MAX_SONS; i++){
+    checkAttributions(node->son[i]);
+  }
+
+
+}
+
+void checkAttParenthesis(AST*node,AST*fatherNode){
+
+  if(!node){
+    return;
+  }
+
+  //If there are other
+  if(node->son[0]->type == AST_PARENTHESES){
+    checkAttParenthesis(node->son[0],fatherNode);
+  }else{
+    if(node->type == AST_PARENTHESES){
+      //PRECISA CHECAR SE FOR + - ETC
+      if(fatherNode->symbol->dataType != node->son[0]->symbol->dataType){
+        fprintf(stderr,"Symbol %s recieved attribution of type ",fatherNode->symbol->yytext);
+        switch(node->son[0]->symbol->dataType){
+          case DATATYPE_INT:
+            fprintf(stderr,"int");
+          break;
+          case DATATYPE_CHAR:
+            fprintf(stderr,"char");
+          break;
+          case DATATYPE_FLOAT:
+            fprintf(stderr,"float");
+          break;
+        }
+        fprintf(stderr,". Expected ");
+        switch(fatherNode->symbol->dataType){
+          case DATATYPE_INT:
+            fprintf(stderr,"int.");
+          break;
+          case DATATYPE_CHAR:
+            fprintf(stderr,"char.");
+          break;
+          case DATATYPE_FLOAT:
+            fprintf(stderr,"float.");
+          break;
+        }
+        fprintf(stderr,"\n");
+        exit(4);
+      }
+    }
+  }
 
 }
 

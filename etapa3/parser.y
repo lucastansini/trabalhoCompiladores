@@ -97,6 +97,7 @@ program: ldec {
                checkSemantic($1);
                checkOperands($1);
                checkUndeclared();
+               checkAttributions($1);
                if(semanticError){
                  printf("Exit 4 due to semantic error!\n");
                  exit(4);
