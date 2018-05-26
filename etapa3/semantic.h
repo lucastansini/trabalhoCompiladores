@@ -9,3 +9,4 @@ void validVectorAttribution(AST* node, AST* currentNode,int attributeIndex);
 void checkAttributions(AST* node);
 
 void checkAttParenthesis(AST *node, AST *currentNode);
+int checkDecParenthesis(AST *node);

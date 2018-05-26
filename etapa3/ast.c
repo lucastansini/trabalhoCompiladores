@@ -284,7 +284,7 @@ void astToFile(int level,AST *node, FILE* fileTree){
             //TK_IDENTIFIER'['exp']'
             break;
 
-      case AST_MULT:// fprintf(stderr, "AST_MULT,\n");
+      case AST_MULT: fprintf(stderr, "AST_MULT,\n");
              astToFile(level+1,node->son[0],fileTree);
               fprintf(fileTree,"*");
             astToFile(level+1,node->son[1],fileTree);

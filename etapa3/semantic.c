@@ -74,6 +74,28 @@ void checkSemantic(AST* node){
 
 
 
+int checkDecParenthesis(AST*node){
+
+  if(!node){
+    return;
+  }
+
+  if(node->son[0]->type == AST_PARENTHESES){
+    checkDecParenthesis(node->son[0]);
+  }else{
+    if(node->son[0]->type == SYMBOL){
+      if(node->son[0]->symbol->type == SYMBOL_INTEGER){
+        return DATATYPE_INT;
+      }
+      if(node->son[0]->symbol->type == SYMBOL_REAL){
+        return DATATYPE_FLOAT;
+      }
+    }
+      if(node->son[0]->type ==  AST_VARIABLE){
+        return node->son[0]->symbol->dataType;
+      }
+  }
+}
 
 void setDeclarations(AST *node){
 
@@ -91,14 +113,7 @@ void setDeclarations(AST *node){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
-
       node->symbol->type = SYMBOL_INTEGER;
-      //printf("\nSON0  TYPE = %d\n",node->son[0]->type);
-      //printf("\nSON0 SYMBOL YYTEXT = %s\n",node->son[0]->symbol->yytext);
-      //printf("\nSON0 SYMBOL TYPE = %d\n",node->son[0]->symbol->type);
-
-      //lidar com AST_PARENTHESES;
-
       if(node->son[0]->type == SYMBOL){
         if(node->son[0]->symbol->type == SYMBOL_INTEGER)
           node->symbol->dataType = DATATYPE_INT;
@@ -106,21 +121,18 @@ void setDeclarations(AST *node){
           node->symbol->dataType = DATATYPE_FLOAT;
         }
       }
-      if(node->son[0]->type ==  AST_VARIABLE){
-        node->symbol->dataType = node->son[0]->symbol->dataType;
-      }
+        if(node->son[0]->type ==  AST_VARIABLE){
+          node->symbol->dataType = node->son[0]->symbol->dataType;
+        }
 
-      if(node->son[0]->type == AST_ADD){
+        if(node->son[0]->type == AST_ADD){
 
-      }
-      //printf("SYMBOL %s HAS TYPE '%d' AND DATATYPE '%d'\n",node->symbol->yytext,node->type,node->symbol->dataType);
+        }
+
+        if(node->son[0]->type == AST_PARENTHESES){
+          node->symbol->dataType = checkDecParenthesis(node->son[0]);
+        }
     }
-  }
-
-  if(node->type == AST_PARENTHESES){
-  //  printf("OSN0%d\n",node->son[0]->type);
-    setDeclarations(node->son[0]);
-    return;
   }
 
 
@@ -293,7 +305,6 @@ void setDeclarations(AST *node){
     }
   }
 
-
   //TODO todo código comentado precisa ser refatorado para testes de declaração
   //TODO VERIFICAR AS ATRIBUIÇÕES COM ADD, SUB, MULT, ETC.
 /*
@@ -373,6 +384,7 @@ void setDeclarations(AST *node){
       node->symbol->type = SYMBOL_FUNC_PAR_FLOAT;
     }
   }*/
+
   //Percorrer todos filhos e declarar.
   for (i = 0; i < MAX_SONS; i++){
     setDeclarations(node->son[i]);
@@ -469,26 +481,38 @@ void checkOperands(AST *node){
         checkOperands(node->son[i]);
     }
 
-    if(node->type == AST_PARENTHESES){
-      checkOperands(node->son[0]);
-      return;
-
-    }
 
 
     if(node->type == AST_VARIABLE_DEC_INT){
       //printf("NODE SYMBOL DATATYPE %d /// NODE SON0 SYMBOL DATATYPE %d\n",node->symbol->dataType,node->son[0]->symbol->dataType);
-      if(node->son[0]->symbol->dataType != DATATYPE_INT){
-        fprintf(stderr,"Symbol %s at Line %d has invalid type operand. Expected type int and was ",node->symbol->yytext, node->symbol->lineNumber);
-        switch(node->son[0]->symbol->dataType){
-          case DATATYPE_CHAR:
-            fprintf(stderr, "char.\n");
-            break;
-          case DATATYPE_FLOAT:
-            fprintf(stderr, "float.\n");
-            break;
+
+      if(node->son[0]->type == AST_PARENTHESES){
+        int findDatatypeOfExp = checkDecParenthesis(node->son[0]);
+        if( findDatatypeOfExp != DATATYPE_INT){
+          fprintf(stderr,"Symbol %s at Line %d has invalid type operand. Expected type int and was ",node->symbol->yytext, node->symbol->lineNumber);
+          switch(findDatatypeOfExp){
+            case DATATYPE_CHAR:
+              fprintf(stderr, "char.\n");
+              break;
+            case DATATYPE_FLOAT:
+              fprintf(stderr, "float.\n");
+              break;
+          }
+          exit(4);
         }
-        exit(4);
+      }else{
+        if(node->son[0]->symbol->dataType != DATATYPE_INT){
+          fprintf(stderr,"Symbol %s at Line %d has invalid type operand. Expected type int and was ",node->symbol->yytext, node->symbol->lineNumber);
+          switch(node->son[0]->symbol->dataType){
+            case DATATYPE_CHAR:
+              fprintf(stderr, "char.\n");
+              break;
+            case DATATYPE_FLOAT:
+              fprintf(stderr, "float.\n");
+              break;
+          }
+          exit(4);
+        }
       }
     }
 
@@ -595,7 +619,7 @@ void checkAttParenthesis(AST*node,AST*fatherNode){
   if(node->son[0]->type == AST_PARENTHESES){
     checkAttParenthesis(node->son[0],fatherNode);
   }else{
-    if(node->type == AST_PARENTHESES){
+    if(node->type == AST_ATRIBUTION){
       //PRECISA CHECAR SE FOR + - ETC
       if(fatherNode->symbol->dataType != node->son[0]->symbol->dataType){
         fprintf(stderr,"Symbol %s recieved attribution of type ",fatherNode->symbol->yytext);
