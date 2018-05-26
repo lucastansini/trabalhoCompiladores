@@ -176,6 +176,7 @@ void setDeclarations(AST *node){
     }
   }
 
+  //Pronto //TODO Verificiar se pode char!
   //|KW_INT TK_IDENTIFIER'['exp']'':' vet_dec ';'$$ = astCreate(AST_VARIABLE_VEC_1_INT,$2,$4,$7,0,0);}
   if(node->type == AST_VARIABLE_VEC_1_INT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
@@ -184,10 +185,13 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_VET_INT;
       node->symbol->dataType = DATATYPE_INT;
+      //Se o index do vetor for válido
       validVectorIndex(node->son[0],node);
+      validVectorAttribution(node->son[1],node,1);
     }
   }
 
+  //Aqui a princípio está pronto.
   //|KW_INT TK_IDENTIFIER'['exp']' ';'  {$$ = astCreate(AST_VARIABLE_VEC_2_INT,$2,$4,0,0,0);}
   if(node->type == AST_VARIABLE_VEC_2_INT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
@@ -201,37 +205,65 @@ void setDeclarations(AST *node){
   }
 
 
-  //A PARTIR DAQUI FAZER O QUE TAVA FAZENDO EM CIMA
 
-  if(node->type == AST_VARIABLE_VEC_2_FLOAT || node->type == AST_VARIABLE_VEC_1_FLOAT){
+
+  //|KW_FLOAT TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_FLOAT,$2,$4,0,0,0);}
+  if(node->type == AST_VARIABLE_VEC_2_FLOAT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
-      node->symbol->type = SYMBOL_REAL;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType = DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType =  DATATYPE_FLOAT;
+      node->symbol->type = SYMBOL_VET_FLOAT;
+      node->symbol->dataType = DATATYPE_FLOAT;
+      //Se o index do vetor for válido
+      validVectorIndex(node->son[0],node);
     }
   }
 
-
-  if(node->type == AST_VARIABLE_VEC_1_CHAR || node->type == AST_VARIABLE_VEC_2_CHAR){
+  if(node->type == AST_VARIABLE_VEC_1_FLOAT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
-      node->symbol->type = SYMBOL_CHAR;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType = DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType =  DATATYPE_FLOAT;
-      if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType =  DATATYPE_CHAR;
+      node->symbol->type = SYMBOL_VET_FLOAT;
+      node->symbol->dataType = DATATYPE_FLOAT;
+      //Se o index do vetor for válido
+      validVectorIndex(node->son[0],node);
+      validVectorAttribution(node->son[1],node,1);
     }
   }
 
+
+  //|KW_CHAR TK_IDENTIFIER'['exp']'':' vet_dec ';'{$$ = astCreate(AST_VARIABLE_VEC_1_CHAR,$2,$4,$7,0,0);}
+  if(node->type == AST_VARIABLE_VEC_1_CHAR){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_VET_CHAR;
+      node->symbol->dataType = DATATYPE_CHAR;
+      validVectorIndex(node->son[0],node);
+      validVectorAttribution(node->son[1],node,1);
+    }
+  }
+
+
+  //|KW_CHAR TK_IDENTIFIER'['exp']' ';'{$$ = astCreate(AST_VARIABLE_VEC_2_CHAR,$2,$4,0,0,0);}
+  if(node->type == AST_VARIABLE_VEC_2_CHAR){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_VET_CHAR;
+      node->symbol->dataType = DATATYPE_CHAR;
+      validVectorIndex(node->son[0],node);
+    }
+  }
+
+
+  //TODO todo código comentado precisa ser refatorado para testes de declaração
+  //TODO VERIFICAR AS ATRIBUIÇÕES COM ADD, SUB, MULT, ETC.
+/*
   if(node->type == AST_VARIABLE_PTR_INT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
@@ -324,7 +356,7 @@ void setDeclarations(AST *node){
     }else{
       node->symbol->type = SYMBOL_FUNC_PAR_FLOAT;
     }
-  }
+  }*/
   //Percorrer todos filhos e declarar.
   for (i = 0; i < MAX_SONS; i++){
     setDeclarations(node->son[i]);
@@ -333,6 +365,64 @@ void setDeclarations(AST *node){
 
 
 }
+
+//vet_dec: lit vet_dec {$$ =astCreate(AST_VET_LIST, 0,$1,  $2, 0, 0); }
+//Son 0 is always the lit and son 1 ->CAN<- be the next list.
+void validVectorAttribution(AST* node, AST*currentNode,int attributeIndex){
+  // printf("CURRENT NODE TYPE IS:%d\n",node->type);
+  int i;
+
+
+
+  //See what vector we are handling, char,float or int.
+  switch(currentNode->symbol->dataType){
+    case DATATYPE_INT:
+    //Handles the LIT attribution
+    if(node->symbol){
+      if(node->symbol->type != SYMBOL_INTEGER){
+        fprintf(stderr,"Invalid type for vector attribution declaration in index %d at line %d.\n",attributeIndex,currentNode->symbol->lineNumber);
+        fprintf(stderr,"Expected type was int.\n");
+        exit(4);
+      }
+    }else{
+      validVectorAttribution(node->son[0],currentNode,attributeIndex);
+      validVectorAttribution(node->son[1],currentNode,attributeIndex+1);
+    }
+    break;
+    case DATATYPE_FLOAT:
+    //Handles the LIT attribution
+    if(node->symbol){
+      if(node->symbol->type != SYMBOL_REAL){
+        fprintf(stderr,"Invalid type for vector attribution declaration in index %d at line %d.\n",attributeIndex,currentNode->symbol->lineNumber);
+        fprintf(stderr,"Expected type was float.\n");
+        exit(4);
+      }
+    }else{
+      validVectorAttribution(node->son[0],currentNode,attributeIndex);
+      validVectorAttribution(node->son[1],currentNode,attributeIndex+1);
+    }
+    break;
+    case DATATYPE_CHAR:
+    //Handles the LIT attribution
+    if(node->symbol){
+      // printf("SYMBOL TYPE%d\n",node->symbol->type);
+      // printf("SYMBOL YYTEXT%s\n",node->symbol->yytext);
+      if(node->symbol->type != SYMBOL_CHAR){
+        fprintf(stderr,"Invalid type for vector attribution declaration in index %d at line %d.\n",attributeIndex,currentNode->symbol->lineNumber);
+        fprintf(stderr,"Expected type was char.\n");
+        exit(4);
+      }
+    }else{
+      validVectorAttribution(node->son[0],currentNode,attributeIndex);
+      validVectorAttribution(node->son[1],currentNode,attributeIndex+1);
+    }
+    break;
+  }
+
+
+
+}
+
 
 int validVectorIndex(AST* node,AST * currentNode){
   if(node->symbol){
