@@ -305,21 +305,15 @@ void setDeclarations(AST *node){
     }
   }
 
-  //TODO todo código comentado precisa ser refatorado para testes de declaração
-  //TODO VERIFICAR AS ATRIBUIÇÕES COM ADD, SUB, MULT, ETC.
-/*
+
+
   if(node->type == AST_VARIABLE_PTR_INT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_INT_PTR;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType = DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType =  DATATYPE_FLOAT;
-      if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType =  DATATYPE_CHAR;
+      node->symbol->dataType = DATATYPE_INT;
     }
   }
 
@@ -329,12 +323,7 @@ void setDeclarations(AST *node){
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_CHAR_PTR;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType = DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType =  DATATYPE_FLOAT;
-      if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType =  DATATYPE_CHAR;
+      node->symbol->dataType = DATATYPE_CHAR;
     }
   }
 
@@ -344,14 +333,10 @@ void setDeclarations(AST *node){
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_FLOAT_PTR;
-      if(node->son[0]->type == SYMBOL_INTEGER)
-        node->symbol->dataType == DATATYPE_INT;
-      if(node->son[0]->type == SYMBOL_REAL)
-        node->symbol->dataType ==  DATATYPE_FLOAT;
-      if(node->son[0]->type == SYMBOL_CHAR)
-        node->symbol->dataType ==  DATATYPE_CHAR;
+      node->symbol->dataType = DATATYPE_FLOAT;
     }
   }
+
 
 
   if(node->type == AST_FUNC_HEADER_FLOAT ){
@@ -360,30 +345,42 @@ void setDeclarations(AST *node){
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_FUNC_FLOAT;
+      node->symbol->dataType = DATATYPE_FLOAT;
     }
   }
-  if(node->type == AST_INT || node->type == AST_CHAR){
-    node->symbol->type = SYMBOL_LIT_INT;
-  }
-  if(node->type == AST_FLOAT){
-    node->symbol->type = SYMBOL_LIT_REAL;
-  }
-  if(node->type == AST_FUNC_PAR_INT || node->type == AST_FUNC_PAR_CHAR){
+
+  if(node->type == AST_FUNC_PAR_INT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_FUNC_PAR_INT;
+      node->symbol->dataType = DATATYPE_INT;
     }
   }
+
   if(node->type == AST_FUNC_PAR_FLOAT){
     if(node->symbol->type != SYMBOL_IDENTIFIER){
       fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
       semanticError = 1;
     }else{
       node->symbol->type = SYMBOL_FUNC_PAR_FLOAT;
+      node->symbol->dataType = DATATYPE_FLOAT;
     }
-  }*/
+  }
+
+  if(node->type == AST_FUNC_PAR_CHAR){
+    if(node->symbol->type != SYMBOL_IDENTIFIER){
+      fprintf(stderr,"Semantic error: Symbol %s was previously declared at line: %d.\n", node->symbol->yytext,node->symbol->lineNumber);
+      semanticError = 1;
+    }else{
+      node->symbol->type = SYMBOL_FUNC_PAR_CHAR;
+      node->symbol->dataType = DATATYPE_CHAR;
+    }
+  }
+
+
+  //TODO VERIFICAR AS ATRIBUIÇÕES COM ADD, SUB, MULT, ETC.
 
   //Percorrer todos filhos e declarar.
   for (i = 0; i < MAX_SONS; i++){
