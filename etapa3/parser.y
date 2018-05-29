@@ -7,6 +7,8 @@ extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
 AST *ast_Geral;
+TAC *aux1;
+TAC *aux2;
 extern FILE *saida;
 extern semanticError;
     %}
@@ -98,10 +100,11 @@ program: ldec {
                checkSemantic($1);
                //checkOperands($1);
                checkUndeclared();
-               checkAttributions($1);
+               //checkAttributions($1);
                if(semanticError){
                  exit(4);
                }
+
                tacPrintForward(tacReverse(codeGenerator($1)));
 
               }
