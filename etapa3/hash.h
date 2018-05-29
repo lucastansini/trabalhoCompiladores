@@ -25,4 +25,8 @@ HASH* alreadyInHash(char *text);
 //Funcao para ver se existe algum simbolo não declarado na hash.
 void checkUndeclared(void);
 
+//Auxiliary functions to TAC
+HASH* makeTemp(void);
+HASH* makeLabel(void);
+
 #endif

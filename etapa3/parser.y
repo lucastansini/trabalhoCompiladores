@@ -2,6 +2,7 @@
 %{
 #include "ast.c"
 #include "semantic.c"
+#include "tac.c"
 extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
@@ -95,13 +96,14 @@ program: ldec {
                //hashPrint();
                setDeclarations($1);
                checkSemantic($1);
-               checkOperands($1);
+               //checkOperands($1);
                checkUndeclared();
                checkAttributions($1);
                if(semanticError){
-                 printf("Exit 4 due to semantic error!\n");
                  exit(4);
                }
+               tacPrintForward(tacReverse(codeGenerator($1)));
+
               }
     ;
 

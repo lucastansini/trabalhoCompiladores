@@ -14,6 +14,22 @@ void hashInit(void){
   }
 }
 
+HASH *makeLabel(){
+  static int serialNumber = 0;
+  static char buffer[64];
+
+  fprintf(buffer,"_LabelLuyka634%d",serialNumber++);
+  return hashInsert(SYMBOL_LABEL,buffer);
+}
+
+HASH* makeTemp(){
+  static int serialNumber = 0;
+  static char buffer[64];
+
+  fprintf(stderr,"_TempLUka631%d",serialNumber++);
+  return hashInsert(SYMBOL_SCALAR,buffer);
+}
+
 
 void checkUndeclared(void){
   HASH* aux;

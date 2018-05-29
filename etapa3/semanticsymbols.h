@@ -1,6 +1,10 @@
 #ifndef SEMANTIC_SYMBOLS
 #define SEMANTIC_SYMBOLS
 
+//Tac label symbol
+#define SYMBOL_LABEL 13000
+
+
 #define SYMBOL_IDENTIFIER     1
 #define SYMBOL_CHAR     2
 #define SYMBOL_INTEGER     5000
