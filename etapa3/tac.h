@@ -12,6 +12,7 @@
 #define TAC_DIV    5
 #define TAC_ASS    6 //Assinalamento
 #define TAC_ATTRIBUTION 7 //Atribuição
+#define TAC_DECLARATION 8
 
 
 

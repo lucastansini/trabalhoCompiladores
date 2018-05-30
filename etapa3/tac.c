@@ -34,6 +34,15 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_ATTRIBUTION:
       fprintf(stderr,"TAC_ATTRIBUTION");
     break;
+    case TAC_SUB:
+      fprintf(stderr,"TAC_SUB");
+    break;
+    case TAC_DIV:
+      fprintf(stderr,"TAC_DIV");
+    break;
+    case TAC_MULT:
+      fprintf(stderr,"TAC_MULT");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -87,13 +96,25 @@ TAC *codeGenerator(AST *node){
       result = makeBinOp(TAC_ADD,code[0],code[1]);
       //printf("TAC TYPE IS= %d\n",result->type);
     break;
+    case AST_SUB:
+    result = makeBinOp(TAC_SUB,code[0],code[1]);
+    break;
     case AST_ATRIBUTION:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
+    break;
+    case AST_MULT:
+      result = makeBinOp(TAC_MULT,code[0],code[1]);
+    break;
+    case AST_DIV:
+      result = makeBinOp(TAC_DIV,code[0],code[1]);
     break;
     case AST_VARIABLE_DEC_INT:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
     break;
     //DECLARATION????? caso do a + 6 + 3;
+    // case AST_DEC:
+    //   result = tacJoin(code[0],tacCreate(TAC_DECLARATION,node->son[0]->symbol, code[0]?code[0]->result: 0,0));
+    // break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
     break;
@@ -152,7 +173,6 @@ void tacPrintForward(TAC *tac){
 TAC *makeBinOp(int type, TAC *code0, TAC *code1){
 
   // printf("Entered make BinOP\n");
-
   TAC *newTac = tacCreate(type,makeTemp(),code0 ? code0->result : 0, code1 ? code1->result : 0);
   // printf("TYPE IS=%d",newTac->type);
   // printf("Exited make BinOP\n");

@@ -104,7 +104,6 @@ program: ldec {
                if(semanticError){
                  exit(4);
                }
-
                tacPrintForward(tacReverse(codeGenerator($1)));
 
               }
