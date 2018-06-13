@@ -70,6 +70,12 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_MULT:
       fprintf(stderr,"TAC_MULT");
     break;
+    case TAC_IF_ZERO:
+      fprintf(stderr,"TAC_IF_ZERO");
+    break;
+    case TAC_LABEL:
+      fprintf(stderr, "TAC_LABEL");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -165,6 +171,9 @@ TAC *codeGenerator(AST *node){
     case AST_OR:
       result = makeBinOp(TAC_OR,code[0],code[1]);
     break;
+    case AST_IF_THEN:
+      result = makeIfThen(code[0],code[1]);
+    break;
     //DECLARATION????? caso do a + 6 + 3;
     // case AST_DEC:
     //   result = tacJoin(code[0],tacCreate(TAC_DECLARATION,node->son[0]->symbol, code[0]?code[0]->result: 0,0));
@@ -232,4 +241,18 @@ TAC *makeBinOp(int type, TAC *code0, TAC *code1){
   // printf("Exited make BinOP\n");
   return tacJoin(code0,tacJoin(code1,newTac));
 
+}
+
+
+TAC* makeIfThen(TAC *code0, TAC *code1){
+
+  TAC *newIfTac = 0;
+  TAC *newLabelTac = 0;
+  HASH *newLabel = 0;
+
+  newLabel = makeLabel();
+  newIfTac = tacCreate(TAC_IF_ZERO,newLabel,code0? code0->result:0,0);
+  newLabelTac = tacCreate(TAC_LABEL,newLabel,0,0);
+
+  return tacJoin(tacJoin(tacJoin(code0,newIfTac),code1),newLabelTac);
 }

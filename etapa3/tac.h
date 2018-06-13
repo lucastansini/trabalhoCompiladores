@@ -22,6 +22,9 @@
 #define TAC_NOT_EQUAL 15
 #define TAC_OR 16
 #define TAC_AND 17
+#define TAC_IF_ZERO 18 //Tac auxiliar para controle de fluxo
+#define TAC_LABEL 19 //Buffer label para controle de fluxo
+
 
 
 
@@ -35,8 +38,7 @@ typedef struct tac{
   struct tac *previous;
 } TAC;
 
-//Tac functions
-
+//Tac general functions
 TAC *tacCreate(int type, HASH *res, HASH *op1, HASH* op2);
 TAC *tacPrintSingle(TAC *tac);
 TAC *tacPrintBack(TAC *tac);
@@ -46,8 +48,8 @@ TAC *tacReverse(TAC *tac);
 TAC *makeBinOp(int type, TAC *code0, TAC *code1);
 TAC *tacJoin(TAC *l1, TAC *l2);
 
-
-
+//TAC Special functions (creation of if,while,for)
+TAC* makeIfThen(TAC *code0, TAC *code1);
 
 
 
