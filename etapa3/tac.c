@@ -34,6 +34,33 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_ATTRIBUTION:
       fprintf(stderr,"TAC_ATTRIBUTION");
     break;
+    case TAC_LESS_THEN:
+      fprintf(stderr,"TAC_LESS_THEN");
+    break;
+    case TAC_GREATER_THEN:
+      fprintf(stderr,"TAC_GREATER_THEN");
+    break;
+    case TAC_NOT_EXPRESSION:
+      fprintf(stderr,"TAC_NOT_EXPRESSION");
+    break;
+    case TAC_LESS_EQUAL:
+      fprintf(stderr,"TAC_LESS_EQUAL");
+    break;
+    case TAC_GREATER_EQUAL:
+      fprintf(stderr,"TAC_GREATER_EQUAL");
+    break;
+    case TAC_EQUAL:
+      fprintf(stderr,"TAC_EQUAL");
+    break;
+    case TAC_NOT_EQUAL:
+      fprintf(stderr,"TAC_NOT_EQUAL");
+    break;
+    case TAC_OR:
+      fprintf(stderr,"TAC_OR");
+    break;
+    case TAC_AND:
+      fprintf(stderr,"TAC_AND");
+    break;
     case TAC_SUB:
       fprintf(stderr,"TAC_SUB");
     break;
@@ -110,6 +137,33 @@ TAC *codeGenerator(AST *node){
     break;
     case AST_VARIABLE_DEC_INT:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
+    break;
+    case AST_LT:
+      result = makeBinOp(TAC_LESS_THEN,code[0],code[1]);
+    break;
+    case AST_GT:
+      result = makeBinOp(TAC_GREATER_THEN,code[0],code[1]);
+    break;
+    case AST_NOT:
+      result = makeBinOp(TAC_NOT_EXPRESSION,code[0],code[1]);
+    break;
+    case AST_LE:
+      result = makeBinOp(TAC_LESS_EQUAL,code[0],code[1]);
+    break;
+    case AST_GE:
+      result = makeBinOp(TAC_GREATER_EQUAL,code[0],code[1]);
+    break;
+    case AST_EQ:
+      result = makeBinOp(TAC_EQUAL,code[0],code[1]);
+    break;
+    case AST_NE:
+      result = makeBinOp(TAC_NOT_EQUAL,code[0],code[1]);
+    break;
+    case AST_AND:
+      result = makeBinOp(TAC_AND,code[0],code[1]);
+    break;
+    case AST_OR:
+      result = makeBinOp(TAC_OR,code[0],code[1]);
     break;
     //DECLARATION????? caso do a + 6 + 3;
     // case AST_DEC:
