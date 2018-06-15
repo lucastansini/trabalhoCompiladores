@@ -18,16 +18,16 @@ HASH *makeLabel(){
   static int serialNumber = 0;
   static char buffer[64];
 
-  sprintf(buffer,"_LabelLuyka634%d",serialNumber++);
-  return hashInsert(SYMBOL_LABEL,buffer);
+  sprintf(buffer,"LabeL%d_",serialNumber++);
+  return hashInsert(SYMBOL_IDENTIFIER,buffer);
 }
 
 HASH* makeTemp(){
   static int serialNumber = 0;
   static char buffer[64];
 
-  sprintf(buffer,"_TempLUka631%d",serialNumber++);
-  return hashInsert(SYMBOL_SCALAR,buffer);
+  sprintf(buffer,"TemporaRy%d_",serialNumber++);
+  return hashInsert(SYMBOL_IDENTIFIER,buffer);
 }
 
 

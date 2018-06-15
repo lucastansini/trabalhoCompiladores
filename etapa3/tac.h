@@ -24,8 +24,8 @@
 #define TAC_AND 17
 #define TAC_IF_ZERO 18 //Tac auxiliar para controle de fluxo
 #define TAC_LABEL 19 //Buffer label para controle de fluxo
-
-
+#define TAC_JUMP 20
+#define TAC_RETURN 21
 
 
 typedef struct tac{
@@ -50,7 +50,7 @@ TAC *tacJoin(TAC *l1, TAC *l2);
 
 //TAC Special functions (creation of if,while,for)
 TAC* makeIfThen(TAC *code0, TAC *code1);
-
+TAC* makeIfThenElse(TAC *code0,TAC *code1, TAC *code2);
 
 
 

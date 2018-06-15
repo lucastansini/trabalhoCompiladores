@@ -28,6 +28,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_ADD:
       fprintf(stderr,"TAC_ADD");
     break;
+    case TAC_RETURN:
+      fprintf(stderr,"TAC_RETURN");
+    break;
     case TAC_ASS:
       fprintf(stderr,"TAC_ASS");
     break;
@@ -76,6 +79,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_LABEL:
       fprintf(stderr, "TAC_LABEL");
     break;
+    case TAC_JUMP:
+      fprintf(stderr, "TAC_JUMP");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -106,7 +112,7 @@ TAC *tacPrintBack(TAC *tac){
 
 TAC *codeGenerator(AST *node){
   // printf("Entered code generator.\n");
-  int i;
+  int i = 0;
   TAC *result = 0;
   TAC* code[MAX_SONS];
 
@@ -123,6 +129,7 @@ TAC *codeGenerator(AST *node){
     case SYMBOL:
       //printf("SYMBOL IS=%s\n",node->symbol->yytext);
       result = tacCreate(TAC_SYMBOL,node->symbol,0,0);
+      fprintf(stderr,"DEBUG: SYMBOL IS%s\n",node->symbol->yytext);
     break;
     case AST_ADD:
       //result = tacJoin(code[0],tacJoin(code[1],tacCreate(TAC_ADD,makeTemp(),code[0]?code[0]->result:0,code[1]?code[1]->result:0)));
@@ -174,10 +181,12 @@ TAC *codeGenerator(AST *node){
     case AST_IF_THEN:
       result = makeIfThen(code[0],code[1]);
     break;
-    //DECLARATION????? caso do a + 6 + 3;
-    // case AST_DEC:
-    //   result = tacJoin(code[0],tacCreate(TAC_DECLARATION,node->son[0]->symbol, code[0]?code[0]->result: 0,0));
-    // break;
+    case AST_IF_THEN_ELSE:
+      result = makeIfThenElse(code[0],code[1],code[2]);
+    break;
+    case AST_RETURN:
+      result = makeBinOp(TAC_RETURN,code[0],code[1]);
+    break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
     break;
@@ -202,7 +211,10 @@ TAC *tacJoin(TAC *l1, TAC *l2){
   }
 
 
-  for(aux = l2;aux->previous; aux=aux->previous);
+  aux = l2;
+  while(aux->previous){
+    aux = aux->previous;
+  }
 
   //FOr tem seg fault.
   aux->previous = l1;
@@ -255,4 +267,25 @@ TAC* makeIfThen(TAC *code0, TAC *code1){
   newLabelTac = tacCreate(TAC_LABEL,newLabel,0,0);
 
   return tacJoin(tacJoin(tacJoin(code0,newIfTac),code1),newLabelTac);
+}
+
+TAC *makeIfThenElse(TAC *code0, TAC *code1, TAC *code2){
+
+  TAC *skipTac = 0;
+  TAC *elseLabelTac = 0;
+  TAC *ifTac = 0;
+
+
+  HASH *ifLabel = makeLabel();
+  HASH *elseLabel = 0;
+
+  elseLabel = makeLabel();
+  skipTac = tacCreate(TAC_JUMP,elseLabel,0,0);
+  elseLabelTac = tacCreate(TAC_LABEL,elseLabelTac,0,0);
+
+  ifTac = tacCreate(TAC_IF_ZERO,ifLabel,code0 ? code0->result : 0,0);
+  ifLabel = tacCreate(TAC_LABEL,ifLabel,0,0);
+
+  return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(code0,ifTac),code1),skipTac),ifLabel),code2),elseLabelTac);
+
 }
