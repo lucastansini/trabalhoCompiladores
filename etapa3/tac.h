@@ -27,6 +27,7 @@
 #define TAC_JUMP 20
 #define TAC_RETURN 21
 
+#define TAC_LCMD 22
 
 typedef struct tac{
 

@@ -151,6 +151,8 @@ fluxControl: KW_IF '(' exp ')' KW_THEN cmd %prec IFELSE  { $$ = astCreate(AST_IF
             |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
             ;
 
+//     |dec {} nao deve estar em cmd!
+//    | KW_IF '(' exp ')' KW_THEN cmd %prec IFELSE  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 0); }
 
 
 cmd: TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,$1,$3, 0,0,0);}
@@ -168,7 +170,6 @@ cmd: TK_IDENTIFIER '=' exp  {$$ = astCreate(AST_ATRIBUTION,$1,$3, 0,0,0);}
     |read  {$$ = $1;}
     |KW_RETURN exp {$$ =astCreate(AST_RETURN,0,$2,0,0,0);}
     |fluxControl
-    |dec
     |block
     | {$$ = 0;}
     ;

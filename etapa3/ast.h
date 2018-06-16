@@ -88,6 +88,7 @@
 #define AST_LCMD2 76
 #define AST_VET_LIST 77
 #define AST_WHILE 78
+#define AST_END_IF 79
 
 typedef struct ast_node{
     int type;

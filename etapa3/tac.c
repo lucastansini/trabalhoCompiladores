@@ -82,6 +82,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_JUMP:
       fprintf(stderr, "TAC_JUMP");
     break;
+    case TAC_LCMD:
+      fprintf(stderr,"TAC_LCMD");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -129,7 +132,7 @@ TAC *codeGenerator(AST *node){
     case SYMBOL:
       //printf("SYMBOL IS=%s\n",node->symbol->yytext);
       result = tacCreate(TAC_SYMBOL,node->symbol,0,0);
-      fprintf(stderr,"DEBUG: SYMBOL IS%s\n",node->symbol->yytext);
+      //fprintf(stderr,"DEBUG: SYMBOL IS%s\n",node->symbol->yytext);
     break;
     case AST_ADD:
       //result = tacJoin(code[0],tacJoin(code[1],tacCreate(TAC_ADD,makeTemp(),code[0]?code[0]->result:0,code[1]?code[1]->result:0)));
@@ -269,7 +272,7 @@ TAC* makeIfThen(TAC *code0, TAC *code1){
   HASH *newLabel = 0;
 
   newLabel = makeLabel();
-  newIfTac = tacCreate(TAC_IF_ZERO,newLabel,code0? code0->result:0,0);
+  newIfTac = tacCreate(TAC_IF_ZERO,newLabel,code0 ? code0->result:0,0);
   newLabelTac = tacCreate(TAC_LABEL,newLabel,0,0);
 
   return tacJoin(tacJoin(tacJoin(code0,newIfTac),code1),newLabelTac);
@@ -280,7 +283,6 @@ TAC *makeIfThenElse(TAC *code0, TAC *code1, TAC *code2){
   TAC *skipTac = 0;
   TAC *elseLabelTac = 0;
   TAC *ifTac = 0;
-
 
   HASH *ifLabel = makeLabel();
   HASH *elseLabel = 0;

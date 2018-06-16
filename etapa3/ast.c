@@ -55,12 +55,16 @@ void astToFile(int level,AST *node, FILE* fileTree){
             astToFile(level+1,node->son[1],fileTree);
             break;
         case AST_LCMD: fprintf(stderr, "AST_LCMD,\n");
-
+        if(node->son[0]) fprintf(stderr, "SON0 type:%d\n",node->son[0]->type);
+        if(node->son[1]) fprintf(stderr, "SON1  type:%d\n",node->son[1]->type);
             astToFile(level+1,node->son[0],fileTree);
             fprintf(fileTree, ";\n");
             astToFile(level+1,node->son[1],fileTree);
             break;
-        case AST_LCMD2: fprintf(stderr, "AST_LCMD,\n");
+        case AST_END_IF:
+          fprintf(fileTree, "AST_END_IF\n");
+        break;
+        case AST_LCMD2: fprintf(stderr, "AST_LCMD2,\n");
             astToFile(level+1,node->son[0],fileTree);
             fprintf(fileTree, ";\n");
             astToFile(level+1,node->son[1],fileTree);
@@ -130,6 +134,8 @@ void astToFile(int level,AST *node, FILE* fileTree){
             fprintf(fileTree,"}");
             break;
       case AST_IF_THEN: fprintf(stderr, "AST_IF_THEN,\n");
+            // if(node->son[0]) fprintf(stderr, "SON0 type:%d",node->son[0]->type);
+            // if(node->son[1]) fprintf(stderr, "SON0 type:%d",node->son[1]->type);
             fprintf(fileTree,"if (");
             astToFile(level+1,node->son[0],fileTree);
             fprintf(fileTree,") then ");
