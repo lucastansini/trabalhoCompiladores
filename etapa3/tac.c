@@ -139,8 +139,12 @@ TAC *codeGenerator(AST *node){
     case AST_SUB:
     result = makeBinOp(TAC_SUB,code[0],code[1]);
     break;
+    case AST_VARIABLE:
+      result = tacCreate(TAC_SYMBOL,node->symbol,0,0);
+    break;
     case AST_ATRIBUTION:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
+      //fprintf(stderr,"DEBUG: RESULT IS%d\n",code[0]->result);
     break;
     case AST_MULT:
       result = makeBinOp(TAC_MULT,code[0],code[1]);
@@ -148,9 +152,11 @@ TAC *codeGenerator(AST *node){
     case AST_DIV:
       result = makeBinOp(TAC_DIV,code[0],code[1]);
     break;
+    ////////////////////////////////////////////////////////////////////////
     case AST_VARIABLE_DEC_INT:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
     break;
+    ////////////////////////////////////////////////////////////////////////
     case AST_LT:
       result = makeBinOp(TAC_LESS_THEN,code[0],code[1]);
     break;
