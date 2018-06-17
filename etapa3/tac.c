@@ -82,8 +82,8 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_JUMP:
       fprintf(stderr, "TAC_JUMP");
     break;
-    case TAC_LCMD:
-      fprintf(stderr,"TAC_LCMD");
+    case TAC_WHILE:
+      fprintf(stderr,"TAC_WHILE");
     break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
@@ -196,6 +196,9 @@ TAC *codeGenerator(AST *node){
     case AST_RETURN:
       result = makeBinOp(TAC_RETURN,code[0],code[1]);
     break;
+    case AST_WHILE:
+      result = makeWhile(code[0],code[1]);
+    break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
     break;
@@ -268,7 +271,7 @@ TAC *makeBinOp(int type, TAC *code0, TAC *code1){
 TAC* makeIfThen(TAC *code0, TAC *code1){
 
   TAC *newIfTac = 0;
-  TAC *newLabelTac = 0;
+  TAC *newLabelTac;
   HASH *newLabel = 0;
 
   newLabel = makeLabel();
@@ -283,17 +286,45 @@ TAC *makeIfThenElse(TAC *code0, TAC *code1, TAC *code2){
   TAC *skipTac = 0;
   TAC *elseLabelTac = 0;
   TAC *ifTac = 0;
+  TAC *ifLabelTac = 0;
 
   HASH *ifLabel = makeLabel();
-  HASH *elseLabel = 0;
+  HASH *elseLabel = makeLabel();
 
-  elseLabel = makeLabel();
   skipTac = tacCreate(TAC_JUMP,elseLabel,0,0);
-  elseLabelTac = tacCreate(TAC_LABEL,elseLabelTac,0,0);
+  elseLabelTac = tacCreate(TAC_LABEL,elseLabel,0,0);
 
   ifTac = tacCreate(TAC_IF_ZERO,ifLabel,code0 ? code0->result : 0,0);
-  ifLabel = tacCreate(TAC_LABEL,ifLabel,0,0);
+  ifLabelTac = tacCreate(TAC_LABEL,ifLabel,0,0);
 
-  return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(code0,ifTac),code1),skipTac),ifLabel),code2),elseLabelTac);
+  return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(code0,ifTac),code1),skipTac),ifLabelTac),code2),elseLabelTac);
+
+}
+
+
+TAC *makeWhile(TAC *code0, TAC*code1){
+
+  //Tacs para while
+  TAC *whileTac;
+  TAC *labelWhileTac;
+  TAC *jumpLabelTac;
+  TAC *jumpTac;
+
+  //Labels
+  HASH *whileLabel;
+  HASH *jumpLabel;
+
+
+  whileLabel = makeLabel();
+  jumpLabel = makeLabel();
+
+  jumpTac = tacCreate(TAC_JUMP,whileLabel,0,0);
+  whileTac = tacCreate(TAC_IF_ZERO,jumpLabel,code0 ? code0->result : 0,0);
+  labelWhileTac = tacCreate(TAC_LABEL,whileLabel,0,0);
+  jumpLabelTac = tacCreate(TAC_LABEL,jumpLabel,0,0);
+
+  //Ligando todos
+  return  tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(labelWhileTac,code0),whileTac),code1),jumpTac),jumpLabelTac);
+
 
 }
