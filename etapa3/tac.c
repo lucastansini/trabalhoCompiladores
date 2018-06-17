@@ -85,6 +85,24 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_WHILE:
       fprintf(stderr,"TAC_WHILE");
     break;
+    case TAC_PRINT_TEXT:
+      fprintf(stderr,"TAC_PRINT_TEXT");
+    break;
+    case TAC_CALL:
+      fprintf(stderr,"TAC_CALL");
+    break;
+    case TAC_READ:
+      fprintf(stderr,"TAC_READ");
+    break;
+    case TAC_PUSH:
+      fprintf(stderr,"TAC_PUSH");
+    break;
+    case TAC_BEGIN_FUNCTION:
+      fprintf(stderr,"TAC_BEGIN_FUNCTION");
+    break;
+    case TAC_END_FUNCTION:
+      fprintf(stderr,"TAC_END_FUNCTION");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -198,6 +216,26 @@ TAC *codeGenerator(AST *node){
     break;
     case AST_WHILE:
       result = makeWhile(code[0],code[1]);
+    break;
+    case AST_VAR_PRINT:
+      result = tacJoin(tacCreate(TAC_PRINT_TEXT,node->symbol,0,0),code[1]);
+    break;
+    case AST_FUNCTIONCALL:
+      result = tacJoin(tacCreate(TAC_CALL,makeTemp(), node->symbol, 0),code[1]);
+    break;
+    case AST_READ:
+      result = tacCreate(TAC_READ,node->symbol,0,0);
+    break;
+    case AST_FUNC_BLOCK:
+      result = makeFunct(tacCreate(TAC_SYMBOL,node->son[0]->symbol,0,0),code[1],code[2]);
+    break;
+    case AST_FUNC_ARGL_LIST:
+      // result = tacJoin(code[1],tacCreate(TAC_PUSH,node->son[0]->symbol,0,0));
+      // fprintf(stderr,"SON0SYMBOL%s:\n",node->son[0]->symbol->yytext);
+      //VERIFICAR AQUI NAO TA FUNCIONANDO!!
+    break;
+    case AST_FUNC_RESET:
+      result = tacJoin(tacCreate(TAC_PUSH,code[0]?code[0]->result:0,0,0),code[1]);
     break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
@@ -327,4 +365,8 @@ TAC *makeWhile(TAC *code0, TAC*code1){
   return  tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(labelWhileTac,code0),whileTac),code1),jumpTac),jumpLabelTac);
 
 
+}
+
+TAC* makeFunct(TAC *code0, TAC *code1, TAC* code2){
+  return tacJoin(tacJoin(tacJoin( tacCreate(TAC_BEGIN_FUNCTION, code0->result, 0, 0), code1) , code2 ), tacCreate(TAC_END_FUNCTION, code0->result, 0, 0));
 }

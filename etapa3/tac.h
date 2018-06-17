@@ -27,6 +27,13 @@
 #define TAC_JUMP 20
 #define TAC_RETURN 21
 #define TAC_WHILE 22
+#define TAC_PRINT_TEXT 23
+#define TAC_CALL 24
+#define TAC_READ 25
+#define TAC_PUSH 26
+#define TAC_BEGIN_FUNCTION 27
+#define TAC_END_FUNCTION 28
+
 
 typedef struct tac{
 
@@ -49,9 +56,11 @@ TAC *makeBinOp(int type, TAC *code0, TAC *code1);
 TAC *tacJoin(TAC *l1, TAC *l2);
 
 //TAC Special functions (creation of if,while,for)
+TAC* makeFunc(TAC *code0,TAC *code1,TAC *code2);
 TAC* makeIfThen(TAC *code0, TAC *code1);
 TAC* makeIfThenElse(TAC *code0,TAC *code1, TAC *code2);
 TAC* makeWhile(TAC *code0, TAC *code1);
+TAC* makeFunct(TAC *code0, TAC *code1, TAC *code2);
 
 
 
