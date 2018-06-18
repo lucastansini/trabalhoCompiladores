@@ -109,6 +109,12 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_VECREAD:
       fprintf(stderr,"TAC_VECREAD");
     break;
+    case TAC_VEC_DEC_ATR:
+      fprintf(stderr,"TAC_VEC_DEC_ATR");
+    break;
+    case TAC_VECTOR_MEM_INIT:
+      fprintf(stderr, "TAC_VECTOR_MEM_INIT");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -181,7 +187,21 @@ TAC *codeGenerator(AST *node){
     break;
     ////////////////////////////////////////////////////////////////////////
     case AST_VARIABLE_DEC_INT:
+    case AST_VARIABLE_PTR_FLOAT:
+    case AST_VARIABLE_PTR_CHAR:
+    case AST_VARIABLE_PTR_INT:
+    case AST_VARIABLE_DEC_CHAR:
+    case AST_VARIABLE_DEC_FLOAT:
+    case AST_TO_PTR_ATRIBUTION:
+    case AST_TO_END_ATRIBUTION:
+    case AST_PTR_ATRIBUTION:
+    case AST_END_ATRIBUTION:
       result = tacJoin(code[0],tacCreate(TAC_ASS,node->symbol,code[0]?code[0]->result:0,0));
+    break;
+    case AST_VARIABLE_VEC_2_FLOAT:
+    case AST_VARIABLE_VEC_2_CHAR:
+    case AST_VARIABLE_VEC_2_INT:
+      result = tacJoin(code[0],tacCreate(TAC_VECTOR_MEM_INIT,node->symbol,code[0]?code[0]->result:0,0));
     break;
     ////////////////////////////////////////////////////////////////////////
     case AST_LT:
@@ -249,6 +269,10 @@ TAC *codeGenerator(AST *node){
     case READ_VEC:
       result = tacCreate(TAC_VECREAD,makeTemp(),node->symbol,code[0]?code[0]->result:0);
     break;
+    // NAO SEI SE PRECISA FAZER ESSA AQUII!!!
+    // case AST_VARIABLE_VEC_1_INT:
+    //   result = tacCreate(TAC_VEC_DEC_ATR,node->symbol,code[1]?code[1]->result:0,0);
+    // break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
     break;

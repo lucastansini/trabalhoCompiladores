@@ -35,7 +35,8 @@
 #define TAC_END_FUNCTION 28
 #define TAC_VECWRITE 29
 #define TAC_VECREAD 30
-
+#define TAC_VEC_DEC_ATR 31 //Não sei se precisa. ver a tac.c
+#define TAC_VECTOR_MEM_INIT 32 //Não sei se precisa
 
 typedef struct tac{
 
