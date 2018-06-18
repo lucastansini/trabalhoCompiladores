@@ -1,0 +1,13 @@
+int a = 10000;
+int b = a;
+int c = 10;
+int d = 1;
+int main (){
+if (3 == 3) then b =3;
+b =10;
+b =1000000;
+c =31;
+;
+c =a;
+d =3;
+}

@@ -37,6 +37,8 @@
 #define TAC_VECREAD 30
 #define TAC_VEC_DEC_ATR 31 //Não sei se precisa. ver a tac.c
 #define TAC_VECTOR_MEM_INIT 32 //Não sei se precisa
+#define TAC_FOR_TO 33
+
 
 typedef struct tac{
 
@@ -64,7 +66,7 @@ TAC* makeIfThen(TAC *code0, TAC *code1);
 TAC* makeIfThenElse(TAC *code0,TAC *code1, TAC *code2);
 TAC* makeWhile(TAC *code0, TAC *code1);
 TAC* makeFunct(TAC *code0, TAC *code1, TAC *code2);
-
+TAC* makeFor(HASH* nodeSymbol,TAC *code0, TAC *code1, TAC *code2);
 
 
 

@@ -148,7 +148,7 @@ resto: ';' cmd resto {$$ = astCreate(AST_LCMD2,0,$2,$3,0,0);}
 fluxControl: KW_IF '(' exp ')' KW_THEN cmd %prec IFELSE  { $$ = astCreate(AST_IF_THEN, 0, $3, $6, 0, 0); }
             |KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd { $$ = astCreate(AST_IF_THEN_ELSE, 0, $3, $6, $8, 0); }
             |KW_WHILE '(' exp ')' cmd  { $$ = astCreate(AST_WHILE, 0, $3, $5, 0, 0); }
-            |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' lcmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
+            |KW_FOR '('TK_IDENTIFIER '=' exp KW_TO exp')' cmd   { $$ = astCreate(AST_FOR_TO, $3, $5, $7, $9, 0); }
             ;
 
 

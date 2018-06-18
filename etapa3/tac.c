@@ -115,6 +115,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_VECTOR_MEM_INIT:
       fprintf(stderr, "TAC_VECTOR_MEM_INIT");
     break;
+    case TAC_FOR_TO:
+      fprintf(stderr, "TAC_FOR_TO");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -269,6 +272,9 @@ TAC *codeGenerator(AST *node){
     case READ_VEC:
       result = tacCreate(TAC_VECREAD,makeTemp(),node->symbol,code[0]?code[0]->result:0);
     break;
+    case AST_FOR_TO:
+      result = makeFor(node->symbol,code[0],code[1],code[2]);
+    break;
     // NAO SEI SE PRECISA FAZER ESSA AQUII!!!
     // case AST_VARIABLE_VEC_1_INT:
     //   result = tacCreate(TAC_VEC_DEC_ATR,node->symbol,code[1]?code[1]->result:0,0);
@@ -375,6 +381,23 @@ TAC *makeIfThenElse(TAC *code0, TAC *code1, TAC *code2){
 
 }
 
+TAC* makeFor(HASH* nodeSymbol, TAC *code0, TAC *code1, TAC *code2){
+
+    TAC *newIfTac = 0;
+
+    HASH *initLabel = makeLabel();
+    HASH *endLabel = makeLabel();
+    HASH *newLabel = makeLabel();
+
+    TAC *returnTac = tacCreate(TAC_LABEL,initLabel,0,0);
+    TAC *equalTac = tacCreate(TAC_EQUAL,makeTemp(),nodeSymbol, code1 ? code1->result : 0);
+    newIfTac = tacCreate(TAC_IF_ZERO,newLabel,equalTac?equalTac->result:0,0);
+    TAC *jump = tacCreate(TAC_JUMP,initLabel,0,0);
+    TAC *end = tacCreate(TAC_LABEL,newLabel,0,0);
+
+    return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(returnTac,equalTac),newIfTac),code2),jump),end);
+
+}
 
 TAC *makeWhile(TAC *code0, TAC*code1){
 
@@ -389,7 +412,7 @@ TAC *makeWhile(TAC *code0, TAC*code1){
   HASH *jumpLabel;
 
 
-  whileLabel = makeLabel();
+    whileLabel = makeLabel();
   jumpLabel = makeLabel();
 
   jumpTac = tacCreate(TAC_JUMP,whileLabel,0,0);
