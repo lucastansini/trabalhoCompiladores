@@ -33,6 +33,8 @@
 #define TAC_PUSH 26
 #define TAC_BEGIN_FUNCTION 27
 #define TAC_END_FUNCTION 28
+#define TAC_VECWRITE 29
+#define TAC_VECREAD 30
 
 
 typedef struct tac{

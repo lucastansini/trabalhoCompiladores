@@ -103,6 +103,12 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_END_FUNCTION:
       fprintf(stderr,"TAC_END_FUNCTION");
     break;
+    case TAC_VECWRITE:
+      fprintf(stderr,"TAC_VECWRITE");
+    break;
+    case TAC_VECREAD:
+      fprintf(stderr,"TAC_VECREAD");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -236,6 +242,12 @@ TAC *codeGenerator(AST *node){
     break;
     case AST_FUNC_RESET:
       result = tacJoin(tacCreate(TAC_PUSH,code[0]?code[0]->result:0,0,0),code[1]);
+    break;
+    case AST_VEC_ATRIBUTION:
+      result = tacJoin(code[1],tacCreate(TAC_VECWRITE,node->symbol,code[0]?code[0]->result:0,code[1]?code[1]->result:0));
+    break;
+    case READ_VEC:
+      result = tacCreate(TAC_VECREAD,makeTemp(),node->symbol,code[0]?code[0]->result:0);
     break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
