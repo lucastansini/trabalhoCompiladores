@@ -3,6 +3,7 @@
 #include "ast.c"
 #include "semantic.c"
 #include "tac.c"
+#include "genco.c"
 extern int getLineNumber();
 #include<stdio.h>
 #include <stdlib.h>
@@ -95,7 +96,7 @@ extern semanticError;
 
 %%
 program: ldec {
-               astToFile(0,$1,saida);
+               //astToFile(0,$1,saida);
                //hashPrint();
                setDeclarations($1);
                checkSemantic($1);
@@ -106,7 +107,7 @@ program: ldec {
                  exit(4);
                }
                tacPrintForward(tacReverse(codeGenerator($1)));
-
+               genco(tacReverse(codeGenerator($1)));
               }
     ;
 

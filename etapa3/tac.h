@@ -67,7 +67,7 @@ TAC* makeIfThenElse(TAC *code0,TAC *code1, TAC *code2);
 TAC* makeWhile(TAC *code0, TAC *code1);
 TAC* makeFunct(TAC *code0, TAC *code1, TAC *code2);
 TAC* makeFor(HASH* nodeSymbol,TAC *code0, TAC *code1, TAC *code2);
-
+void genco(TAC *tac);
 
 
 

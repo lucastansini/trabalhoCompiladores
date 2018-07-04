@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     FILE    *fd;
 
     //Colocar 'argc==3' para rodar etapa3.
-    if (argc == 3)
+    if (argc == 2)
     {
         if (!(fd = fopen(argv[1], "r")))
         {
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     }
     else{
         printf("Usage: a.out filename\n");
-	   return 0;	
+	   return 0;
 	}
 
 
