@@ -15,6 +15,7 @@ void genco(TAC *tac){
 	}
 	int count = 0;
 	int count2=0;
+	int count3 = 0;
 	for(;tac;tac=tac->next){
 		switch(tac->type){
 			printf("TAC TYPE:%d\n",tac->type);
@@ -23,6 +24,14 @@ void genco(TAC *tac){
 					fprintf(fp,"\n.globl %s\n .type %s, @function\n %s:\n LFB%d:\n",tac->result->yytext,tac->result->yytext,tac->result->yytext,count);
 					count++;
 				}
+			}
+			break;
+			case TAC_PRINT_TEXT:{
+				if(tac->result){
+					fprintf(fp,".LC%d:\n		.string	%s\n",count3,tac->result->yytext);
+					fprintf(fp,"\nmovl	$.LC%d, %%edi\n	movl	$0, %%eax\n	call	printf\n",count3);
+				}
+				count3++;
 			}
 			break;
 			case TAC_END_FUNCTION:
