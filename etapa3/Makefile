@@ -8,4 +8,4 @@ lex.yy.c: scanner.l
 	lex scanner.l
 
 clean:
-	rm lex.yy.c parser.tab.c parser.tab.h y.output etapa4
+	rm lex.yy.c parser.tab.c parser.tab.h y.output etapa6

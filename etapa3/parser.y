@@ -107,6 +107,7 @@ program: ldec {
                  exit(4);
                }
                tacPrintForward(tacReverse(codeGenerator($1)));
+               //genData(tacReverse(codeGenerator($1)));
                genco(tacReverse(codeGenerator($1)));
               }
     ;
