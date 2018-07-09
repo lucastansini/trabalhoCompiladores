@@ -168,7 +168,7 @@ TAC *codeGenerator(AST *node){
     case SYMBOL:
       //printf("SYMBOL IS=%s\n",node->symbol->yytext);
       result = tacCreate(TAC_SYMBOL,node->symbol,0,0);
-      //fprintf(stderr,"DEBUG: SYMBOL IS%s\n",node->symbol->yytext);
+    //  fprintf(stderr,"DEBUG: SYMBOL IS%s\n",node->symbol->yytext);
     break;
     case AST_ADD:
       //result = tacJoin(code[0],tacJoin(code[1],tacCreate(TAC_ADD,makeTemp(),code[0]?code[0]->result:0,code[1]?code[1]->result:0)));
