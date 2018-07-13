@@ -12,6 +12,15 @@ int digito(TAC *tac){
 	return 1;
 }
 
+int digitoSegundo(TAC*tac){
+	while(*tac->op2->yytext){
+		if(isdigit(*tac->op2->yytext++)==0){
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void genco(TAC *tac){
 
 	//Guarda o tac inicial
@@ -73,6 +82,9 @@ void genco(TAC *tac){
 					}
 				}
 			}
+			break;
+			case TAC_ADD:
+				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
 		}
 	}
@@ -143,10 +155,20 @@ void genco(TAC *tac){
 			break;
 
 			case TAC_ADD:{
+				char* savedOp1 = initialTac->op1->yytext;
+				char* savedOp2 = initialTac->op2->yytext;
+				char* savedResult = initialTac->result->yytext;
 				if(initialTac->result){
-					fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",initialTac->op1->yytext);
-					fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op2->yytext);
-					fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
+					if(digitoSegundo(initialTac)){
+						fprintf(fp,"\tmovl	%s(%%rip), %%eax\n",savedOp1);
+						fprintf(fp,"\taddl $%s,%%eax\n",savedOp2); //edx guarda o resultado da soma!
+						fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
+					}else{
+						fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",savedOp1);
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+						fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
+						fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
+					}
 				}
 			}
 			break;
