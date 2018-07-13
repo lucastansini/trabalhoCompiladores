@@ -3,6 +3,15 @@
 #define MAX_VECTOR_PRINT_SIZE 100
 
 
+int digito(TAC *tac){
+	while(*tac->op1->yytext){
+		if(isdigit(*tac->op1->yytext++)==0){
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void genco(TAC *tac){
 
 	//Guarda o tac inicial
@@ -19,6 +28,7 @@ void genco(TAC *tac){
 	int count = 0;
 	int count2=0;
 	int count3 = 0;
+	int insideFunction = 0;
 
 	//variável inicial para controle do vetor que armazena na posição vectorIndex, uma string "xxx", correspondente aquele index em assembly.
 	//Exemplo, LC0 - > aaa , então a[0] = "aaa"
@@ -39,7 +49,7 @@ void genco(TAC *tac){
 				}
 			}
 			break;
-			//Assinalamento de variáveis, assumindo todas como float.
+		//	Assinalamento de variáveis, assumindo todas como float.
 			case TAC_ASS:{
 				alreadyPrintedAssing = 0;
 				if(tac->result){
@@ -50,9 +60,16 @@ void genco(TAC *tac){
 						}
 					}
 					if(alreadyPrintedAssing == 0){
-						fprintf(fp,".globl %s\n \t.align 4\n  \t.type %s, @object\n  \t.size %s, 4\n%s:\n  \t.long %s\n",tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->op1->yytext);
-						vectorGlobalAssing[vectorGlobalIndex] = tac->result->yytext;
-						vectorGlobalIndex++;
+						if(!strcmp(tac->op1->yytext,"0")){
+							//.comm	VARIAVEL,4,4
+							fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
+							vectorGlobalAssing[vectorGlobalIndex] = tac->result->yytext;
+							vectorGlobalIndex++;
+						}else {
+							fprintf(fp,".globl %s\n \t.align 4\n  \t.type %s, @object\n  \t.size %s, 4\n%s:\n  \t.long %s\n",tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->op1->yytext);
+							vectorGlobalAssing[vectorGlobalIndex] = tac->result->yytext;
+							vectorGlobalIndex++;
+						}
 					}
 				}
 			}
@@ -81,6 +98,7 @@ void genco(TAC *tac){
 						.cfi_def_cfa_register 6*/
 					fprintf(fp,"\tpushq %%rbp\n\t.cfi_def_cfa_offset 16\n\t.cfi_offset 6, -16\n\tmovq	%%rsp, %%rbp\n\t.cfi_def_cfa_register 6\n");
 					count++;
+					insideFunction = 1;
 				}
 			}
 			break;
@@ -116,9 +134,36 @@ void genco(TAC *tac){
 					.cfi_def_cfa 7, 8
 					ret*/
 					fprintf(fp,"\tmovl $0, %%eax\n\tpopq %%rbp\n\t.cfi_def_cfa 7, 8\n\tret\n");
-					fprintf(fp,".cfi_endproc\n .LFE%d:\n .size %s, .-%s",count2,initialTac->result->yytext,initialTac->result->yytext);
+					fprintf(fp,".cfi_endproc\n .LFE%d:\n \t.size %s, .-%s",count2,initialTac->result->yytext,initialTac->result->yytext);
+					//Warnings do compilador exigem uma newline no final do arquivo.
+					fprintf(fp,"\n");
 					count2++;
+					insideFunction = 0;
 				}
+			break;
+
+			case TAC_ADD:{
+				if(initialTac->result){
+					fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",initialTac->op1->yytext);
+					fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op2->yytext);
+					fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
+				}
+			}
+			break;
+			/*movl	a(%rip), %eax
+			movl	%eax, c(%rip)*/
+			case TAC_ASS:{
+				char* savedOp1 = initialTac->op1->yytext;
+				char* savedResult = initialTac->result->yytext;
+				if(insideFunction){
+					if(digito(initialTac)){
+						fprintf(fp,"\tmovl $%s, %s(%%rip)\n",savedOp1,savedResult);
+					}else{
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp1);
+						fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
+					}
+				}
+			}
 			break;
 		}
 	}
