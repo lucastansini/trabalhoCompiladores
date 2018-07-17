@@ -56,6 +56,7 @@ void genco(TAC *tac){
 	int count2=0;
 	int count3 = 0;
 	int insideFunction = 0;
+	int countLabelAndLeite = 0;
 
 	//variável inicial para controle do vetor que armazena na posição vectorIndex, uma string "xxx", correspondente aquele index em assembly.
 	//Exemplo, LC0 - > aaa , então a[0] = "aaa"
@@ -103,6 +104,7 @@ void genco(TAC *tac){
 			}
 			break;
 			case TAC_ADD:
+			case TAC_EQUAL:
 			case TAC_MULT:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
@@ -178,9 +180,9 @@ void genco(TAC *tac){
 				char* savedOp2 = initialTac->op2->yytext;
 				char* savedResult = initialTac->result->yytext;
 				TAC* auxTac = initialTac;
-				printf("OP1ADRESSTAC:%d\n",initialTac->op1);
-				printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
-				printf("OP1SYMBOL:%s\n",savedOp1);
+				// printf("OP1ADRESSTAC:%d\n",initialTac->op1);
+				// printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
+				// printf("OP1SYMBOL:%s\n",savedOp1);
 				if(initialTac->result){
 				 	if(digitoPrimeiro(initialTac)){
 						fprintf(fp,"\tmovl	$%s, %%edx\n",savedOp1);
@@ -233,9 +235,9 @@ void genco(TAC *tac){
 			case TAC_ASS:{
 				char* savedOp1 = initialTac->op1->yytext;
 				char* savedResult = initialTac->result->yytext;
-				printf("OP1ADRESSTAC:%d\n",initialTac->op1);
-				printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
-				printf("OP1SYMBOL:%s\n",savedOp1);
+				// printf("OP1ADRESSTAC:%d\n",initialTac->op1);
+				// printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
+				// printf("OP1SYMBOL:%s\n",savedOp1);
 
 				if(initialTac->result){
 					if(insideFunction){
@@ -250,8 +252,64 @@ void genco(TAC *tac){
 							// printf("RESULT:%s\n",savedResult);
 							// printf("OP1:%s\n",savedOp1);
 			}
-
 			break;
+			/*IF COM DUAS VARIAVEIS
+			movl	a(%rip), %edx
+			movl	b(%rip), %eax
+			cmpl	%eax, %edx
+			jne	.L2*/
+			/*IF A == 2
+			movl	a(%rip), %eax
+			cmpl	$2, %eax*/
+			case TAC_EQUAL:{
+				char* savedOp1 = initialTac->op1->yytext;
+				char* savedOp2 = initialTac->op2->yytext;
+				char* savedResult = initialTac->result->yytext;
+				if(insideFunction){
+					if(initialTac->result){
+						if(digitoPrimeiro(initialTac)){
+							fprintf(fp,"\tmovl $%s, %%edx\n",savedOp1);
+						}else{
+							fprintf(fp,"\tmovl %s(%%rip), %%edx\n",savedOp1);
+						}
+
+						if(digitoSegundo(initialTac)){
+							fprintf(fp,"\tmovl $%s, %%eax\n",savedOp2);
+						}else{
+							fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+						}
+						fprintf(fp,"\tcmpl %%eax,%%edx\n");
+						// fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
+						fprintf(fp,"\tjz LabelTeste_ParavVEerLuuL1KKAKSSszz12345a%d\n",countLabelAndLeite);
+						fprintf(fp,"\tmovl $1, %s(%%rip)\n",savedResult);
+						fprintf(fp,"\tjmp Leeeeiteeeee%d\n",countLabelAndLeite);
+						fprintf(fp,"LabelTeste_ParavVEerLuuL1KKAKSSszz12345a%d:\n",countLabelAndLeite);
+						fprintf(fp,"\tmovl $0, %s(%%rip)\n",savedResult);
+						fprintf(fp,"Leeeeiteeeee%d:\n",countLabelAndLeite);
+						countLabelAndLeite++;
+					}
+				}
+			}
+			break;
+			case TAC_IF_ZERO:{
+				if(insideFunction){
+					if(initialTac->result){
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op1->yytext);
+						fprintf(fp,"\tcmpl	$0, %%eax\n");
+						fprintf(fp,"\tjnz	%s\n",initialTac->result->yytext);
+					}
+				}
+			}break;
+			case TAC_LABEL:{
+				if(insideFunction){
+					fprintf(fp,"%s:\n",initialTac->result->yytext);
+				}
+			}break;
+			case TAC_JUMP:{
+				if(insideFunction){
+					fprintf(fp,"\tjmp %s\n",initialTac->result->yytext);
+				}
+			}
 		}
 	}
 }
