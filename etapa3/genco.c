@@ -3,32 +3,39 @@
 #define MAX_VECTOR_PRINT_SIZE 100
 
 
-int digito(TAC *tac){
-	while(*tac->op1->yytext){
-		if(isdigit(*tac->op1->yytext++)==0){
-			return 0;
-		}
-	}
-	return 1;
-}
+
 
 int digitoSegundo(TAC*tac){
-	TAC *handleTac = tac;
-	while(*handleTac->op2->yytext){
-		if(isdigit(*handleTac->op2->yytext++)==0){
+	int i = 0;
+	while(*tac->op2->yytext){
+		if(isdigit(*tac->op2->yytext++)==0){
+			//restore one position
+			*tac->op2->yytext--;
 			return 0;
 		}
+		i++;
+	}
+	for(i;i>0;i--){
+		*tac->op2->yytext--;
 	}
 	return 1;
 }
 
 int digitoPrimeiro(TAC* tac){
-	TAC* handleTac = tac;
-	while(*handleTac->op1->yytext){
-		if(isdigit(*handleTac->op1->yytext++)==0){
+	int i = 0;
+	while(*tac->op1->yytext){
+		if(isdigit(*tac->op1->yytext++)==0){
+			//restore one position
+			*tac->op1->yytext--;
 			return 0;
 		}
+		i++;
 	}
+	//Restore the pointer.
+	for(i;i>0;i--){
+		*tac->op1->yytext--;
+	}
+	//printf("i is equalt to:%d\n",i);
 	return 1;
 }
 
@@ -170,12 +177,12 @@ void genco(TAC *tac){
 				char* savedOp1 = initialTac->op1->yytext;
 				char* savedOp2 = initialTac->op2->yytext;
 				char* savedResult = initialTac->result->yytext;
-				//printf("bbbb:%s\n",savedOp2);
-				// printf("OP1:%s\n",initialTac->op1->yytext);
-				// printf("OP2:%s\n",initialTac->op2->yytext);
-				// printf("savedop2:%s\n",savedOp2);
+				TAC* auxTac = initialTac;
+				printf("OP1ADRESSTAC:%d\n",initialTac->op1);
+				printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
+				printf("OP1SYMBOL:%s\n",savedOp1);
 				if(initialTac->result){
-					if(digitoPrimeiro(initialTac)){
+				 	if(digitoPrimeiro(initialTac)){
 						fprintf(fp,"\tmovl	$%s, %%edx\n",savedOp1);
 					}else{
 						fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",savedOp1);
@@ -194,7 +201,7 @@ void genco(TAC *tac){
 				movl	b(%rip), %eax
 				imull	%edx, %eax*/
 			case TAC_MULT:{
-
+				TAC* auxTac = initialTac;
 				printf("Teste:%s\n",initialTac->op1->yytext);
 				// while(*initialTac->op1->yytext){
 				// 	*savedOp1 = *initialTac->op1->yytext;
@@ -226,10 +233,13 @@ void genco(TAC *tac){
 			case TAC_ASS:{
 				char* savedOp1 = initialTac->op1->yytext;
 				char* savedResult = initialTac->result->yytext;
+				printf("OP1ADRESSTAC:%d\n",initialTac->op1);
+				printf("YYTEXTINITIALTAC:%s\n",initialTac->op1->yytext);
+				printf("OP1SYMBOL:%s\n",savedOp1);
 
 				if(initialTac->result){
 					if(insideFunction){
-						if(digito(initialTac)){
+						if(digitoPrimeiro(initialTac)){
 							fprintf(fp,"\tmovl $%s, %s(%%rip)\n",savedOp1,savedResult);
 						}else{
 							fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp1);
