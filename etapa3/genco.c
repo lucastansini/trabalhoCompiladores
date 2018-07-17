@@ -13,8 +13,19 @@ int digito(TAC *tac){
 }
 
 int digitoSegundo(TAC*tac){
-	while(*tac->op2->yytext){
-		if(isdigit(*tac->op2->yytext++)==0){
+	TAC *handleTac = tac;
+	while(*handleTac->op2->yytext){
+		if(isdigit(*handleTac->op2->yytext++)==0){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int digitoPrimeiro(TAC* tac){
+	TAC* handleTac = tac;
+	while(*handleTac->op1->yytext){
+		if(isdigit(*handleTac->op1->yytext++)==0){
 			return 0;
 		}
 	}
@@ -61,6 +72,7 @@ void genco(TAC *tac){
 		//	Assinalamento de variáveis, assumindo todas como float.
 			case TAC_ASS:{
 				alreadyPrintedAssing = 0;
+
 				if(tac->result){
 					int aux2=0;
 					for(aux2; aux2 < MAX_VECTOR_PRINT_SIZE ; aux2++){
@@ -75,7 +87,7 @@ void genco(TAC *tac){
 							vectorGlobalAssing[vectorGlobalIndex] = tac->result->yytext;
 							vectorGlobalIndex++;
 						}else {
-							fprintf(fp,".globl %s\n \t.align 4\n  \t.type %s, @object\n  \t.size %s, 4\n%s:\n  \t.long %s\n",tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->op1->yytext);
+							fprintf(fp,".globl %s\n\t.data\n \t.align 4\n  \t.type %s, @object\n  \t.size %s, 4\n%s:\n  \t.long %s\n",tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->result->yytext,tac->op1->yytext);
 							vectorGlobalAssing[vectorGlobalIndex] = tac->result->yytext;
 							vectorGlobalIndex++;
 						}
@@ -84,6 +96,7 @@ void genco(TAC *tac){
 			}
 			break;
 			case TAC_ADD:
+			case TAC_MULT:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
 		}
@@ -97,9 +110,8 @@ void genco(TAC *tac){
 
 
 
-	for(;initialTac;initialTac=initialTac->next){
+	while(initialTac = initialTac->next){
 		switch(initialTac->type){
-			printf("TAC TYPE:%d\n",tac->type);
 			case TAC_BEGIN_FUNCTION:{
 				if(initialTac->result){
 					fprintf(fp,"\n.globl %s\n .type %s, @function\n %s:\n LFB%d:\n .cfi_startproc\n",initialTac->result->yytext,initialTac->result->yytext,initialTac->result->yytext,count);
@@ -158,17 +170,54 @@ void genco(TAC *tac){
 				char* savedOp1 = initialTac->op1->yytext;
 				char* savedOp2 = initialTac->op2->yytext;
 				char* savedResult = initialTac->result->yytext;
+				//printf("bbbb:%s\n",savedOp2);
+				// printf("OP1:%s\n",initialTac->op1->yytext);
+				// printf("OP2:%s\n",initialTac->op2->yytext);
+				// printf("savedop2:%s\n",savedOp2);
 				if(initialTac->result){
-					if(digitoSegundo(initialTac)){
-						fprintf(fp,"\tmovl	%s(%%rip), %%eax\n",savedOp1);
-						fprintf(fp,"\taddl $%s,%%eax\n",savedOp2); //edx guarda o resultado da soma!
-						fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
+					if(digitoPrimeiro(initialTac)){
+						fprintf(fp,"\tmovl	$%s, %%edx\n",savedOp1);
 					}else{
 						fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",savedOp1);
-						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
-						fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
-						fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
 					}
+					if(digitoSegundo(initialTac)){
+						fprintf(fp,"\tmovl $%s, %%eax\n",savedOp2);
+					}else{
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+					}
+					fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
+					fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
+				}
+			}
+			break;
+			/*movl	a(%rip), %edx
+				movl	b(%rip), %eax
+				imull	%edx, %eax*/
+			case TAC_MULT:{
+
+				printf("Teste:%s\n",initialTac->op1->yytext);
+				// while(*initialTac->op1->yytext){
+				// 	*savedOp1 = *initialTac->op1->yytext;
+				// 	printf("Teste:%s\n",initialTac->op1->yytext);
+				// }
+				char* savedOp1 = initialTac->op1->yytext;
+				char* savedOp2 = initialTac->op2->yytext;
+				char* savedResult = initialTac->result->yytext;
+				if(initialTac->result){
+
+					if(digitoPrimeiro(initialTac)){
+						fprintf(fp,"\tmovl $%s, %%edx\n",savedOp1);
+					}else{
+						fprintf(fp,"\tmovl %s(%%rip), %%edx\n",savedOp1);
+					}
+
+					if(digitoSegundo(initialTac)){
+						fprintf(fp,"\tmovl $%s, %%eax\n",savedOp2);
+					}else{
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+					}
+					fprintf(fp,"\timull %%edx, %%eax\n");
+					fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
 				}
 			}
 			break;
@@ -177,15 +226,21 @@ void genco(TAC *tac){
 			case TAC_ASS:{
 				char* savedOp1 = initialTac->op1->yytext;
 				char* savedResult = initialTac->result->yytext;
-				if(insideFunction){
-					if(digito(initialTac)){
-						fprintf(fp,"\tmovl $%s, %s(%%rip)\n",savedOp1,savedResult);
-					}else{
-						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp1);
-						fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
+
+				if(initialTac->result){
+					if(insideFunction){
+						if(digito(initialTac)){
+							fprintf(fp,"\tmovl $%s, %s(%%rip)\n",savedOp1,savedResult);
+						}else{
+							fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp1);
+							fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",savedResult);
+						}
 					}
 				}
+							// printf("RESULT:%s\n",savedResult);
+							// printf("OP1:%s\n",savedOp1);
 			}
+
 			break;
 		}
 	}
