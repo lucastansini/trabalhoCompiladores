@@ -108,6 +108,16 @@ void genco(TAC *tac){
 			case TAC_MULT:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
+
+
+			/*For vectors, we have different types, though the mem allocated will be always 32 to simplify the process.
+			1 int	v[10] = .comm 10*4,32
+			2 char v[10] = .comm	v,8,32  (8 is the index of array and 32 is the mem allocated.)
+			3 float v[10] = = .comm 10*4,32*/
+			case TAC_VECTOR_MEM_INIT:{
+				int valueIndex = atoi(tac->op1->yytext) * 4;
+				fprintf(fp,"\t.comm	%s,%d,32\n",tac->result->yytext,valueIndex);
+			}
 		}
 	}
 
@@ -309,7 +319,26 @@ void genco(TAC *tac){
 				if(insideFunction){
 					fprintf(fp,"\tjmp %s\n",initialTac->result->yytext);
 				}
-			}
+			}break;
+			/*Com variáveis movl	c(%rip), %eax
+											cltq
+											movl	$55, a(,%rax,4)*/
+			case TAC_VECWRITE:{
+				//Se for dígito no index
+				if(digitoPrimeiro(initialTac)){
+					int indexToStore = atoi(initialTac->op1->yytext) * 4;
+					fprintf(fp,"\tmovl $%s, %s+%d(%%rip)\n",initialTac->op2->yytext,initialTac->result->yytext,indexToStore);
+				}else{
+					fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op1->yytext);
+					fprintf(fp,"\tcltq\n");
+					fprintf(fp,"\tmovl $%s, %s(,%%rax,4)\n",initialTac->op2->yytext,initialTac->result->yytext);
+				}
+			}break;
+			/*movl	a+8(%rip), %eax
+			  movl	%eax, c(%rip)*/
+			case TAC_VECREAD:{
+
+			}break;
 		}
 	}
 }
