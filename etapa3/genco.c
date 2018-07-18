@@ -334,8 +334,15 @@ void genco(TAC *tac){
 					fprintf(fp,"\tmovl $%s, %s(,%%rax,4)\n",initialTac->op2->yytext,initialTac->result->yytext);
 				}
 			}break;
-			/*movl	a+8(%rip), %eax
-			  movl	%eax, c(%rip)*/
+			/*Se for c = a[2]
+				movl	a+8(%rip), %eax
+			  movl	%eax, c(%rip)
+				----------------------
+				Se for c = a[b] por Exemplo
+				movl	b(%rip), %eax
+				cltq
+				movl	a(,%rax,4), %eax
+				movl	%eax, c(%rip)*/
 			case TAC_VECREAD:{
 
 			}break;
