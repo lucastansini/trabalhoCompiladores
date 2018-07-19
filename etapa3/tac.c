@@ -22,7 +22,7 @@ TAC* tacPrintSingle(TAC *tac){
   if(!tac){
     return;
   }
-  if(tac->type == TAC_SYMBOL) return;
+  if(tac->type == TAC_SYMBOL || tac->type == TAC_BUFFER) return;
   fprintf(stderr,"TAC(");
   switch(tac->type){
     case TAC_ADD:
@@ -252,9 +252,12 @@ TAC *codeGenerator(AST *node){
     case AST_VAR_PRINT:
       result = tacJoin(tacCreate(TAC_PRINT_TEXT,node->symbol,0,0),code[1]);
     break;
-    case AST_FUNCTIONCALL:
-      result = tacJoin(tacCreate(TAC_CALL,makeTemp(), node->symbol, 0),code[1]);
-    break;
+    case AST_FUNCTIONCALL:{
+      //HASH* newLabel = makeTemp();
+      TAC *tacBuffer = tacCreate(TAC_BUFFER,node->symbol,0,0);
+      tacBuffer->result = makeTemp();
+      result = tacJoin(tacJoin(tacJoin(tacCreate(TAC_CALL,tacBuffer->result, node->symbol,0),code[0]),code[1]),tacBuffer);
+    }break;
     case AST_READ:
       result = tacCreate(TAC_READ,node->symbol,0,0);
     break;
@@ -262,8 +265,8 @@ TAC *codeGenerator(AST *node){
       result = makeFunct(tacCreate(TAC_SYMBOL,node->son[0]->symbol,0,0),code[1],code[2]);
     break;
     case AST_FUNC_ARGL_LIST:
-      // result = tacJoin(code[1],tacCreate(TAC_PUSH,node->son[0]->symbol,0,0));
-      // fprintf(stderr,"SON0SYMBOL%s:\n",node->son[0]->symbol->yytext);
+      result = tacJoin(code[1],tacCreate(TAC_PUSH,node->son[0]->symbol,0,0));
+      //fprintf(stderr,"First ariable to be called: %s\n",node->son[0]->symbol->yytext);
       //VERIFICAR AQUI NAO TA FUNCIONANDO!!
     break;
     case AST_FUNC_RESET:

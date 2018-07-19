@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 
 
 
-    saida = fopen(argv[2],"w+");
+    saida = fopen("saida.txt","w+");
     int token;
     FILE    *fd;
 

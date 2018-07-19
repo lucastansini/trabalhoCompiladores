@@ -39,6 +39,7 @@
 #define TAC_VECTOR_MEM_INIT 32 //Não sei se precisa
 #define TAC_FOR_TO 33
 #define TAC_INC 34
+#define TAC_BUFFER 35
 
 typedef struct tac{
 

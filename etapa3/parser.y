@@ -96,7 +96,7 @@ extern semanticError;
 
 %%
 program: ldec {
-               //astToFile(0,$1,saida);
+               astToFile(0,$1,saida);
                //hashPrint();
                setDeclarations($1);
                checkSemantic($1);
