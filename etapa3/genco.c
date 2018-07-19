@@ -105,6 +105,7 @@ void genco(TAC *tac){
 			break;
 			case TAC_ADD:
 			case TAC_EQUAL:
+			case TAC_VECREAD:
 			case TAC_MULT:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
@@ -344,7 +345,26 @@ void genco(TAC *tac){
 				movl	a(,%rax,4), %eax
 				movl	%eax, c(%rip)*/
 			case TAC_VECREAD:{
-
+				if(digitoSegundo(initialTac)){
+					int valueToAdd = atoi(initialTac->op2->yytext) * 4;
+					fprintf(fp,"\tmovl %s+%d(%%rip), %%eax\n",initialTac->op1->yytext,valueToAdd);
+					fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",initialTac->result->yytext);
+				}else{
+					fprintf(fp,"\tmovl %s(%%rip), %%eax\n", initialTac->op2->yytext);
+					fprintf(fp,"\tcltq\n");
+					fprintf(fp,"\tmovl %s(,%%rax,4), %%eax\n",initialTac->op1->yytext);
+					fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",initialTac->result->yytext);
+				}
+			}break;
+			/*movl	$a, %esi
+			movl	$.LC0, %edi
+			movl	$0, %eax
+			call	__isoc99_scanf*/
+			case TAC_READ:{
+				fprintf(fp,"\tmovl $%s, %%esi\n",initialTac->result->yytext);
+				fprintf(fp,"\tmovl $.LC9999999, %%edi\n");
+				fprintf(fp,"\tmovl $0, %%eax\n");
+				fprintf(fp,"\tcall __isoc99_scanf\n");
 			}break;
 		}
 	}
