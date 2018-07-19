@@ -107,6 +107,7 @@ void genco(TAC *tac){
 			case TAC_EQUAL:
 			case TAC_VECREAD:
 			case TAC_MULT:
+			case TAC_LESS_THEN:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
 
@@ -300,14 +301,57 @@ void genco(TAC *tac){
 						countLabelAndLeite++;
 					}
 				}
-			}
-			break;
+			}break;
+			/*Com variáveis para fazer a comparação
+				movl	a(%rip), %edx
+				movl	b(%rip), %eax
+				Com números
+				movl	a(%rip), %eax
+				cmpl	$1, %eax*/
+			case TAC_LESS_THEN:{
+				char* savedOp1 = initialTac->op1->yytext;
+				char* savedOp2 = initialTac->op2->yytext;
+				char* savedResult = initialTac->result->yytext;
+				if(insideFunction){
+					if(initialTac->result){
+						if(digitoPrimeiro(initialTac)){
+							fprintf(fp,"\tmovl $%s, %%edx\n",savedOp1);
+						}else{
+							fprintf(fp,"\tmovl %s(%%rip), %%edx\n",savedOp1);
+						}
+
+						if(digitoSegundo(initialTac)){
+							fprintf(fp,"\tmovl $%s, %%eax\n",savedOp2);
+						}else{
+							fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+						}
+						fprintf(fp,"\tcmpl %%eax,%%edx\n");
+						// fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
+						fprintf(fp,"\tjl LabelTeste_ParavVEerLuuL1KKAKSSszz12345a%d\n",countLabelAndLeite);
+						fprintf(fp,"\tmovl $1, %s(%%rip)\n",savedResult);
+						fprintf(fp,"\tjmp Leeeeiteeeee%d\n",countLabelAndLeite);
+						fprintf(fp,"LabelTeste_ParavVEerLuuL1KKAKSSszz12345a%d:\n",countLabelAndLeite);
+						fprintf(fp,"\tmovl $0, %s(%%rip)\n",savedResult);
+						fprintf(fp,"Leeeeiteeeee%d:\n",countLabelAndLeite);
+						countLabelAndLeite++;
+					}
+				}
+			}break;
 			case TAC_IF_ZERO:{
 				if(insideFunction){
 					if(initialTac->result){
 						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op1->yytext);
 						fprintf(fp,"\tcmpl	$0, %%eax\n");
 						fprintf(fp,"\tjnz	%s\n",initialTac->result->yytext);
+					}
+				}
+			}break;
+			case TAC_IF_ZERO_FOR:{
+				if(insideFunction){
+					if(initialTac->result){
+						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->op1->yytext);
+						fprintf(fp,"\tcmpl	$0, %%eax\n");
+						fprintf(fp,"\tjz	%s\n",initialTac->result->yytext);
 					}
 				}
 			}break;
@@ -366,6 +410,12 @@ void genco(TAC *tac){
 				fprintf(fp,"\tmovl $0, %%eax\n");
 				fprintf(fp,"\tcall __isoc99_scanf\n");
 			}break;
+			case TAC_INC:{
+				fprintf(fp,"\tmovl %s(%%rip), %%edx\n",initialTac->result->yytext);
+				fprintf(fp,"\tmovl $1, %%eax\n");
+				fprintf(fp,"\taddl %%eax, %%edx\n");
+				fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",initialTac->result->yytext);
+			}
 		}
 	}
 }

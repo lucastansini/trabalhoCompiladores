@@ -40,6 +40,7 @@
 #define TAC_FOR_TO 33
 #define TAC_INC 34
 #define TAC_BUFFER 35
+#define TAC_IF_ZERO_FOR 36
 
 typedef struct tac{
 

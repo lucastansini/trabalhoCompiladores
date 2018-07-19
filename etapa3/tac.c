@@ -121,6 +121,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_INC:
       fprintf(stderr, "TAC_INC");
     break;
+    case TAC_IF_ZERO_FOR:
+      fprintf(stderr, "TAC_IZ_ZERO");
+    break;
     default:
       fprintf(stderr,"TAC_UNKOWN");
     break;
@@ -398,15 +401,15 @@ TAC* makeFor(HASH* nodeSymbol, TAC *code0, TAC *code1, TAC *code2){
     HASH *newLabel = makeLabel();
     //TAC *newTacAdd = tacCreate(TAC_ADD,makeTemp(),nodeSymbol,addValue?addValue->result:0);
 
-
+    TAC *attributeFor = tacCreate(TAC_ASS,nodeSymbol,code0?code0->result : 0,0);
     TAC *returnTac = tacCreate(TAC_LABEL,initLabel,0,0);
     TAC *equalTac = tacCreate(TAC_EQUAL,makeTemp(),nodeSymbol, code1 ? code1->result : 0);
-    newIfTac = tacCreate(TAC_IF_ZERO,newLabel,equalTac?equalTac->result:0,0);
+    newIfTac = tacCreate(TAC_IF_ZERO_FOR,newLabel,equalTac?equalTac->result:0,0);
     TAC *jump = tacCreate(TAC_JUMP,initLabel,0,0);
     TAC *end = tacCreate(TAC_LABEL,newLabel,0,0);
 
 
-    return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(returnTac,equalTac),newIfTac),code2),i),jump),end);
+    return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(attributeFor,returnTac),equalTac),newIfTac),code2),i),jump),end);
 
 }
 
