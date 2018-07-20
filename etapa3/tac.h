@@ -35,12 +35,13 @@
 #define TAC_END_FUNCTION 28
 #define TAC_VECWRITE 29
 #define TAC_VECREAD 30
-#define TAC_VEC_DEC_ATR 31 //Não sei se precisa. ver a tac.c
-#define TAC_VECTOR_MEM_INIT 32 //Não sei se precisa
+#define TAC_VEC_DEC_ATR 31
+#define TAC_VECTOR_MEM_INIT 32
 #define TAC_FOR_TO 33
 #define TAC_INC 34
 #define TAC_BUFFER 35
 #define TAC_IF_ZERO_FOR 36
+#define TAC_PAR_LIST 37
 
 typedef struct tac{
 
@@ -67,7 +68,7 @@ TAC* makeFunc(TAC *code0,TAC *code1,TAC *code2);
 TAC* makeIfThen(TAC *code0, TAC *code1);
 TAC* makeIfThenElse(TAC *code0,TAC *code1, TAC *code2);
 TAC* makeWhile(TAC *code0, TAC *code1);
-TAC* makeFunct(TAC *code0, TAC *code1, TAC *code2);
+TAC* makeFunct(TAC *code0, TAC *code1, TAC *code2, TAC*codeParams);
 TAC* makeFor(HASH* nodeSymbol,TAC *code0, TAC *code1, TAC *code2);
 void genco(TAC *tac);
 

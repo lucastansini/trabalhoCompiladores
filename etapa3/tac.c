@@ -112,6 +112,9 @@ TAC* tacPrintSingle(TAC *tac){
     case TAC_VEC_DEC_ATR:
       fprintf(stderr,"TAC_VEC_DEC_ATR");
     break;
+    case TAC_PAR_LIST:
+      fprintf(stderr,"TAC_PAR_LIST");
+    break;
     case TAC_VECTOR_MEM_INIT:
       fprintf(stderr, "TAC_VECTOR_MEM_INIT");
     break;
@@ -151,12 +154,12 @@ TAC *tacPrintBack(TAC *tac){
 
 
 
-
 TAC *codeGenerator(AST *node){
   // printf("Entered code generator.\n");
   int i = 0;
   TAC *result = 0;
   TAC* code[MAX_SONS];
+
 
   if(!node){
     return 0;
@@ -259,14 +262,14 @@ TAC *codeGenerator(AST *node){
       //HASH* newLabel = makeTemp();
       TAC *tacBuffer = tacCreate(TAC_BUFFER,node->symbol,0,0);
       tacBuffer->result = makeTemp();
-      result = tacJoin(tacJoin(tacJoin(tacCreate(TAC_CALL,tacBuffer->result, node->symbol,0),code[0]),code[1]),tacBuffer);
+      result = tacJoin(tacJoin(code[1],tacJoin(code[0],tacCreate(TAC_CALL,tacBuffer->result, node->symbol,0))),tacBuffer);
     }break;
     case AST_READ:
       result = tacCreate(TAC_READ,node->symbol,0,0);
     break;
-    case AST_FUNC_BLOCK:
-      result = makeFunct(tacCreate(TAC_SYMBOL,node->son[0]->symbol,0,0),code[1],code[2]);
-    break;
+    case AST_FUNC_BLOCK:{
+      result = makeFunct(tacCreate(TAC_SYMBOL,node->son[0]->symbol,0,0),code[1],code[2],code[0]);
+    }break;
     case AST_FUNC_ARGL_LIST:
       result = tacJoin(code[1],tacCreate(TAC_PUSH,node->son[0]->symbol,0,0));
       //fprintf(stderr,"First ariable to be called: %s\n",node->son[0]->symbol->yytext);
@@ -284,10 +287,21 @@ TAC *codeGenerator(AST *node){
     case AST_FOR_TO:
       result = makeFor(node->symbol,code[0],code[1],code[2]);
     break;
-    // NAO SEI SE PRECISA FAZER ESSA AQUII!!!
-    // case AST_VARIABLE_VEC_1_INT:
-    //   result = tacCreate(TAC_VEC_DEC_ATR,node->symbol,code[1]?code[1]->result:0,0);
-    // break;
+    case AST_FUNC_HEADER_INT:
+    result = tacJoin(code[0],code[1]);
+    //printf("1\n");
+    break;
+    case AST_FUNC_PAR_LIST:
+    result = tacJoin(code[0],code[1]);
+      //printf("1\n");
+    break;
+    case AST_FUNC_PAR:
+    result = tacJoin(code[0],code[1]);
+      //printf("1funcpar\n");
+    break;
+    case AST_FUNC_PAR_INT:
+    result = tacCreate(TAC_PAR_LIST,node->symbol,0,0);
+    break;
     default:
       result = tacJoin(tacJoin(tacJoin(code[0],code[1]),code[2]),code[3]);
     break;
@@ -440,6 +454,7 @@ TAC *makeWhile(TAC *code0, TAC*code1){
 
 }
 
-TAC* makeFunct(TAC *code0, TAC *code1, TAC* code2){
-  return tacJoin(tacJoin(tacJoin( tacCreate(TAC_BEGIN_FUNCTION, code0->result, 0, 0), code1) , code2 ), tacCreate(TAC_END_FUNCTION, code0->result, 0, 0));
+TAC* makeFunct(TAC *code0, TAC *code1, TAC* code2, TAC*codeParams){
+
+  return tacJoin(tacJoin(tacJoin(tacJoin(tacCreate(TAC_BEGIN_FUNCTION, code0->result, 0, 0), codeParams),code1) , code2 ), tacCreate(TAC_END_FUNCTION, code0->result, 0, 0));
 }

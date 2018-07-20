@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "tac.h"
 #define MAX_VECTOR_PRINT_SIZE 100
-
+#define MAX_VECTOR_PARAM_LIST 17
 
 
 
@@ -39,6 +39,24 @@ int digitoPrimeiro(TAC* tac){
 	return 1;
 }
 
+int digitoResult(TAC* tac){
+	int i = 0;
+	while(*tac->result->yytext){
+		if(isdigit(*tac->result->yytext++)==0){
+			//restore one position
+			*tac->result->yytext--;
+			return 0;
+		}
+		i++;
+	}
+	//Restore the pointer.
+	for(i;i>0;i--){
+		*tac->result->yytext--;
+	}
+	//printf("i is equalt to:%d\n",i);
+	return 1;
+}
+
 void genco(TAC *tac){
 
 	//Guarda o tac inicial
@@ -55,8 +73,12 @@ void genco(TAC *tac){
 	int count = 0;
 	int count2=0;
 	int count3 = 0;
+	int paramCont=0;
+	int paramContPush = 0;
 	int insideFunction = 0;
 	int countLabelAndLeite = 0;
+	int isCalled = 0;
+	char *paramVectorList[MAX_VECTOR_PARAM_LIST];
 
 	//variável inicial para controle do vetor que armazena na posição vectorIndex, uma string "xxx", correspondente aquele index em assembly.
 	//Exemplo, LC0 - > aaa , então a[0] = "aaa"
@@ -107,6 +129,8 @@ void genco(TAC *tac){
 			case TAC_EQUAL:
 			case TAC_VECREAD:
 			case TAC_MULT:
+			case TAC_CALL:
+			case TAC_RETURN:
 			case TAC_LESS_THEN:
 				fprintf(fp,"\t.comm %s,4,4\n",tac->result->yytext);
 			break;
@@ -178,10 +202,20 @@ void genco(TAC *tac){
 					popq	%rbp
 					.cfi_def_cfa 7, 8
 					ret*/
-					fprintf(fp,"\tmovl $0, %%eax\n\tpopq %%rbp\n\t.cfi_def_cfa 7, 8\n\tret\n");
-					fprintf(fp,".cfi_endproc\n .LFE%d:\n \t.size %s, .-%s",count2,initialTac->result->yytext,initialTac->result->yytext);
-					//Warnings do compilador exigem uma newline no final do arquivo.
-					fprintf(fp,"\n");
+					if(isCalled){
+						fprintf(fp,"\t.cfi_def_cfa 7, 8\n\tret\n");
+						fprintf(fp,".cfi_endproc\n .LFE%d:\n \t.size %s, .-%s",count2,initialTac->result->yytext,initialTac->result->yytext);
+						//Warnings do compilador exigem uma newline no final do arquivo.
+						fprintf(fp,"\n");
+						isCalled = 0;
+					}else{
+						fprintf(fp,"\tmovl $0, %%eax\n");
+						fprintf(fp,"\tpopq %%rbp\n\t.cfi_def_cfa 7, 8\n\tret\n");
+						fprintf(fp,".cfi_endproc\n .LFE%d:\n \t.size %s, .-%s",count2,initialTac->result->yytext,initialTac->result->yytext);
+						//Warnings do compilador exigem uma newline no final do arquivo.
+						fprintf(fp,"\n");
+					}
+
 					count2++;
 					insideFunction = 0;
 				}
@@ -199,18 +233,55 @@ void genco(TAC *tac){
 				 	if(digitoPrimeiro(initialTac)){
 						fprintf(fp,"\tmovl	$%s, %%edx\n",savedOp1);
 					}else{
-						fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",savedOp1);
+						int i = 0;
+						int indexOnStack = 0;
+						int isLocal = 0;
+						for(i=0;i<MAX_VECTOR_PARAM_LIST;i++){
+							if( paramVectorList[i] == savedOp1){
+								indexOnStack = i;
+								isLocal = 1;
+							}
+						}
+						if(isLocal){
+							fprintf(fp,"\tmovl -%d(%%rbp), %%edx\n",indexOnStack);
+						}else{
+							fprintf(fp,"\tmovl	%s(%%rip), %%edx\n",savedOp1);
+						}
 					}
 					if(digitoSegundo(initialTac)){
 						fprintf(fp,"\tmovl $%s, %%eax\n",savedOp2);
 					}else{
-						fprintf(fp,"\tmovl %s(%%rip), %%eax\n",savedOp2);
+						int i = 0;
+						int indexOnStack = 0;
+						int isLocal = 0;
+						for(i=0;i<MAX_VECTOR_PARAM_LIST;i++){
+							if( paramVectorList[i] == savedOp2){
+								indexOnStack = i;
+								isLocal = 1;
+							}
+						}
+						if(isLocal){
+							fprintf(fp,"\tmovl -%d(%%rbp), %%eax\n",indexOnStack);
+						}else{
+							fprintf(fp,"\tmovl	%s(%%rip), %%eax\n",savedOp2);
+						}
 					}
 					fprintf(fp,"\taddl %%eax,%%edx\n"); //edx guarda o resultado da soma!
 					fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",savedResult);
 				}
 			}
 			break;
+			case TAC_RETURN:{
+				if(digitoPrimeiro(initialTac)){
+					fprintf(fp,"\tmovl $%s, %s(%%rip)\n",initialTac->op1->yytext,initialTac->result->yytext);
+					fprintf(fp,"\tpopq %%rbp\n");
+				}else{
+					fprintf(fp,"\tmovl %s(%%rip), %%edx\n",initialTac->op1->yytext);
+					fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",initialTac->result->yytext);
+					fprintf(fp,"\tmovl %s(%%rip), %%eax\n",initialTac->result->yytext);
+					fprintf(fp,"\tpopq %%rbp\n");
+				}
+			}break;
 			/*movl	a(%rip), %edx
 				movl	b(%rip), %eax
 				imull	%edx, %eax*/
@@ -415,7 +486,68 @@ void genco(TAC *tac){
 				fprintf(fp,"\tmovl $1, %%eax\n");
 				fprintf(fp,"\taddl %%eax, %%edx\n");
 				fprintf(fp,"\tmovl %%edx, %s(%%rip)\n",initialTac->result->yytext);
+			}break;
+			case TAC_CALL:{
+				fprintf(fp,"\tcall %s\n",initialTac->op1->yytext);
+				fprintf(fp,"\tmovl %%eax, %s(%%rip)\n",initialTac->result->yytext);
+			}break;
+			case TAC_PUSH:{
+				if(digitoResult(initialTac)){
+					fprintf(fp,"\tmovl $%s, ",initialTac->result->yytext);
+				}else{
+					fprintf(fp,"\tmovl %s(%%rip), %%edx\n",initialTac->result->yytext);
+					fprintf(fp,"\tmovl %%edx, ");
+				}
+				switch(paramContPush){
+				case 0:{
+					fprintf(fp,"%%edi\n"); //esi
+				}break;
+				case 1:{
+					fprintf(fp,"%%esi\n"); //ecx
+				}break;
+				case 2:{
+					fprintf(fp,"%%ecx\n"); //edx
+				}break;
+				case 3:{
+					fprintf(fp,"%%esi\n"); //esi
+				}break;
+				default:
+				break;
 			}
+				paramContPush++;
+			}break;
+			case TAC_PAR_LIST:{
+				/*movl	%edi, -4(%rbp)
+					movl	%esi, -8(%rbp)
+					movl	%edx, -12(%rbp)
+					movl	%ecx, -16(%rbp)
+					movl	%r8d, -20(%rbp)
+					De acordo com quantos parametros temos, precisamos usar um numero
+					x de registradores.*/
+					isCalled = 1;
+				switch (paramCont){
+					case 0:{
+						fprintf(fp,"\tmovl %%edi, -4(%%rbp)\n");
+						paramVectorList[4] = initialTac->result->yytext;
+						// printf("%s\n",paramVectorList[4]);
+					}break;
+					case 1:{
+						fprintf(fp,"\tmovl %%esi, -8(%%rbp)\n");
+						paramVectorList[8] = initialTac->result->yytext;
+					}break;
+					case 2:{
+						fprintf(fp,"\tmovl %%ecx, -12(%%rbp)\n");
+						paramVectorList[12] = initialTac->result->yytext;
+					}break;
+					case 3:{
+						fprintf(fp,"\tmovl %%r8d, -16(%%rbp)\n");
+						paramVectorList[16] = initialTac->result->yytext;
+					}break;
+					default:
+					break;
+				}
+					paramCont++;
+			}break;
 		}
 	}
 }
